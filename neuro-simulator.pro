@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    neuro.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    neuro.h
 
 FORMS += \
     mainwindow.ui
