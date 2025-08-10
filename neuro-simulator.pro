@@ -11,11 +11,12 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    neuro.cpp
+    kernel/neuro.cpp
 
 HEADERS += \
     mainwindow.h \
-    neuro.h
+    kernel/neuro.h \
+    kernel/threedimvector.h
 
 FORMS += \
     mainwindow.ui
