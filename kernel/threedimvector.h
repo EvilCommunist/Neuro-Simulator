@@ -13,6 +13,10 @@ private:
     inline size_t recalculateIndex(size_t i, size_t j, size_t k){
         return i+width*j+width*height*k;
     }
+
+    inline void checkIndex(size_t i, size_t j, size_t k){
+        if(i >= width || j >= height || k >= depth){throw std::out_of_range(QString("Attention! Index out of range"));}
+    }
 public:
     ThreeDimVector(size_t w, size_t h, size_t d, T val)
     : width(w), height(h), depth(d)
@@ -21,10 +25,12 @@ public:
     }
 
     inline void setValue(size_t i, size_t j, size_t k, T value){
+        checkIndex(i, j, k);
         data[recalculateIndex(i, j, k)] = value;
     }
 
-    inline T getValue(size_t i, size_t j, size_t k){
+    inline T getValue(size_t i, size_t j, size_t k) const{
+        checkIndex(i, j, k);
         return data[recalculateIndex(i, j, k)];
     }
 };
