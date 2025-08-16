@@ -19,8 +19,12 @@ void MainWindow::on_startButton_clicked()
     //ui->output->setPlainText("Done!");  // placeholder function for neuro-test
 
     // 3D vector test
-    ThreeDimVector<int> drei(5,5,5,0);
-    drei.setValue(2,1,4,100);
-    ui->output->setPlainText(QString::number(drei.getValue(2,1,4)));
+    try{
+        Neuro NN(3, {2, 3, 1});
+        ui->output->setPlainText("Done!");
+    }
+    catch(std::exception Ex){
+        ui->output->setPlainText(Ex.what());
+    }
 }
 
