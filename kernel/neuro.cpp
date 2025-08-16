@@ -11,7 +11,11 @@ size_t Neuro::qvectorMax(QVector<size_t> data){
 Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL):
     layers(l),
     neuronAmountPerLayer(nAPL),
-    neurons(ThreeDimVector<float>(qvectorMax(nAPL),NeuroDataType,l,0)),
-    weights(ThreeDimVector<float>(qvectorMax(nAPL),qvectorMax(nAPL),l-1,0))
+    neurons(ThreeDimVector<double>(qvectorMax(nAPL),NeuroDataType,l,0)),
+    weights(ThreeDimVector<double>(qvectorMax(nAPL),qvectorMax(nAPL),l-1,0))
 {/*Every initialisation is in the cunstructor above*/}
+
+void Neuro::forwardPropogation(size_t size, QVector<double> data){
+// TODO: write the function
+}
 
