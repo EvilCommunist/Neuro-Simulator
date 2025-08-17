@@ -15,6 +15,7 @@ private:
     ThreeDimVector<double> neurons;
     ThreeDimVector<double> weights;
     size_t qvectorMax(QVector<size_t> data);
+    void initWeights();
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL);

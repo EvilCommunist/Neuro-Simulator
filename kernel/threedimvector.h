@@ -15,7 +15,7 @@ private:
     }
 
     inline void checkIndex(size_t i, size_t j, size_t k){
-        if(i >= width || j >= height || k >= depth){throw std::out_of_range(QString("Attention! Index out of range"));}
+        if(i >= width || j >= height || k >= depth){throw std::out_of_range("Attention! Index out of range");}
     }
 public:
     ThreeDimVector(size_t w, size_t h, size_t d, T val)
