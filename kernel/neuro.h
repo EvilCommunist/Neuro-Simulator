@@ -4,7 +4,7 @@
 #include "threedimvector.h"
 #include "./math/actiovationFunctions.h"
 
-const int NeuroDataType = 3;
+const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
 
 class Neuro
@@ -19,7 +19,10 @@ private:
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL);
-    void forwardPropogation(size_t size, QVector<double> data);
+    void forwardPropogation(QVector<double> data, math_activate::ActivationFunc func);
+    QVector<double> getRes();
+    void learn_backPropogation(QVector<double> data, QVector<double> ans, double learnSpeed, size_t epochs);
+
 };
 
 #endif // NEURO_H

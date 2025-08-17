@@ -10,11 +10,11 @@ private:
     size_t width, height, depth;  // i, j, k
     QVector<T> data;
 
-    inline size_t recalculateIndex(size_t i, size_t j, size_t k){
+    inline size_t recalculateIndex(size_t i, size_t j, size_t k) const{
         return i+width*j+width*height*k;
     }
 
-    inline void checkIndex(size_t i, size_t j, size_t k){
+    inline void checkIndex(size_t i, size_t j, size_t k) const{
         if(i >= width || j >= height || k >= depth){throw std::out_of_range("Attention! Index out of range");}
     }
 public:
