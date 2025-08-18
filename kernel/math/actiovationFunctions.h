@@ -7,8 +7,8 @@ namespace math_activate{
 typedef double(*ActivationFunc)(double);
 const float Delta = 0.001;
 
-inline double sigmoid(double x);
-inline double linear(double x);
+double sigmoid(double x);
+double linear(double x);
 
 double get_derivative(ActivationFunc func, double x);
 /*-- Activation functions for neural network --*/

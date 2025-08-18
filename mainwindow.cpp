@@ -20,11 +20,36 @@ void MainWindow::on_startButton_clicked()
 
     // 3D vector test
     try{
-        Neuro NN(3, {2, 3, 1});
-        ui->output->setPlainText("Done!");
+        Neuro net(3, {16, 32, 10});
+        QVector<double> teach = {
+                                    1, 0, 1, 0,
+                                    1, 1, 1, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 1, 0
+                                },
+            test = {
+                        1, 0, 0, 1,
+                        1, 1, 1, 1,
+                        0, 0, 0, 1,
+                        0, 0, 0, 1
+                    },
+            ans = {0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+        net.forwardPropogation(test, math_activate::sigmoid);
+        auto res = net.getRes();
+        QString textRes = "BEFORE LEARNING\n\n\n";
+        for (auto value : res){
+            textRes += QString::number(value) + ",\n";
+        }
+        textRes += "\n\n\nAFTER LEARNING\n\n\n";
+
+        net.learn_backPropogation(teach, ans, 0.5, 1000, math_activate::sigmoid);
+        res = net.getRes();
+        for (auto value : res){
+            textRes += QString::number(value) + ",\n";
+        }
+        ui->output->setPlainText(textRes);
     }
     catch(std::exception Ex){
         ui->output->setPlainText(Ex.what());
     }
 }
-

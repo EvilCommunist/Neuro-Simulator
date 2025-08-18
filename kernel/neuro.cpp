@@ -1,7 +1,7 @@
 #include "neuro.h"
 #include <random>
 
-size_t Neuro::qvectorMax(QVector<size_t> data){
+size_t Neuro::qvectorMax(const QVector<size_t>& data){
     size_t max = data[0];
     for(const auto &element : data){
         if(max < element) max = element;
@@ -30,7 +30,7 @@ Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL):
     weights(ThreeDimVector<double>(qvectorMax(nAPL),qvectorMax(nAPL),l-1,0))
 { initWeights(); }
 
-void Neuro::forwardPropogation(QVector<double> data, math_activate::ActivationFunc func){
+void Neuro::forwardPropogation(const QVector<double>& data, math_activate::ActivationFunc func){
     size_t index = 0;
     for (const auto &element : data){
         neurons.setValue(index, NeuroSignalIndex, 0, element);
@@ -57,7 +57,28 @@ QVector<double> Neuro::getRes(){
     return result;
 }
 
-void Neuro::learn_backPropogation(QVector<double> data, QVector<double> ans, double learnSpeed, size_t epochs){
-    //TODO: write function
+void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed, size_t epochs, math_activate::ActivationFunc func){
+    for(size_t e = 0; e < epochs; e++){
+        forwardPropogation(data, func);
+        //QVector<double> errors = getRes();
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+            neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*currentNeuron*(1-currentNeuron)));
+        }
+        for(uint16_t l = layers-2; l > 0; l--){
+            for(size_t n = 0; n < neuronAmountPerLayer[l]; n++){
+                for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++){
+                    neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l) + (neurons.getValue(prev, NeuroErrorIndex, l+1)
+                                                             * weights.getValue(n, prev, l) * neurons.getValue(n, NeuroActivateIndex, l)
+                                                             * (1 - neurons.getValue(n, NeuroActivateIndex, l))
+                                                            ));
+                    weights.setValue(n, prev, l, weights.getValue(n, prev, l)
+                                                    + neurons.getValue(n, NeuroActivateIndex, l)
+                                                    * neurons.getValue(prev, NeuroErrorIndex, l+1) * learnSpeed
+                                    );
+                }
+            }
+        }
+    }
 }
 
