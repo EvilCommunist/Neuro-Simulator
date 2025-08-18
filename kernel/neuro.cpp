@@ -60,7 +60,6 @@ QVector<double> Neuro::getRes(){
 void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed, size_t epochs, math_activate::ActivationFunc func){
     for(size_t e = 0; e < epochs; e++){
         forwardPropogation(data, func);
-        //QVector<double> errors = getRes();
         for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
             auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
             neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*currentNeuron*(1-currentNeuron)));

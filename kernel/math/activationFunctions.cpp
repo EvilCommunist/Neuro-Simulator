@@ -1,4 +1,4 @@
-#include "actiovationFunctions.h"
+#include "activationFunctions.h"
 
 double math_activate::sigmoid(double x){
     return 1/(1+exp(-x));

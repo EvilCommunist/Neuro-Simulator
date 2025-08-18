@@ -1,5 +1,5 @@
-#ifndef ACTIOVATIONFUNCTIONS_H
-#define ACTIOVATIONFUNCTIONS_H
+#ifndef ACTIVATIONFUNCTIONS_H
+#define ACTIVATIONFUNCTIONS_H
 #include <cmath>
 
 namespace math_activate{
@@ -14,4 +14,4 @@ double get_derivative(ActivationFunc func, double x);
 /*-- Activation functions for neural network --*/
 }
 
-#endif // ACTIOVATIONFUNCTIONS_H
+#endif // ACTIVATIONFUNCTIONS_H

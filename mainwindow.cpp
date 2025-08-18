@@ -15,11 +15,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-    // Temporary button
-    //ui->output->setPlainText("Done!");  // placeholder function for neuro-test
-
-    // 3D vector test
-    try{
+   try{
         Neuro net(3, {16, 32, 10});
         QVector<double> teach = {
                                     1, 0, 1, 0,

@@ -2,7 +2,7 @@
 #define NEURO_H
 
 #include "threedimvector.h"
-#include "./math/actiovationFunctions.h"
+#include "./math/activationFunctions.h"
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
