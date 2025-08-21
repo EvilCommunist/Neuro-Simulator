@@ -9,10 +9,11 @@ size_t Neuro::qvectorMax(const QVector<size_t>& data){
     return max;
 }
 
-void Neuro::initWeights(){
+void Neuro::initWeights(){  // Xavier initializattion
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(-1, 1);
+    double stddev = sqrt(1.0 / qvectorMax(neuronAmountPerLayer));
+    std::normal_distribution<double> dis(0.0, stddev);
 
     for(size_t i = 0; i < qvectorMax(neuronAmountPerLayer); i++){
         for(size_t j = 0; j < qvectorMax(neuronAmountPerLayer); j++){
