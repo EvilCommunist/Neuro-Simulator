@@ -21,7 +21,7 @@ public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL);
     void forwardPropogation(const QVector<double>& data, math_activate::ActivationFunc func);
     QVector<double> getRes();
-    void learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed, size_t epochs, math_activate::ActivationFunc func);
+    void learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed, math_activate::ActivationFunc func);
 
 };
 

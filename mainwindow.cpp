@@ -38,7 +38,8 @@ void MainWindow::on_startButton_clicked()
         }
         textRes += "\n\n\nAFTER LEARNING\n\n\n";
 
-        net.learn_backPropogation(teach, ans, 0.5, 1000, math_activate::sigmoid);
+        for (int i = 0; i < 1000; i++)
+            net.learn_backPropogation(teach, ans, 0.5, math_activate::sigmoid);
         res = net.getRes();
         for (auto value : res){
             textRes += QString::number(value) + ",\n";
