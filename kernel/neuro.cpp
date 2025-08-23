@@ -24,9 +24,10 @@ void Neuro::initWeights(){  // Xavier initializattion
     }
 }
 
-Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL):
+Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL):
     layers(l),
     neuronAmountPerLayer(nAPL),
+    activationFuncForLayer(aFfL),
     neurons(ThreeDimVector<double>(qvectorMax(nAPL)+1,NeuroDataType,l,0)),
     weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0))
 {
@@ -36,11 +37,11 @@ Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL):
     initWeights();
 }
 
-void Neuro::forwardPropogation(const QVector<double>& data, math_activate::ActivationFunc func){
+void Neuro::forwardPropogation(const QVector<double>& data){
     size_t index = 0;
     for (const auto &element : data){
         neurons.setValue(index, NeuroSignalIndex, 0, element);
-        neurons.setValue(index, NeuroActivateIndex, 0, func(element));
+        neurons.setValue(index, NeuroActivateIndex, 0, activationFuncForLayer[0](element));
         index++;
     }
 
@@ -50,7 +51,7 @@ void Neuro::forwardPropogation(const QVector<double>& data, math_activate::Activ
             for(size_t prev = 0; prev < neuronAmountPerLayer[l-1]; prev++)
                 input += neurons.getValue(prev, NeuroActivateIndex, l-1) * weights.getValue(prev, n, l-1);
             neurons.setValue(n, NeuroSignalIndex, l, input);
-            neurons.setValue(n, NeuroActivateIndex, l, func(input));
+            neurons.setValue(n, NeuroActivateIndex, l, activationFuncForLayer[l](input));
         }
         if (l < layers -1)
             neurons.setValue(neuronAmountPerLayer[l]-1, NeuroActivateIndex, l, 1);
@@ -65,11 +66,11 @@ QVector<double> Neuro::getRes(){
     return result;
 }
 
-void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed, math_activate::ActivationFunc func){
-    forwardPropogation(data, func);
+void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed){
+    forwardPropogation(data);
     for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
         auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
-        neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*math_activate::get_derivative(func, currentNeuron)));
+        neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[0], currentNeuron)));
     }
     for(uint16_t l = layers-2; l > 0; l--){
         for(size_t n = 0; n < neuronAmountPerLayer[l]-1; n++){
@@ -80,7 +81,7 @@ void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<dou
                                 );
             }
             neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l)
-                             * math_activate::get_derivative(func, neurons.getValue(n, NeuroActivateIndex, l))
+                             * math_activate::get_derivative(activationFuncForLayer[l], neurons.getValue(n, NeuroActivateIndex, l))
                             );
         }
     }
