@@ -10,6 +10,12 @@
     <height>665</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>500</height>
+   </size>
+  </property>
   <property name="font">
    <font>
     <family>Garamond</family>
@@ -18,6 +24,12 @@
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>35</width>
+    <height>30</height>
+   </size>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -29,27 +41,209 @@
         <pointsize>12</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">border-width: 3px; border-radius: 5px; background-color: #FFF; color: #000;
+border-color: rgb(124, 124, 124); padding: 5px;</string>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="Creation">
        <attribute name="title">
-        <string>Configuration</string>
+        <string>Конфигурация</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <layout class="QFormLayout" name="formLayout_5">
+            <item row="0" column="0">
+             <widget class="QLabel" name="neuroNumLabel">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Количество нейронов</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="activFuncLabel">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Функция активации</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="neuroAmount">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+              <property name="readOnly">
+               <bool>false</bool>
+              </property>
+              <property name="keyboardTracking">
+               <bool>true</bool>
+              </property>
+              <property name="showGroupSeparator" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="activFunc">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>Сигмоида</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Линейная</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1" rowspan="2">
+           <widget class="QFrame" name="frame">
+            <property name="minimumSize">
+             <size>
+              <width>10</width>
+              <height>10</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <layout class="QFormLayout" name="formLayout_6">
+            <item row="0" column="0">
+             <widget class="QLabel" name="neuroNumLabel_2">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Количество нейронов</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spinBox">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="activFuncLabel_2">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Функция активации</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboBox">
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <item>
+               <property name="text">
+                <string>Сигмоида</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Линейная</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="Learn">
        <attribute name="title">
-        <string>Teaching</string>
+        <string>Обучение</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="Test">
        <attribute name="title">
-        <string>Test</string>
+        <string>Проверка</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="Forecast">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <attribute name="title">
-        <string>Forecast</string>
+        <string>Прогноз</string>
        </attribute>
       </widget>
      </widget>
@@ -79,7 +273,7 @@
      </font>
     </property>
     <property name="title">
-     <string>File</string>
+     <string>Файл</string>
     </property>
     <addaction name="actionSave_current_neuro_network_as"/>
     <addaction name="actionSave_current_neuro_network"/>
@@ -92,22 +286,27 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_current_neuro_network_as">
    <property name="text">
-    <string>Save neuro network as...</string>
+    <string>Сохранить проект как...</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
   </action>
   <action name="actionSave_current_neuro_network">
    <property name="text">
-    <string>Save neuro network</string>
+    <string>Сохранить проект</string>
    </property>
   </action>
   <action name="actionOpen_neuro_network">
    <property name="text">
-    <string>Open neuro network</string>
+    <string>Открыть проект</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>Выйти</string>
    </property>
    <property name="font">
     <font>
