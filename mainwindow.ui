@@ -6,62 +6,116 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1309</width>
+    <height>665</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Garamond</family>
+    <pointsize>12</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="startButton">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>141</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>START.exe</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="output">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>120</y>
-      <width>531</width>
-      <height>391</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="placeholderText">
-     <string>Programm is running...</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="Creation">
+       <attribute name="title">
+        <string>Configuration</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="Learn">
+       <attribute name="title">
+        <string>Teaching</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="Test">
+       <attribute name="title">
+        <string>Test</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Forecast</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>25</height>
+     <width>1309</width>
+     <height>27</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Garamond</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSave_current_neuro_network_as"/>
+    <addaction name="actionSave_current_neuro_network"/>
+    <addaction name="actionOpen_neuro_network"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSave_current_neuro_network_as">
+   <property name="text">
+    <string>Save neuro network as...</string>
+   </property>
+  </action>
+  <action name="actionSave_current_neuro_network">
+   <property name="text">
+    <string>Save neuro network</string>
+   </property>
+  </action>
+  <action name="actionOpen_neuro_network">
+   <property name="text">
+    <string>Open neuro network</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Garamond</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

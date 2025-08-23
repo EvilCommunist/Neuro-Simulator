@@ -19,7 +19,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_startButton_clicked();
 
 private:
     Ui::MainWindow *ui;
