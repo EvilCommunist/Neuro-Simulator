@@ -42,116 +42,279 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-width: 3px; border-radius: 5px; background-color: #FFF; color: #000;
-border-color: rgb(124, 124, 124); padding: 5px;</string>
+       <string notr="true">#tabWidget{border-width: 3px; border-radius: 5px; border-style: solid; background-color: #FFF; color: #000;
+border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="Creation">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <attribute name="title">
         <string>Конфигурация</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <layout class="QFormLayout" name="formLayout_5">
-            <item row="0" column="0">
-             <widget class="QLabel" name="neuroNumLabel">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Количество нейронов</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="activFuncLabel">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Функция активации</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="neuroAmount">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-              </property>
-              <property name="readOnly">
-               <bool>false</bool>
-              </property>
-              <property name="keyboardTracking">
-               <bool>true</bool>
-              </property>
-              <property name="showGroupSeparator" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="activFunc">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="currentIndex">
-               <number>0</number>
-              </property>
-              <item>
-               <property name="text">
-                <string>Сигмоида</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Линейная</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="0" column="1" rowspan="2">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="2,2,5" columnstretch="3,8">
+          <item row="1" column="0">
            <widget class="QFrame" name="frame">
+            <property name="styleSheet">
+             <string notr="true">#frame{border-color: rgb(124, 124, 124); border-width: 1px; border-radius: 10px; border-style: solid}
+</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <widget class="QWidget" name="layoutWidget_2">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>321</width>
+               <height>66</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout_6">
+              <item row="0" column="0">
+               <widget class="QLabel" name="neuroNumLabel_2">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Количество нейронов</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="activFuncLabel_2">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Функция активации</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="comboBox">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Сигмоида</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Линейная</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QLabel" name="label_2">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>0</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Garamond</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #FFF; color: #000; margin-top: -2px;</string>
+             </property>
+             <property name="text">
+              <string>Выходной слой</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QFrame" name="frame_2">
+            <property name="styleSheet">
+             <string notr="true">#frame_2{border-color: rgb(124, 124, 124); border-width: 1px; border-radius: 10px; border-style: solid}
+</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <widget class="QWidget" name="layoutWidget">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>321</width>
+               <height>71</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout_5">
+              <item row="0" column="0">
+               <widget class="QLabel" name="neuroNumLabel">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Количество нейронов</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="activFuncLabel">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Функция активации</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="neuroAmount">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+                <property name="keyboardTracking">
+                 <bool>true</bool>
+                </property>
+                <property name="showGroupSeparator" stdset="0">
+                 <bool>true</bool>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="activFunc">
+                <property name="font">
+                 <font>
+                  <family>Garamond</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Сигмоида</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Линейная</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QLabel" name="label">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>0</y>
+               <width>121</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Garamond</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #FFF; color: #000; margin-top: -2px;</string>
+             </property>
+             <property name="text">
+              <string>Входной слой</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item row="0" column="1" rowspan="3">
+           <widget class="QFrame" name="neuroHolder">
             <property name="minimumSize">
              <size>
               <width>10</width>
               <height>10</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-color: rgb(124, 124, 124); border-style: solid; border-width: 1px; border-radius: 10px;</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::Shape::StyledPanel</enum>
@@ -161,68 +324,91 @@ border-color: rgb(124, 124, 124); padding: 5px;</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <layout class="QFormLayout" name="formLayout_6">
-            <item row="0" column="0">
-             <widget class="QLabel" name="neuroNumLabel_2">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Количество нейронов</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="spinBox">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="activFuncLabel_2">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Функция активации</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="comboBox">
-              <property name="font">
-               <font>
-                <family>Garamond</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <item>
-               <property name="text">
-                <string>Сигмоида</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Линейная</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
+          <item row="2" column="0">
+           <widget class="QFrame" name="hiddenLayersFrame">
+            <property name="styleSheet">
+             <string notr="true">#hiddenLayersFrame{border-color: rgb(124, 124, 124); border-width: 1px; border-radius: 10px; border-style: solid}
+</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="12">
+             <item>
+              <layout class="QGridLayout" name="gridLayout_2" columnstretch="5,1,1">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="font">
+                  <font>
+                   <family>Garamond</family>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Скрытые слои</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="addLayer">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">padding: 2px 1px; background-color: rgb(76, 255, 44); color: white;</string>
+                 </property>
+                 <property name="text">
+                  <string>+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="removeFrame">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">padding: 3px 1px; background-color: rgb(255, 1, 5); color: white;</string>
+                 </property>
+                 <property name="text">
+                  <string>-</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="3">
+                <widget class="QScrollArea" name="scrollArea">
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>313</width>
+                    <height>214</height>
+                   </rect>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </item>
