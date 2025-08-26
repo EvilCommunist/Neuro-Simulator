@@ -94,7 +94,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox">
+               <widget class="QSpinBox" name="neuroAmountOutput">
                 <property name="font">
                  <font>
                   <family>Garamond</family>
@@ -120,7 +120,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="comboBox">
+               <widget class="QComboBox" name="activFuncInputOutput">
                 <property name="font">
                  <font>
                   <family>Garamond</family>
@@ -217,7 +217,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="neuroAmount">
+               <widget class="QSpinBox" name="neuroAmountInput">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -254,7 +254,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="activFunc">
+               <widget class="QComboBox" name="activFuncInput">
                 <property name="font">
                  <font>
                   <family>Garamond</family>
@@ -364,7 +364,8 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">padding: 2px 1px; background-color: rgb(76, 255, 44); color: white;</string>
+                  <string notr="true">#addLayer{padding: 2px 1px; background-color: rgb(76, 255, 44); color: white;}
+#addLayer:hover{background-color: rgb(114, 255, 114); color: #000}</string>
                  </property>
                  <property name="text">
                   <string>+</string>
@@ -372,7 +373,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QPushButton" name="removeFrame">
+                <widget class="QPushButton" name="removeLayer">
                  <property name="font">
                   <font>
                    <pointsize>12</pointsize>
@@ -381,7 +382,8 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">padding: 3px 1px; background-color: rgb(255, 1, 5); color: white;</string>
+                  <string notr="true">#removeLayer{padding: 3px 1px; background-color: rgb(255, 1, 5); color: #FFF;}
+#removeLayer:hover{background-color: rgb(255, 129, 129); color: #000;}</string>
                  </property>
                  <property name="text">
                   <string>-</string>
@@ -402,15 +404,24 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <height>214</height>
                    </rect>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_4">
-                   <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_3">
-                     <property name="spacing">
-                      <number>7</number>
-                     </property>
-                    </layout>
-                   </item>
-                  </layout>
+                  <widget class="QWidget" name="">
+                   <property name="geometry">
+                    <rect>
+                     <x>11</x>
+                     <y>11</y>
+                     <width>291</width>
+                     <height>191</height>
+                    </rect>
+                   </property>
+                   <layout class="QVBoxLayout" name="hiddenLayersLayout">
+                    <property name="spacing">
+                     <number>7</number>
+                    </property>
+                    <property name="sizeConstraint">
+                     <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+                    </property>
+                   </layout>
+                  </widget>
                  </widget>
                 </widget>
                </item>

@@ -20,7 +20,15 @@ public:
 
 private slots:
 
+    void on_addLayer_clicked();
+
+    void on_removeLayer_clicked();
+
 private:
     Ui::MainWindow *ui;
+    Neuro* NN; // neuro network
+    QVector<math_activate::ActivationFunc> activFuncPerLayer;
+    QVector<size_t> neuronsAmountPerLayer;
+    QVector<QWidget*> hiddenLayersConfig;
 };
 #endif // MAINWINDOW_H

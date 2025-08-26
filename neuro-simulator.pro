@@ -12,16 +12,19 @@ SOURCES += \
     kernel/math/activationFunctions.cpp \
     main.cpp \
     mainwindow.cpp \
-    kernel/neuro.cpp
+    kernel/neuro.cpp \
+    ui/hiddenlayerconfig.cpp
 
 HEADERS += \
     kernel/math/activationFunctions.h \
     mainwindow.h \
     kernel/neuro.h \
-    kernel/threedimvector.h
+    kernel/threedimvector.h \
+    ui/hiddenlayerconfig.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    ui/hiddenlayerconfig.ui
 
 TRANSLATIONS += \
     neuro-simulator_ru_RU.ts
