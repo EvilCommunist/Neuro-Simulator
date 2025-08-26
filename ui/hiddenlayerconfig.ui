@@ -97,7 +97,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="hiddenActivFunc">
       <property name="font">
        <font>
         <family>Garamond</family>
@@ -117,7 +117,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QSpinBox" name="spinBox">
+     <widget class="QSpinBox" name="hiddenNeuronAmount">
       <property name="font">
        <font>
         <family>Garamond</family>

@@ -20,6 +20,7 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/functionMap.h \
     ui/hiddenlayerconfig.h
 
 FORMS += \

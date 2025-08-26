@@ -392,6 +392,9 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </item>
                <item row="1" column="0" colspan="3">
                 <widget class="QScrollArea" name="scrollArea">
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+                 </property>
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
@@ -404,7 +407,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <height>214</height>
                    </rect>
                   </property>
-                  <widget class="QWidget" name="">
+                  <widget class="QWidget" name="layoutWidget">
                    <property name="geometry">
                     <rect>
                      <x>11</x>

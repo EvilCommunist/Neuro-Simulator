@@ -26,6 +26,8 @@ void MainWindow::on_addLayer_clicked()
 
 void MainWindow::on_removeLayer_clicked()
 {
+    if (hiddenLayersConfig.isEmpty())
+        return;
     auto hLC = hiddenLayersConfig.takeLast();
     ui->hiddenLayersLayout->removeWidget(hLC);
     delete hLC;

@@ -2,6 +2,7 @@
 #define HIDDENLAYERCONFIG_H
 
 #include <QFrame>
+#include "../kernel/math/activationFunctions.h"
 
 namespace Ui {
 class HiddenLayerConfig;
@@ -15,6 +16,10 @@ public:
     explicit HiddenLayerConfig(QWidget *parent = nullptr);
     void setNumber(size_t num);
     ~HiddenLayerConfig();
+
+    // getters
+    size_t getNeuronAMount();
+    math_activate::ActivationFunc getActivationFunc();
 
 private:
     Ui::HiddenLayerConfig *ui;
