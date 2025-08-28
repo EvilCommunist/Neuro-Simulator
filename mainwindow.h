@@ -24,11 +24,17 @@ private slots:
 
     void on_removeLayer_clicked();
 
+    void on_addSelection_clicked();
+
+    void on_removeSelection_clicked();
+
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network
     QVector<math_activate::ActivationFunc> activFuncPerLayer;
     QVector<size_t> neuronsAmountPerLayer;
     QVector<QWidget*> hiddenLayersConfig;
+    size_t inputSize; // input amount of neurons
+    size_t outputSize; // output amount of neurons
 };
 #endif // MAINWINDOW_H

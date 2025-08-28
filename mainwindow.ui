@@ -441,6 +441,172 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
        <attribute name="title">
         <string>Обучение</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,2">
+        <item>
+         <widget class="QTabWidget" name="tabWidget_2">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="learningConfig">
+           <attribute name="title">
+            <string>Данные обучения</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4" columnstretch="8,1,1">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="removeSelection">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#removeSelection{padding: 3px 1px; background-color: rgb(255, 1, 5); color: #FFF;}
+#removeSelection:hover{background-color: rgb(255, 129, 129); color: #000;}</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="addSelection">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#addSelection{padding: 2px 1px; background-color: rgb(76, 255, 44); color: white;}
+#addSelection:hover{background-color: rgb(114, 255, 114); color: #000}</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="3">
+             <widget class="QTableWidget" name="learnDataTable"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="learninGraphic">
+           <attribute name="title">
+            <string>График обучения</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="learnConfigFrame">
+          <property name="styleSheet">
+           <string notr="true">#learnConfigFrame{border-color: rgb(124, 124, 124); border-style: solid; border-width: 1px; border-radius: 10px;}
+</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3" rowstretch="0,0">
+           <item row="0" column="0">
+            <widget class="QFrame" name="frame_4">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <layout class="QFormLayout" name="formLayout">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_4">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Алгоритм обучения:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="learnAlgorithm">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Обратного распространения</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_5">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Инициализация весов:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="weightInitAlgorithm">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Метод Ксавьера</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="learnWeightsLayout"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QFrame" name="frame_3">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="Test">
        <attribute name="title">

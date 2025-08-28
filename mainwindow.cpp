@@ -3,11 +3,19 @@
 #include <./ui/hiddenlayerconfig.h>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+    inputSize(1),
+    outputSize(1),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     NN = nullptr;
+
+    ui->learnDataTable->setColumnCount(2);
+    QTableWidgetItem *headerInput = new QTableWidgetItem("X1");
+    QTableWidgetItem *headerOutput = new QTableWidgetItem("D1");
+    ui->learnDataTable->setHorizontalHeaderItem(0, headerInput);
+    ui->learnDataTable->setHorizontalHeaderItem(1, headerOutput);
 }
 
 MainWindow::~MainWindow()
@@ -31,5 +39,19 @@ void MainWindow::on_removeLayer_clicked()
     auto hLC = hiddenLayersConfig.takeLast();
     ui->hiddenLayersLayout->removeWidget(hLC);
     delete hLC;
+}
+
+
+void MainWindow::on_addSelection_clicked()
+{
+    ui->learnDataTable->setRowCount(ui->learnDataTable->rowCount()+1);
+}
+
+
+void MainWindow::on_removeSelection_clicked()
+{
+    if(ui->learnDataTable->rowCount() > 0){
+        ui->learnDataTable->setRowCount(ui->learnDataTable->rowCount()-1);
+    }
 }
 
