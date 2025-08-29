@@ -1,6 +1,5 @@
 #include "hiddenlayerconfig.h"
 #include "ui_hiddenlayerconfig.h"
-
 #include "./functionMap.h"
 
 HiddenLayerConfig::HiddenLayerConfig(QWidget *parent)
@@ -20,7 +19,7 @@ HiddenLayerConfig::~HiddenLayerConfig()
     delete ui;
 }
 
-size_t HiddenLayerConfig::getNeuronAMount(){
+size_t HiddenLayerConfig::getNeuronAmount(){
     return ui->hiddenNeuronAmount->text().toUInt();
 }
 

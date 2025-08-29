@@ -22,6 +22,7 @@ HEADERS += \
     kernel/neuro.h \
     kernel/threedimvector.h \
     ui/backpropocoeffs.h \
+    ui/enums.h \
     ui/functionMap.h \
     ui/hiddenlayerconfig.h
 

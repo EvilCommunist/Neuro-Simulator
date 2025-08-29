@@ -120,7 +120,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="activFuncInputOutput">
+               <widget class="QComboBox" name="activFuncOutput">
                 <property name="font">
                  <font>
                   <family>Garamond</family>

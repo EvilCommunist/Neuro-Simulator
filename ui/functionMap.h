@@ -4,7 +4,7 @@
 #include <QMap>
 #include "../kernel/math/activationFunctions.h"
 
-QMap<QString, math_activate::ActivationFunc> uiKernelMap = {
+inline QMap<QString, math_activate::ActivationFunc> uiKernelMap = {
     {"Сигмоида", math_activate::sigmoid},
     {"Линейная", math_activate::linear}
 };

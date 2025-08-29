@@ -18,7 +18,7 @@ public:
     ~HiddenLayerConfig();
 
     // getters
-    size_t getNeuronAMount();
+    size_t getNeuronAmount();
     math_activate::ActivationFunc getActivationFunc();
 
 private:

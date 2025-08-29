@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <./ui/hiddenlayerconfig.h>
 #include <./ui/backpropocoeffs.h>
+#include <./ui/enums.h>
+#include "./ui/functionMap.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -90,9 +93,62 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
     if(currentLearnFuncCoeffs){
         ui->learnWeightsLayout->removeWidget(currentLearnFuncCoeffs);
         delete currentLearnFuncCoeffs;
+        currentLearnFuncCoeffs = nullptr;
     }
-    backPropoCoeffs* coeffWidget = new backPropoCoeffs;
-    currentLearnFuncCoeffs = coeffWidget;
-    ui->learnWeightsLayout->insertWidget(0, coeffWidget);
+    switch(index){
+    case NOTHING: break;
+    case BACK_PROPOGATION:{
+        backPropoCoeffs* coeffWidget = new backPropoCoeffs;
+        currentLearnFuncCoeffs = coeffWidget;
+        ui->learnWeightsLayout->insertWidget(0, coeffWidget);
+        break;
+    }
+    }
+}
+
+
+void MainWindow::on_startLearning_clicked()
+{
+    QVector<size_t> neuronsPerLayer{};
+    QVector<math_activate::ActivationFunc> functionPerLayer{};
+    neuronsPerLayer.append(inputSize);
+    functionPerLayer.append(uiKernelMap[ui->activFuncInput->currentText()]);
+    for(auto hidden : hiddenLayersConfig){
+        auto hiddenLayer = dynamic_cast<HiddenLayerConfig*>(hidden);
+        neuronsPerLayer.append(hiddenLayer->getNeuronAmount());
+        functionPerLayer.append(hiddenLayer->getActivationFunc());
+    }
+    neuronsPerLayer.append(outputSize);
+    functionPerLayer.append(uiKernelMap[ui->activFuncOutput->currentText()]);
+
+    ThreeDimVector<double> learnData(inputSize, ui->learnDataTable->rowCount(), 1, 0),
+        answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
+
+    for(size_t i = 0; i < inputSize; i++)
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
+            learnData.setValue(i, j, 0, ui->learnDataTable->itemAt(i, j)->text().toDouble());
+
+    for(size_t i = inputSize; i < (inputSize+outputSize); i++)
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
+            answers.setValue(i-inputSize, j, 0, ui->learnDataTable->itemAt(i, j)->text().toDouble());
+
+
+    NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
+    for(size_t e = 0; e < ui->learnIterations->value(); e++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+            QVector<double> data;
+            for(size_t i = 0; i < inputSize; i ++){
+                data.append(learnData.getValue(i, j, 0));
+            }
+            QVector<double> ans;
+            for(size_t i = 0; i < outputSize; i ++){
+                ans.append(answers.getValue(i, j, 0));
+            }
+            auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs); // test now, will change to switch-case or abstract func later
+            NN->learn_backPropogation(data,ans,curr->getSpeedCoeff());
+        }
+    }
+    NN->forwardPropogation({2, 3});
+    qDebug() << NN->getRes();
 }
 

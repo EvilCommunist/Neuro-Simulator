@@ -28,11 +28,13 @@ private slots:
 
     void on_learnAlgorithm_currentIndexChanged(int index);
 
+    void on_startLearning_clicked();
+
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network
     QVector<math_activate::ActivationFunc> activFuncPerLayer;
-    QVector<size_t> neuronsAmountPerLayer;
+    //QVector<size_t> neuronsAmountPerLayer;
     QVector<QWidget*> hiddenLayersConfig;
     size_t inputSize; // input amount of neurons
     size_t outputSize; // output amount of neurons
