@@ -70,7 +70,7 @@ void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<dou
     forwardPropogation(data);
     for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
         auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
-        neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[0], currentNeuron)));
+        neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
     }
     for(uint16_t l = layers-2; l > 0; l--){
         for(size_t n = 0; n < neuronAmountPerLayer[l]-1; n++){

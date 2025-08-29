@@ -124,21 +124,27 @@ void MainWindow::on_startLearning_clicked()
     ThreeDimVector<double> learnData(inputSize, ui->learnDataTable->rowCount(), 1, 0),
         answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
 
+
     for(size_t i = 0; i < inputSize; i++)
         for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
-            learnData.setValue(i, j, 0, ui->learnDataTable->itemAt(i, j)->text().toDouble());
+            learnData.setValue(i, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
 
     for(size_t i = inputSize; i < (inputSize+outputSize); i++)
         for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
-            answers.setValue(i-inputSize, j, 0, ui->learnDataTable->itemAt(i, j)->text().toDouble());
+            answers.setValue(i-inputSize, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
 
 
+    if (NN){
+        delete NN;
+        NN = nullptr;
+    }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
     for(size_t e = 0; e < ui->learnIterations->value(); e++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount()-inputSize; j+=inputSize){
+                continue;
             QVector<double> data;
             for(size_t i = 0; i < inputSize; i ++){
-                data.append(learnData.getValue(i, j, 0));
+                data.append(learnData.getValue(i, j, 0)); // change to QMatrix and add error processor
             }
             QVector<double> ans;
             for(size_t i = 0; i < outputSize; i ++){
@@ -148,7 +154,5 @@ void MainWindow::on_startLearning_clicked()
             NN->learn_backPropogation(data,ans,curr->getSpeedCoeff());
         }
     }
-    NN->forwardPropogation({2, 3});
-    qDebug() << NN->getRes();
 }
 
