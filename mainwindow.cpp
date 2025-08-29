@@ -106,6 +106,15 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
     }
 }
 
+/*______________________________________________*/
+double normalize(double value, double max, double min){ // later make library
+    return (value - min) / (max - min);
+}
+
+double denormalize(double value, double max, double min){ // later make library
+    return value*(max-min)+min;
+}
+/*______________________________________________*/
 
 void MainWindow::on_startLearning_clicked()
 {
@@ -125,13 +134,43 @@ void MainWindow::on_startLearning_clicked()
         answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
 
 
-    for(size_t i = 0; i < inputSize; i++)
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
+    double maxInput = INT16_MIN, minInput = INT16_MAX;
+    for(size_t i = 0; i < inputSize; i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
             learnData.setValue(i, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
+            if(maxInput < learnData.getValue(i, j, 0)){
+                maxInput = learnData.getValue(i, j, 0);
+            }
+            if(minInput > learnData.getValue(i, j, 0)){
+                minInput = learnData.getValue(i, j, 0);
+            }
+        }
+    }
 
-    for(size_t i = inputSize; i < (inputSize+outputSize); i++)
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++)
+    double maxOutput = INT16_MIN, minOutput = INT16_MAX;
+    for(size_t i = inputSize; i < (inputSize+outputSize); i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
             answers.setValue(i-inputSize, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
+            if(maxOutput < answers.getValue(i-inputSize, j, 0)){
+                maxOutput = answers.getValue(i-inputSize, j, 0);
+            }
+            if(minOutput > answers.getValue(i-inputSize, j, 0)){
+                minOutput = answers.getValue(i-inputSize, j, 0);
+            }
+        }
+    }
+
+    for(size_t i = 0; i < inputSize; i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+            learnData.setValue(i, j, 0, normalize(learnData.getValue(i, j, 0), maxInput, minInput));
+        }
+    }
+
+    for(size_t i = 0; i < outputSize; i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+            answers.setValue(i, j, 0, normalize(answers.getValue(i, j, 0), maxOutput, minOutput));
+        }
+    }
 
 
     if (NN){
@@ -141,7 +180,6 @@ void MainWindow::on_startLearning_clicked()
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
     for(size_t e = 0; e < ui->learnIterations->value(); e++){
         for(size_t j = 0; j < ui->learnDataTable->rowCount()-inputSize; j+=inputSize){
-                continue;
             QVector<double> data;
             for(size_t i = 0; i < inputSize; i ++){
                 data.append(learnData.getValue(i, j, 0)); // change to QMatrix and add error processor
@@ -154,5 +192,8 @@ void MainWindow::on_startLearning_clicked()
             NN->learn_backPropogation(data,ans,curr->getSpeedCoeff());
         }
     }
+
+    NN->forwardPropogation({2, 3});
+    qDebug() << denormalize(NN->getRes()[0], maxOutput, minOutput);
 }
 
