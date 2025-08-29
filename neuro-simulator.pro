@@ -13,6 +13,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/backpropocoeffs.cpp \
     ui/hiddenlayerconfig.cpp
 
 HEADERS += \
@@ -20,11 +21,13 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/backpropocoeffs.h \
     ui/functionMap.h \
     ui/hiddenlayerconfig.h
 
 FORMS += \
     mainwindow.ui \
+    ui/backpropocoeffs.ui \
     ui/hiddenlayerconfig.ui
 
 TRANSLATIONS += \

@@ -26,6 +26,8 @@ private slots:
     void on_neuroAmountInput_valueChanged(int arg1);
     void on_neuroAmountOutput_valueChanged(int arg1);
 
+    void on_learnAlgorithm_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network
@@ -34,6 +36,10 @@ private:
     QVector<QWidget*> hiddenLayersConfig;
     size_t inputSize; // input amount of neurons
     size_t outputSize; // output amount of neurons
+
+    // visual helpers
+    QWidget* currentLearnFuncCoeffs;
+    QWidget* currentInitFuncCoeffs;
 
     void redrawLearnTable();
 };

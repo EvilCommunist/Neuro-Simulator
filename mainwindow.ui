@@ -46,7 +46,7 @@
 border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Creation">
        <property name="styleSheet">
@@ -552,6 +552,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   </property>
                   <item>
                    <property name="text">
+                    <string>Not set (test)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
                     <string>Обратного распространения</string>
                    </property>
                   </item>
@@ -585,10 +590,45 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   </item>
                  </widget>
                 </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_6">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Количество итераций:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QSpinBox" name="learnIterations">
+                  <property name="font">
+                   <font>
+                    <family>Garamond</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>1000</number>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="learnWeightsLayout"/>
+               <layout class="QHBoxLayout" name="learnWeightsLayout"/>
               </item>
              </layout>
             </widget>
@@ -601,6 +641,25 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
              </property>
+             <widget class="QPushButton" name="startLearning">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>70</y>
+                <width>281</width>
+                <height>121</height>
+               </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Garamond</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>ОБУЧИТЬ (тест)</string>
+              </property>
+             </widget>
             </widget>
            </item>
           </layout>

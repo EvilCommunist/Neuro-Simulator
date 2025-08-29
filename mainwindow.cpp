@@ -1,11 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <./ui/hiddenlayerconfig.h>
+#include <./ui/backpropocoeffs.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     inputSize(1),
     outputSize(1),
+    currentInitFuncCoeffs(nullptr),
+    currentLearnFuncCoeffs(nullptr),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -79,5 +82,17 @@ void MainWindow::on_neuroAmountOutput_valueChanged(int arg1)
     outputSize = arg1;
     ui->learnDataTable->setColumnCount(inputSize+outputSize);
     redrawLearnTable();
+}
+
+
+void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
+{
+    if(currentLearnFuncCoeffs){
+        ui->learnWeightsLayout->removeWidget(currentLearnFuncCoeffs);
+        delete currentLearnFuncCoeffs;
+    }
+    backPropoCoeffs* coeffWidget = new backPropoCoeffs;
+    currentLearnFuncCoeffs = coeffWidget;
+    ui->learnWeightsLayout->insertWidget(0, coeffWidget);
 }
 
