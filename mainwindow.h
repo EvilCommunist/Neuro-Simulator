@@ -44,5 +44,6 @@ private:
     QWidget* currentInitFuncCoeffs;
 
     void redrawLearnTable();
+    void redrawCheckTable();
 };
 #endif // MAINWINDOW_H

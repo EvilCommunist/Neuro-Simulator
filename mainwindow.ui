@@ -46,7 +46,7 @@
 border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Creation">
        <property name="styleSheet">
@@ -671,6 +671,18 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
        <attribute name="title">
         <string>Проверка</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="checkLearned">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="Forecast">
        <property name="styleSheet">

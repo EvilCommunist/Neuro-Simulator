@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     NN = nullptr;
 
-    ui->learnDataTable->setColumnCount(inputSize+outputSize);
     redrawLearnTable();
+    redrawCheckTable();
 }
 
 MainWindow::~MainWindow()
@@ -60,6 +60,7 @@ void MainWindow::on_removeSelection_clicked()
 
 
 void MainWindow::redrawLearnTable(){
+    ui->learnDataTable->setColumnCount(inputSize+outputSize);
     for(size_t i = 0; i < inputSize; i++){
         QTableWidgetItem *headerInput = new QTableWidgetItem("X"+QString::number(i+1));
         ui->learnDataTable->setHorizontalHeaderItem(i, headerInput);
@@ -71,20 +72,38 @@ void MainWindow::redrawLearnTable(){
     }
 }
 
+void MainWindow::redrawCheckTable(){
+    ui->checkLearned->setColumnCount(inputSize+outputSize+outputSize);
+    for(size_t i = 0; i < inputSize; i++){
+        QTableWidgetItem *headerInput = new QTableWidgetItem("X"+QString::number(i+1));
+        ui->checkLearned->setHorizontalHeaderItem(i, headerInput);
+    }
+
+    for(size_t i = inputSize; i < outputSize + inputSize; i++){
+        QTableWidgetItem *headerOutput = new QTableWidgetItem("D"+QString::number(i+1-inputSize));
+        ui->checkLearned->setHorizontalHeaderItem(i, headerOutput);
+    }
+
+    for(size_t i = inputSize + outputSize; i < outputSize + inputSize + outputSize; i++){
+        QTableWidgetItem *headerOutput = new QTableWidgetItem("E"+QString::number(i+1-inputSize - outputSize));
+        ui->checkLearned->setHorizontalHeaderItem(i, headerOutput);
+    }
+}
+
 
 void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 {
     inputSize = arg1;
-    ui->learnDataTable->setColumnCount(inputSize+outputSize);
     redrawLearnTable();
+    redrawCheckTable();
 }
 
 
 void MainWindow::on_neuroAmountOutput_valueChanged(int arg1)
 {
     outputSize = arg1;
-    ui->learnDataTable->setColumnCount(inputSize+outputSize);
     redrawLearnTable();
+    redrawCheckTable();
 }
 
 
