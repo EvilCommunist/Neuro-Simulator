@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <./ui/hiddenlayerconfig.h>
-#include <./ui/backpropocoeffs.h>
-#include <./ui/enums.h>
+#include "./ui/hiddenlayerconfig.h"
+#include "./ui/backpropocoeffs.h"
+#include "./ui/enums.h"
 #include "./ui/functionMap.h"
 
 
@@ -212,7 +212,65 @@ void MainWindow::on_startLearning_clicked()
         }
     }
 
-    NN->forwardPropogation({2, 3});
-    qDebug() << denormalize(NN->getRes()[0], maxOutput, minOutput);
+    fillCheckTable();
+}
+
+void MainWindow::fillCheckTable(){
+    ui->checkLearned->setRowCount(ui->learnDataTable->rowCount());
+
+    ThreeDimVector<double> learnData(inputSize, ui->learnDataTable->rowCount(), 1, 0),
+                                  answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
+
+    double maxInput = INT16_MIN, minInput = INT16_MAX;
+    for(size_t i = 0; i < inputSize; i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+            QTableWidgetItem *dataDuplicate = new QTableWidgetItem(ui->learnDataTable->item(j, i)->text());
+            ui->checkLearned->setItem(j, i, dataDuplicate);
+            learnData.setValue(i, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
+            if(maxInput < learnData.getValue(i, j, 0)){ // maybe have to take that values in one place and after just give them as func arg...
+                maxInput = learnData.getValue(i, j, 0);
+            }
+            if(minInput > learnData.getValue(i, j, 0)){
+                minInput = learnData.getValue(i, j, 0);
+            }
+        }
+    }
+
+    double maxOutput = INT16_MIN, minOutput = INT16_MAX;
+    for(size_t i = inputSize; i < (inputSize+outputSize); i++){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+            answers.setValue(i-inputSize, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
+            if(maxOutput < answers.getValue(i-inputSize, j, 0)){
+                maxOutput = answers.getValue(i-inputSize, j, 0);
+            }
+            if(minOutput > answers.getValue(i-inputSize, j, 0)){
+                minOutput = answers.getValue(i-inputSize, j, 0);
+            }
+        }
+    }
+
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        QVector<double> data{};
+        for(size_t i = 0; i < inputSize; i++){
+            data.append(normalize(learnData.getValue(i, j, 0), maxInput, minInput));
+        }
+        qDebug() << data;
+        NN->forwardPropogation(data);
+        auto ans = NN->getRes();
+        qDebug() << ans;
+        for(size_t i = inputSize; i < (inputSize+outputSize); i++){
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], maxOutput, minOutput)));
+            ui->checkLearned->setItem(j, i, neuroAnswer);
+        }
+    }
+
+
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        for(size_t i = inputSize  + outputSize; i < (inputSize+outputSize+outputSize); i++){
+            double diff = abs(ui->learnDataTable->item(j, i-outputSize)->text().toDouble() - ui->checkLearned->item(j, i-outputSize)->text().toDouble());
+            QTableWidgetItem *neuroDifference = new QTableWidgetItem(QString::number(diff));
+            ui->checkLearned->setItem(j, i, neuroDifference);
+        }
+    }
 }
 

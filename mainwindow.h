@@ -45,5 +45,6 @@ private:
 
     void redrawLearnTable();
     void redrawCheckTable();
+    void fillCheckTable();
 };
 #endif // MAINWINDOW_H
