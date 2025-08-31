@@ -221,8 +221,8 @@ void MainWindow::fillCheckTable(){
             QTableWidgetItem *dataDuplicate = new QTableWidgetItem(ui->learnDataTable->item(j, i)->text());
             ui->checkLearned->setItem(j, i, dataDuplicate);
             learnData.setValue(i, j, ui->learnDataTable->item(j, i)->text().toDouble());
-            minMaxInput.append(normalization::findMinMax(learnData.getLine(j)));
         }
+        minMaxInput.append(normalization::findMinMax(learnData.getLine(j)));
     }
 
     QVector<QPair<double, double>> minMaxOutput{};
