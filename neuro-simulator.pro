@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     kernel/math/activationFunctions.cpp \
+    kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
@@ -18,6 +19,8 @@ SOURCES += \
 
 HEADERS += \
     kernel/math/activationFunctions.h \
+    kernel/math/normalization.h \
+    kernel/twodimvector.h \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
