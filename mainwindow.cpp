@@ -8,6 +8,7 @@
 #include "./kernel/twodimvector.h"
 
 #include <QPair>
+#include <algorithm>  // test
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -268,34 +269,31 @@ void MainWindow::on_deleteTestSelection_clicked()
 
 void MainWindow::on_calculateTests_clicked()
 {
+    TwoDimVector<double> testData(inputSize, ui->prognosisTable->rowCount(), 0);
+    QVector<QPair<double, double>> minMaxInput{};
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
-        QVector<double> data{};
-        double min = ui->prognosisTable->item(j, 0)->text().toDouble(), max = ui->prognosisTable->item(j, 0)->text().toDouble();
         for(size_t i = 0; i < inputSize; i++){
-            data.append(ui->prognosisTable->item(j, i)->text().toDouble());
-            if(max < ui->prognosisTable->item(j, i)->text().toDouble()){
-                max = ui->prognosisTable->item(j, i)->text().toDouble();
-            }
-            if(min > ui->prognosisTable->item(j, i)->text().toDouble()){
-                min = ui->prognosisTable->item(j, i)->text().toDouble();
-            }
+            testData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
-        for(size_t i = 0; i < data.size(); i++){
-            data[i] = normalization::normalize(data[i], max, min);
+        minMaxInput.append(normalization::findMinMax(testData.getLine(j)));
+    }
+    // How to normalize answer???
+    QPair<double, double> minMaxOutput{};
+    QVector<double> answers;
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        for(size_t i = inputSize; i < (inputSize+outputSize); i++){
+            answers.append(ui->learnDataTable->item(j, i)->text().toDouble());
         }
+    }
+    minMaxOutput = normalization::findMinMax(answers);
+
+    for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
+        auto data = testData.getLine(j);
+        normalization::normalizeSelection(data, minMaxInput[j].second, minMaxInput[j].first);
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
-        double minAns = ans[0], maxAns = ans[0];
-        for(size_t i = 0; i < outputSize; i++){
-            if(maxAns < ans[i]){
-                maxAns = ans[i];
-            }
-            if(minAns > ans[i]){
-                minAns = ans[i];
-            }
-        }
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(normalization::denormalize(ans[i-(inputSize)], max, min))); // вопрос нормализации???
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(normalization::denormalize(ans[i-(inputSize)], minMaxOutput.second, minMaxOutput.first))); // вопрос нормализации???
             ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
