@@ -5,6 +5,8 @@
 #include "./ui/enums.h"
 #include "./ui/functionMap.h"
 
+#include <QPair>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -143,7 +145,10 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
 
 /*______________________________________________*/
 double normalize(double value, double max, double min){ // later make library
-    return (value - min) / (max - min);
+    if (max != min)
+        return (value - min) / (max - min);
+    else
+        return min;
 }
 
 double denormalize(double value, double max, double min){ // later make library
@@ -169,41 +174,47 @@ void MainWindow::on_startLearning_clicked()
         answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
 
 
-    double maxInput = INT16_MIN, minInput = INT16_MAX;
-    for(size_t i = 0; i < inputSize; i++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+    QVector<QPair<double, double>> minMaxInput{};
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        auto max = learnData.getValue(0, j, 0);
+        auto min = learnData.getValue(0, j, 0);
+        for(size_t i = 0; i < inputSize; i++){
             learnData.setValue(i, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
-            if(maxInput < learnData.getValue(i, j, 0)){
-                maxInput = learnData.getValue(i, j, 0);
+            if(max < learnData.getValue(i, j, 0)){
+                max = learnData.getValue(i, j, 0);
             }
-            if(minInput > learnData.getValue(i, j, 0)){
-                minInput = learnData.getValue(i, j, 0);
+            if(min > learnData.getValue(i, j, 0)){
+                min = learnData.getValue(i, j, 0);
             }
         }
+        minMaxInput.append({min, max});
     }
 
-    double maxOutput = INT16_MIN, minOutput = INT16_MAX;
-    for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+    QVector<QPair<double, double>> minMaxOutput{};
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        auto max = answers.getValue(0, j, 0);
+        auto min = answers.getValue(0, j, 0);
+        for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             answers.setValue(i-inputSize, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
-            if(maxOutput < answers.getValue(i-inputSize, j, 0)){
-                maxOutput = answers.getValue(i-inputSize, j, 0);
+            if(max < answers.getValue(i-inputSize, j, 0)){
+                max = answers.getValue(i-inputSize, j, 0);
             }
-            if(minOutput > answers.getValue(i-inputSize, j, 0)){
-                minOutput = answers.getValue(i-inputSize, j, 0);
+            if(min > answers.getValue(i-inputSize, j, 0)){
+                min = answers.getValue(i-inputSize, j, 0);
             }
         }
+        minMaxOutput.append({min, max});
     }
 
     for(size_t i = 0; i < inputSize; i++){
         for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
-            learnData.setValue(i, j, 0, normalize(learnData.getValue(i, j, 0), maxInput, minInput));
+            learnData.setValue(i, j, 0, normalize(learnData.getValue(i, j, 0), minMaxInput[j].second, minMaxInput[j].first));
         }
     }
 
     for(size_t i = 0; i < outputSize; i++){
         for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
-            answers.setValue(i, j, 0, normalize(answers.getValue(i, j, 0), maxOutput, minOutput));
+            answers.setValue(i, j, 0, normalize(answers.getValue(i, j, 0), minMaxOutput[j].second, minMaxOutput[j].first));
         }
     }
 
@@ -237,43 +248,50 @@ void MainWindow::fillCheckTable(){
     ThreeDimVector<double> learnData(inputSize, ui->learnDataTable->rowCount(), 1, 0),
                                   answers(outputSize, ui->learnDataTable->rowCount(), 1, 0);
 
-    double maxInput = INT16_MIN, minInput = INT16_MAX;
-    for(size_t i = 0; i < inputSize; i++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+
+    QVector<QPair<double, double>> minMaxInput{};
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        auto max = learnData.getValue(0, j, 0);
+        auto min = learnData.getValue(0, j, 0);
+        for(size_t i = 0; i < inputSize; i++){
             QTableWidgetItem *dataDuplicate = new QTableWidgetItem(ui->learnDataTable->item(j, i)->text());
             ui->checkLearned->setItem(j, i, dataDuplicate);
             learnData.setValue(i, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
-            if(maxInput < learnData.getValue(i, j, 0)){ // maybe have to take that values in one place and after just give them as func arg...
-                maxInput = learnData.getValue(i, j, 0);
+            if(max < learnData.getValue(i, j, 0)){
+                max = learnData.getValue(i, j, 0);
             }
-            if(minInput > learnData.getValue(i, j, 0)){
-                minInput = learnData.getValue(i, j, 0);
+            if(min > learnData.getValue(i, j, 0)){
+                min = learnData.getValue(i, j, 0);
             }
         }
+        minMaxInput.append({min, max});
     }
 
-    double maxOutput = INT16_MIN, minOutput = INT16_MAX;
-    for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+    QVector<QPair<double, double>> minMaxOutput{};
+    for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
+        auto max = answers.getValue(0, j, 0);
+        auto min = answers.getValue(0, j, 0);
+        for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             answers.setValue(i-inputSize, j, 0, ui->learnDataTable->item(j, i)->text().toDouble());
-            if(maxOutput < answers.getValue(i-inputSize, j, 0)){
-                maxOutput = answers.getValue(i-inputSize, j, 0);
+            if(max < answers.getValue(i-inputSize, j, 0)){
+                max = answers.getValue(i-inputSize, j, 0);
             }
-            if(minOutput > answers.getValue(i-inputSize, j, 0)){
-                minOutput = answers.getValue(i-inputSize, j, 0);
+            if(min > answers.getValue(i-inputSize, j, 0)){
+                min = answers.getValue(i-inputSize, j, 0);
             }
         }
+        minMaxOutput.append({min, max});
     }
 
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         QVector<double> data{};
         for(size_t i = 0; i < inputSize; i++){
-            data.append(normalize(learnData.getValue(i, j, 0), maxInput, minInput));
+            data.append(normalize(learnData.getValue(i, j, 0), minMaxInput[j].second, minMaxInput[j].first));
         }
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], maxOutput, minOutput)));
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], minMaxOutput[j].second, minMaxOutput[j].first)));
             ui->checkLearned->setItem(j, i, neuroAnswer);
         }
     }
@@ -306,13 +324,32 @@ void MainWindow::on_calculateTests_clicked()
 {
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
         QVector<double> data{};
+        double min = ui->prognosisTable->item(j, 0)->text().toDouble(), max = ui->prognosisTable->item(j, 0)->text().toDouble();
         for(size_t i = 0; i < inputSize; i++){
-            data.append(normalize(ui->prognosisTable->item(j, i)->text().toDouble(), 6, 1)); // вопрос нормализации???
+            data.append(ui->prognosisTable->item(j, i)->text().toDouble());
+            if(max < ui->prognosisTable->item(j, i)->text().toDouble()){
+                max = ui->prognosisTable->item(j, i)->text().toDouble();
+            }
+            if(min > ui->prognosisTable->item(j, i)->text().toDouble()){
+                min = ui->prognosisTable->item(j, i)->text().toDouble();
+            }
+        }
+        for(size_t i = 0; i < data.size(); i++){
+            data[i] = normalize(data[i], max, min);
         }
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
+        double minAns = ans[0], maxAns = ans[0];
+        for(size_t i = 0; i < outputSize; i++){
+            if(maxAns < ans[i]){
+                maxAns = ans[i];
+            }
+            if(minAns > ans[i]){
+                minAns = ans[i];
+            }
+        }
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], 2, 10))); // вопрос нормализации???
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], max, min))); // вопрос нормализации???
             ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
