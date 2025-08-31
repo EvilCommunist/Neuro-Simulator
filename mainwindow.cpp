@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     redrawLearnTable();
     redrawCheckTable();
+    redrawForecastTable();
 }
 
 MainWindow::~MainWindow()
@@ -90,12 +91,26 @@ void MainWindow::redrawCheckTable(){
     }
 }
 
+void MainWindow::redrawForecastTable(){
+    ui->prognosisTable->setColumnCount(inputSize+outputSize);
+    for(size_t i = 0; i < inputSize; i++){
+        QTableWidgetItem *headerInput = new QTableWidgetItem("X"+QString::number(i+1));
+        ui->prognosisTable->setHorizontalHeaderItem(i, headerInput);
+    }
+
+    for(size_t i = inputSize; i < outputSize+inputSize; i++){
+        QTableWidgetItem *headerOutput = new QTableWidgetItem("D"+QString::number(i+1-inputSize));
+        ui->prognosisTable->setHorizontalHeaderItem(i, headerOutput);
+    }
+}
+
 
 void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 {
     inputSize = arg1;
     redrawLearnTable();
     redrawCheckTable();
+    redrawForecastTable();
 }
 
 
@@ -104,6 +119,7 @@ void MainWindow::on_neuroAmountOutput_valueChanged(int arg1)
     outputSize = arg1;
     redrawLearnTable();
     redrawCheckTable();
+    redrawForecastTable();
 }
 
 
@@ -198,7 +214,7 @@ void MainWindow::on_startLearning_clicked()
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
     for(size_t e = 0; e < ui->learnIterations->value(); e++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount()-inputSize; j+=inputSize){
+        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
             QVector<double> data;
             for(size_t i = 0; i < inputSize; i ++){
                 data.append(learnData.getValue(i, j, 0)); // change to QMatrix and add error processor
@@ -254,10 +270,8 @@ void MainWindow::fillCheckTable(){
         for(size_t i = 0; i < inputSize; i++){
             data.append(normalize(learnData.getValue(i, j, 0), maxInput, minInput));
         }
-        qDebug() << data;
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
-        qDebug() << ans;
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], maxOutput, minOutput)));
             ui->checkLearned->setItem(j, i, neuroAnswer);
@@ -270,6 +284,36 @@ void MainWindow::fillCheckTable(){
             double diff = abs(ui->learnDataTable->item(j, i-outputSize)->text().toDouble() - ui->checkLearned->item(j, i-outputSize)->text().toDouble());
             QTableWidgetItem *neuroDifference = new QTableWidgetItem(QString::number(diff));
             ui->checkLearned->setItem(j, i, neuroDifference);
+        }
+    }
+}
+
+
+void MainWindow::on_addTestSelection_clicked()
+{
+    ui->prognosisTable->setRowCount(ui->prognosisTable->rowCount()+1);
+}
+
+
+void MainWindow::on_deleteTestSelection_clicked()
+{
+    if(ui->prognosisTable->rowCount() > 0)
+        ui->prognosisTable->setRowCount(ui->prognosisTable->rowCount()-1);
+}
+
+
+void MainWindow::on_calculateTests_clicked()
+{
+    for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
+        QVector<double> data{};
+        for(size_t i = 0; i < inputSize; i++){
+            data.append(normalize(ui->prognosisTable->item(j, i)->text().toDouble(), 6, 1)); // вопрос нормализации???
+        }
+        NN->forwardPropogation(data);
+        auto ans = NN->getRes();
+        for(size_t i = inputSize; i < (inputSize+outputSize); i++){
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(denormalize(ans[i-(inputSize)], 2, 10))); // вопрос нормализации???
+            ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
 }

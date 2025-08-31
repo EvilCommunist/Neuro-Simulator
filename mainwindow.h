@@ -25,10 +25,12 @@ private slots:
     void on_removeSelection_clicked();
     void on_neuroAmountInput_valueChanged(int arg1);
     void on_neuroAmountOutput_valueChanged(int arg1);
-
     void on_learnAlgorithm_currentIndexChanged(int index);
+    void on_addTestSelection_clicked();
+    void on_deleteTestSelection_clicked();
+    void on_calculateTests_clicked();
 
-    void on_startLearning_clicked();
+    void on_startLearning_clicked(); // test button
 
 private:
     Ui::MainWindow *ui;
@@ -45,6 +47,7 @@ private:
 
     void redrawLearnTable();
     void redrawCheckTable();
+    void redrawForecastTable();
     void fillCheckTable();
 };
 #endif // MAINWINDOW_H

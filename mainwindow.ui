@@ -46,7 +46,7 @@
 border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="Creation">
        <property name="styleSheet">
@@ -691,6 +691,67 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
        <attribute name="title">
         <string>Прогноз</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_7" rowstretch="0,0,0" columnstretch="14,1,1,1">
+        <item row="1" column="2">
+         <widget class="QPushButton" name="calculateTests">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#calculateTests{padding: 2px 1px; background-color: rgb(7, 243, 255); color: white;}#calculateTests:hover{background-color: rgb(137, 255, 237); color: #000}</string>
+          </property>
+          <property name="text">
+           <string>=</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="addTestSelection">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#addTestSelection{padding: 2px 1px; background-color: rgb(76, 255, 44); color: white;}
+#addTestSelection:hover{background-color: rgb(114, 255, 114); color: #000}</string>
+          </property>
+          <property name="text">
+           <string>+</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="deleteTestSelection">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#deleteTestSelection{padding: 2px 1px; background-color: rgb(255, 0, 4); color: white;}#deleteTestSelection:hover{background-color: rgb(255, 170, 171); color: #000}</string>
+          </property>
+          <property name="text">
+           <string>-</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="4">
+         <widget class="QTableWidget" name="prognosisTable">
+          <property name="font">
+           <font>
+            <family>Garamond</family>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
