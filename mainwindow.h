@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "kernel/neuro.h"
+#include <QPair>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -40,6 +41,8 @@ private:
     QVector<QWidget*> hiddenLayersConfig;
     size_t inputSize; // input amount of neurons
     size_t outputSize; // output amount of neurons
+    QVector<QPair<double, double>> minMaxInput;
+    QVector<QPair<double, double>> minMaxOutput;
 
     // visual helpers
     QWidget* currentLearnFuncCoeffs;

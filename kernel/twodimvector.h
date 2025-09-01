@@ -42,9 +42,23 @@ public:
         return line;
     }
 
+    QVector<T> getRow(size_t index){
+        QVector<T> line{};
+        for(size_t j = 0; j < height; j++){
+            line.append(data[recalculateIndex(index, j)]);
+        }
+        return line;
+    }
+
     void setLine(const QVector<T>& data, size_t index){
         for(size_t i = 0; i < width; i++){
             this->data[recalculateIndex(i, index)] = data[i];
+        }
+    }
+
+    void setRow(const QVector<T>& data, size_t index){
+        for(size_t j = 0; j < height; j++){
+            this->data[recalculateIndex(index, j)] = data[j];
         }
     }
 };
