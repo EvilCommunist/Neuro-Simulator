@@ -7,10 +7,12 @@
 #include "./kernel/math/normalization.h"
 #include "./kernel/twodimvector.h"
 #include "./kernel/files/csvprocessor.h"
+#include "./ui/adaptlearndatadialog.h"
 
 #include <QPair>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QMessageBox>
 #include <algorithm>  // test
 
 
@@ -316,11 +318,38 @@ void MainWindow::on_loadLearnData_triggered()
     CSVProcessor csvProc;
     QString data = csvProc.readCSVFile(filename);
 
-    // if(csvProc.getHeader() != "\0")
-    //     pass;
+    if(csvProc.getHeader() != "\0"){
+        AdaptLearnDataDialog* adapt = new AdaptLearnDataDialog(csvProc.getHeader(), this);
+        adapt->exec();
+        if(adapt->getChangeConfig()){
+            // processing header
+            QString header = csvProc.getHeader();
+            auto headerItems = header.split(";");
+            size_t inputCount = 0, outputCount = 0;
+            for(auto item : headerItems){
+                if(item[0]=='X')
+                    inputCount++;
+                if(item[0]=='D')
+                    outputCount++;
+            }
+            ui->neuroAmountInput->setValue(inputCount);
+            ui->neuroAmountOutput->setValue(outputCount);
+            on_neuroAmountInput_valueChanged(inputCount);
+            on_neuroAmountOutput_valueChanged(outputCount);
+        }else{
+            if(ui->neuroAmountInput->value()+ui->neuroAmountOutput->value() != (csvProc.getHeader().size()+1)/2){ //string: 9;9;9
+                QMessageBox* message = new QMessageBox(this);
+                message->setText("Проищошла ошибка!\nДанные не подходят для вашей нейросети.");
+                message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+                message->exec();
+                delete message;
+                return;
+            }
+        }
+        delete adapt;
+    }
 
     auto dataParsed = csvProc.parseFromCSV(data);
-    ui->learnDataTable->setColumnCount(dataParsed.getWidth());
     ui->learnDataTable->setRowCount(dataParsed.getHeight());
     for(size_t i = 0; i < dataParsed.getHeight(); i++){
         for(size_t j = 0; j < dataParsed.getWidth(); j++){

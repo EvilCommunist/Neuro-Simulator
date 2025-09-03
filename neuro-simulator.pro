@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/hiddenlayerconfig.cpp
 
@@ -26,6 +27,7 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
     ui/enums.h \
     ui/functionMap.h \
@@ -33,6 +35,7 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
+    ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
     ui/hiddenlayerconfig.ui
 
