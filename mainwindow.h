@@ -33,6 +33,7 @@ private slots:
     void on_startLearning_clicked(); // test button
 
     void on_loadLearnData_triggered();
+    void on_loadPrognosisData_triggered();
 
 private:
     Ui::MainWindow *ui;

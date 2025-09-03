@@ -359,3 +359,27 @@ void MainWindow::on_loadLearnData_triggered()
     }
 }
 
+
+void MainWindow::on_loadPrognosisData_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Открыть файл с датасетом для прогнозов",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation),
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    CSVProcessor csvProc;
+    QString data = csvProc.readCSVFile(filename);
+
+    auto dataParsed = csvProc.parseFromCSV(data);
+    ui->prognosisTable->setRowCount(dataParsed.getHeight());
+    for(size_t i = 0; i < dataParsed.getHeight(); i++){
+        for(size_t j = 0; j < dataParsed.getWidth() - outputSize; j++){
+            QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
+            ui->prognosisTable->setItem(i, j, readedItem);
+        }
+    }
+}
+
