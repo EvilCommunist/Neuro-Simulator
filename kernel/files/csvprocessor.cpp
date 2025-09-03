@@ -16,6 +16,7 @@ QString CSVProcessor::readCSVFile(QString filename){
         header = firstLine;
     }else{
         fileData += firstLine;
+        fileData+="\n";
         header = "\0";
     }
     // __trying to initialize header_______________________
