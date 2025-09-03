@@ -32,6 +32,8 @@ private slots:
 
     void on_startLearning_clicked(); // test button
 
+    void on_loadLearnData_triggered();
+
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network

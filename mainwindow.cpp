@@ -6,8 +6,11 @@
 #include "./ui/functionMap.h"
 #include "./kernel/math/normalization.h"
 #include "./kernel/twodimvector.h"
+#include "./kernel/files/csvprocessor.h"
 
 #include <QPair>
+#include <QFileDialog>
+#include <QStandardPaths>
 #include <algorithm>  // test
 
 
@@ -295,6 +298,33 @@ void MainWindow::on_calculateTests_clicked()
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(normalization::denormalize(ans[i-(inputSize)], minMaxOutput.second, minMaxOutput.first))); // вопрос нормализации???
             ui->prognosisTable->setItem(j, i, neuroAnswer);
+        }
+    }
+}
+
+
+void MainWindow::on_loadLearnData_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Открыть файл с обучающим датасетом",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation),
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    CSVProcessor csvProc;
+    QString data = csvProc.readCSVFile(filename);
+    // test
+    qDebug() << csvProc.getHeader();
+
+    auto dataParsed = csvProc.parseFromCSV(data);
+    ui->learnDataTable->setColumnCount(dataParsed.getWidth());
+    ui->learnDataTable->setRowCount(dataParsed.getHeight());
+    for(int i = 0; i < dataParsed.getHeight(); i++){
+        for(int j = 0; j < dataParsed.getWidth(); j++){
+            QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
+            ui->learnDataTable->setItem(j, i, readedItem);
         }
     }
 }
