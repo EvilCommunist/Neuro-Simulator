@@ -315,16 +315,17 @@ void MainWindow::on_loadLearnData_triggered()
 
     CSVProcessor csvProc;
     QString data = csvProc.readCSVFile(filename);
-    // test
-    qDebug() << csvProc.getHeader();
+
+    // if(csvProc.getHeader() != "\0")
+    //     pass;
 
     auto dataParsed = csvProc.parseFromCSV(data);
     ui->learnDataTable->setColumnCount(dataParsed.getWidth());
     ui->learnDataTable->setRowCount(dataParsed.getHeight());
-    for(int i = 0; i < dataParsed.getHeight(); i++){
-        for(int j = 0; j < dataParsed.getWidth(); j++){
+    for(size_t i = 0; i < dataParsed.getHeight(); i++){
+        for(size_t j = 0; j < dataParsed.getWidth(); j++){
             QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
-            ui->learnDataTable->setItem(j, i, readedItem);
+            ui->learnDataTable->setItem(i, j, readedItem);
         }
     }
 }

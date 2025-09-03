@@ -39,6 +39,7 @@ bool CSVProcessor::writeCSVFile(const QString& data, QString filename){
 
 
 TwoDimVector<double> CSVProcessor::parseFromCSV(QString data){
+    data = data.trimmed();
     QStringList linesOfData = data.split("\n");
     TwoDimVector<double> res((linesOfData[0].size()+1)/2, linesOfData.size(), 0); // line = 8;8;8
     size_t cur_i = 0, cur_j = 0;

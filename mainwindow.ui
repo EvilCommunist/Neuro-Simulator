@@ -789,6 +789,12 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu">
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Данные</string>
     </property>
