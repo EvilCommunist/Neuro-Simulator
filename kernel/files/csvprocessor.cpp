@@ -45,6 +45,10 @@ TwoDimVector<double> CSVProcessor::parseFromCSV(QString data){
     TwoDimVector<double> res((linesOfData[0].size()+1)/2, linesOfData.size(), 0); // line = 8;8;8
     size_t cur_i = 0, cur_j = 0;
     for(auto line : linesOfData){
+        if (line[line.size()-1]==";"){
+            line.append("\n");
+            line.remove(QRegularExpression("[;]{1}\n"));
+        }
         auto symbols = line.split(";");
         for(auto symbol : symbols){
             res.setValue(cur_j++, cur_i, symbol.toDouble());
