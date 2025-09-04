@@ -6,8 +6,13 @@
 #include "./ui/functionMap.h"
 #include "./kernel/math/normalization.h"
 #include "./kernel/twodimvector.h"
+#include "./kernel/files/csvprocessor.h"
+#include "./ui/adaptlearndatadialog.h"
 
 #include <QPair>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QMessageBox>
 #include <algorithm>  // test
 
 
@@ -297,5 +302,151 @@ void MainWindow::on_calculateTests_clicked()
             ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
+}
+
+
+void MainWindow::on_loadLearnData_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Открыть файл с обучающим датасетом",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation),
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    CSVProcessor csvProc;
+    QString data = csvProc.readCSVFile(filename);
+
+    if(csvProc.getHeader() != "\0"){
+        AdaptLearnDataDialog* adapt = new AdaptLearnDataDialog(csvProc.getHeader(), this);
+        adapt->exec();
+        if(adapt->getChangeConfig()){
+            // processing header
+            QString header = csvProc.getHeader();
+            auto headerItems = header.split(";");
+            size_t inputCount = 0, outputCount = 0;
+            for(auto item : headerItems){
+                if(item[0]=='X')
+                    inputCount++;
+                if(item[0]=='D')
+                    outputCount++;
+            }
+            ui->neuroAmountInput->setValue(inputCount);
+            ui->neuroAmountOutput->setValue(outputCount);
+            on_neuroAmountInput_valueChanged(inputCount);
+            on_neuroAmountOutput_valueChanged(outputCount);
+        }else{
+            if(ui->neuroAmountInput->value()+ui->neuroAmountOutput->value() != (csvProc.getHeader().size()+1)/2){ //string: 9;9;9
+                QMessageBox* message = new QMessageBox(this);
+                message->setText("Проищошла ошибка!\nДанные не подходят для вашей нейросети.");
+                message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+                message->exec();
+                delete message;
+                return;
+            }
+        }
+        delete adapt;
+    }
+
+    auto dataParsed = csvProc.parseFromCSV(data);
+    ui->learnDataTable->setRowCount(dataParsed.getHeight());
+    for(size_t i = 0; i < dataParsed.getHeight(); i++){
+        for(size_t j = 0; j < dataParsed.getWidth(); j++){
+            QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
+            ui->learnDataTable->setItem(i, j, readedItem);
+        }
+    }
+}
+
+
+void MainWindow::on_loadPrognosisData_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Открыть файл с датасетом для прогнозов",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation),
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    CSVProcessor csvProc;
+    QString data = csvProc.readCSVFile(filename);
+
+    auto dataParsed = csvProc.parseFromCSV(data);
+    ui->prognosisTable->setRowCount(dataParsed.getHeight());
+    for(size_t i = 0; i < dataParsed.getHeight(); i++){
+        for(size_t j = 0; j < dataParsed.getWidth() - outputSize; j++){
+            QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
+            ui->prognosisTable->setItem(i, j, readedItem);
+        }
+    }
+}
+
+
+void MainWindow::on_saveLearnData_triggered()
+{
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить файл с датасетом для обучения",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/data.csv",
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+    if (!filename.endsWith(".csv", Qt::CaseInsensitive)) {
+        filename += ".csv";
+    }
+
+
+    TwoDimVector<double> learnData(ui->learnDataTable->columnCount(), ui->learnDataTable->rowCount(), 0);
+    for(size_t j = 0; j < learnData.getHeight(); j++){
+        for(size_t i = 0; i < learnData.getWidth(); i++){
+            learnData.setValue(i, j, ui->learnDataTable->item(j, i)->text().toDouble());
+        }
+    }
+
+    CSVProcessor* csvProc = new CSVProcessor;
+    QString data = csvProc->parseToCSV(learnData);
+    if(!csvProc->writeCSVFile(data, filename)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    delete csvProc;
+}
+
+
+void MainWindow::on_savePrognosisData_triggered()
+{
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить файл с датасетом для прогнозов",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/data.csv",
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+
+    TwoDimVector<double> prognData(inputSize, ui->prognosisTable->rowCount(), 0);
+    for(size_t j = 0; j < prognData.getHeight(); j++){
+        for(size_t i = 0; i < inputSize; i++){
+            prognData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
+        }
+    }
+
+    CSVProcessor* csvProc = new CSVProcessor;
+    QString data = csvProc->parseToCSV(prognData);
+    if(!csvProc->writeCSVFile(data, filename)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    delete csvProc;
 }
 

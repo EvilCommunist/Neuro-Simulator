@@ -458,6 +458,9 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
             <string>Данные обучения</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_4" columnstretch="8,1,1">
+            <item row="1" column="0" colspan="3">
+             <widget class="QTableWidget" name="learnDataTable"/>
+            </item>
             <item row="0" column="2">
              <widget class="QPushButton" name="removeSelection">
               <property name="font">
@@ -492,9 +495,6 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                <string>+</string>
               </property>
              </widget>
-            </item>
-            <item row="1" column="0" colspan="3">
-             <widget class="QTableWidget" name="learnDataTable"/>
             </item>
            </layout>
           </widget>
@@ -788,7 +788,24 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Данные</string>
+    </property>
+    <addaction name="loadLearnData"/>
+    <addaction name="saveLearnData"/>
+    <addaction name="separator"/>
+    <addaction name="loadPrognosisData"/>
+    <addaction name="savePrognosisData"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_current_neuro_network_as">
@@ -820,6 +837,26 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
      <family>Garamond</family>
      <pointsize>12</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="loadLearnData">
+   <property name="text">
+    <string>Загрузить файл с данными для обучения</string>
+   </property>
+  </action>
+  <action name="saveLearnData">
+   <property name="text">
+    <string>Сохранить данные для обучения в файл</string>
+   </property>
+  </action>
+  <action name="loadPrognosisData">
+   <property name="text">
+    <string>Загрузить файл с данными для прогноза</string>
+   </property>
+  </action>
+  <action name="savePrognosisData">
+   <property name="text">
+    <string>Сохранить данные для прогноза в файл</string>
    </property>
   </action>
  </widget>

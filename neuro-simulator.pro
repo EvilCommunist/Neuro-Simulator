@@ -9,21 +9,25 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    kernel/files/csvprocessor.cpp \
     kernel/math/activationFunctions.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/hiddenlayerconfig.cpp
 
 HEADERS += \
+    kernel/files/csvprocessor.h \
     kernel/math/activationFunctions.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
     ui/enums.h \
     ui/functionMap.h \
@@ -31,6 +35,7 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
+    ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
     ui/hiddenlayerconfig.ui
 

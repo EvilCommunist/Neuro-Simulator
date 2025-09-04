@@ -47,6 +47,9 @@ public:
             this->data[recalculateIndex(i, index)] = data[i];
         }
     }
+
+    inline size_t getWidth() const { return width; }
+    inline size_t getHeight() const { return height; }
 };
 
 #endif // TWODIMVECTOR_H
