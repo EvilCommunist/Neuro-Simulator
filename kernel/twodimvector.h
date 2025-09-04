@@ -48,8 +48,8 @@ public:
         }
     }
 
-    inline size_t getWidth() { return width; }
-    inline size_t getHeight() { return height; }
+    inline size_t getWidth() const { return width; }
+    inline size_t getHeight() const { return height; }
 };
 
 #endif // TWODIMVECTOR_H

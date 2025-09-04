@@ -34,6 +34,8 @@ private slots:
 
     void on_loadLearnData_triggered();
     void on_loadPrognosisData_triggered();
+    void on_saveLearnData_triggered();
+    void on_savePrognosisData_triggered();
 
 private:
     Ui::MainWindow *ui;

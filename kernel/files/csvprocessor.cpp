@@ -57,5 +57,14 @@ TwoDimVector<double> CSVProcessor::parseFromCSV(QString data){
 }
 
 QString CSVProcessor::parseToCSV(const TwoDimVector<double>& data){
-    //TODO: write function
+    QString res = "";
+    for(size_t i = 0; i < data.getHeight(); i++){
+        for(size_t j = 0; j < data.getWidth(); j++){
+            res.append(QString::number(data.getValue(j, i)));
+            if(j < data.getHeight()-1)
+                res.append(";");
+        }
+        res.append("\n");
+    }
+    return res;
 }

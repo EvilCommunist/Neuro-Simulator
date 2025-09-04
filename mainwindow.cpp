@@ -383,3 +383,70 @@ void MainWindow::on_loadPrognosisData_triggered()
     }
 }
 
+
+void MainWindow::on_saveLearnData_triggered()
+{
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить файл с датасетом для обучения",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/data.csv",
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+    if (!filename.endsWith(".csv", Qt::CaseInsensitive)) {
+        filename += ".csv";
+    }
+
+
+    TwoDimVector<double> learnData(ui->learnDataTable->columnCount(), ui->learnDataTable->rowCount(), 0);
+    for(size_t j = 0; j < learnData.getHeight(); j++){
+        for(size_t i = 0; i < learnData.getWidth(); i++){
+            learnData.setValue(i, j, ui->learnDataTable->item(j, i)->text().toDouble());
+        }
+    }
+
+    CSVProcessor* csvProc = new CSVProcessor;
+    QString data = csvProc->parseToCSV(learnData);
+    if(!csvProc->writeCSVFile(data, filename)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    delete csvProc;
+}
+
+
+void MainWindow::on_savePrognosisData_triggered()
+{
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить файл с датасетом для прогнозов",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/data.csv",
+                                                    "Файлы csv (*.csv)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+
+    TwoDimVector<double> prognData(inputSize, ui->prognosisTable->rowCount(), 0);
+    for(size_t j = 0; j < prognData.getHeight(); j++){
+        for(size_t i = 0; i < inputSize; i++){
+            prognData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
+        }
+    }
+
+    CSVProcessor* csvProc = new CSVProcessor;
+    QString data = csvProc->parseToCSV(prognData);
+    if(!csvProc->writeCSVFile(data, filename)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    delete csvProc;
+}
+
