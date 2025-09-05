@@ -6,7 +6,9 @@
 
 inline QMap<QString, math_activate::ActivationFunc> uiKernelMap = {
     {"Сигмоида", math_activate::sigmoid},
-    {"Линейная", math_activate::linear}
+    {"Линейная", math_activate::linear},
+    {"ReLu", math_activate::reLu},
+    {"Текучая ReLu", math_activate::leakyReLu}
 };
 
 #endif // FUNCTIONMAP_H
