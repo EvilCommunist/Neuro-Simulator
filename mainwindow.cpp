@@ -188,11 +188,11 @@ void MainWindow::on_startLearning_clicked()
         NN = nullptr;
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
+    auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs); // test now, will change to switch-case or abstract func later
     for(size_t e = 0; e < ui->learnIterations->value(); e++){
         for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
             auto data = learnData.getLine(j);
             auto ans = answers.getLine(j);
-            auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs); // test now, will change to switch-case or abstract func later
             NN->learn_backPropogation(data,ans,curr->getSpeedCoeff());
         }
     }
