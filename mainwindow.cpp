@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     redrawLearnTable();
     redrawCheckTable();
     redrawForecastTable();
+    on_learnAlgorithm_currentIndexChanged(0);
 }
 
 MainWindow::~MainWindow()
@@ -141,7 +142,6 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
         currentLearnFuncCoeffs = nullptr;
     }
     switch(index){
-    case NOTHING: break;
     case BACK_PROPOGATION:{
         backPropoCoeffs* coeffWidget = new backPropoCoeffs;
         currentLearnFuncCoeffs = coeffWidget;

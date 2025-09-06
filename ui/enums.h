@@ -2,8 +2,7 @@
 #define ENUMS_H
 
 enum functionCoeffs{
-    NOTHING,
-    BACK_PROPOGATION
+    BACK_PROPOGATION,
 };
 
 

@@ -75,7 +75,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
               <rect>
                <x>10</x>
                <y>30</y>
-               <width>321</width>
+               <width>333</width>
                <height>66</height>
               </rect>
              </property>
@@ -195,7 +195,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
               <rect>
                <x>10</x>
                <y>30</y>
-               <width>321</width>
+               <width>333</width>
                <height>71</height>
               </rect>
              </property>
@@ -570,11 +570,6 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <pointsize>11</pointsize>
                    </font>
                   </property>
-                  <item>
-                   <property name="text">
-                    <string>Not set (test)</string>
-                   </property>
-                  </item>
                   <item>
                    <property name="text">
                     <string>Обратного распространения</string>
