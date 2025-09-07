@@ -66,33 +66,39 @@ QVector<double> Neuro::getRes(){
     return result;
 }
 
-void Neuro::learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed){
-    forwardPropogation(data);
-    for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
-        auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
-        neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
-    }
-    for(long l = layers-2; l >= 0; l--){
-        for(size_t n = 0; n < neuronAmountPerLayer[l]-1; n++){
-            neurons.setValue(n, NeuroErrorIndex, l, 0);
-            for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++){
-                neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l) + (neurons.getValue(prev, NeuroErrorIndex, l+1)
-                                 * weights.getValue(n, prev, l))
-                                );
+void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs = 1000){
+    for(size_t e = 0; e < epochs; e++){
+        for(size_t selection = 0; selection < data.getHeight(); selection ++){
+            auto data_line = data.getLine(selection);
+            auto ans_line = ans.getLine(selection);
+            forwardPropogation(data_line);
+            for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+                auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+                neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans_line[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
             }
-            neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l)
-                             * math_activate::get_derivative(activationFuncForLayer[l], neurons.getValue(n, NeuroActivateIndex, l))
-                            );
-        }
-    }
+            for(long l = layers-2; l >= 0; l--){
+                for(size_t n = 0; n < neuronAmountPerLayer[l]-1; n++){
+                    neurons.setValue(n, NeuroErrorIndex, l, 0);
+                    for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++){
+                        neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l) + (neurons.getValue(prev, NeuroErrorIndex, l+1)
+                                         * weights.getValue(n, prev, l))
+                                        );
+                    }
+                    neurons.setValue(n, NeuroErrorIndex, l, neurons.getValue(n, NeuroErrorIndex, l)
+                                     * math_activate::get_derivative(activationFuncForLayer[l], neurons.getValue(n, NeuroActivateIndex, l))
+                                    );
+                }
+            }
 
-    for(uint16_t l = layers-2; l > 0; l--){
-        for(size_t n = 0; n < neuronAmountPerLayer[l]; n++){
-            for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++){
-                weights.setValue(n, prev, l, weights.getValue(n, prev, l)
-                                                 + neurons.getValue(n, NeuroActivateIndex, l)
-                                                       * neurons.getValue(prev, NeuroErrorIndex, l+1) * learnSpeed
-                                 );
+            for(uint16_t l = layers-2; l > 0; l--){
+                for(size_t n = 0; n < neuronAmountPerLayer[l]; n++){
+                    for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++){
+                        weights.setValue(n, prev, l, weights.getValue(n, prev, l)
+                                                         + neurons.getValue(n, NeuroActivateIndex, l)
+                                                               * neurons.getValue(prev, NeuroErrorIndex, l+1) * learnSpeed
+                                         );
+                    }
+                }
             }
         }
     }
