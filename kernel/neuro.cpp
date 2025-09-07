@@ -113,11 +113,11 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
 
 void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs){
     // RPROP parameters, might be initialized as values calculated based on selections
-    const double Delta0 = 0.001;
+    const double Delta0 = 0.01;
     const double DeltaMin = 0.0000001;
-    const double DeltaMax = 10;
-    const double EtaMinus = 0.05;
-    const double EtaPlus = 0.5;
+    const double DeltaMax = 50;
+    const double EtaMinus = 0.5;
+    const double EtaPlus = 1.2;
     const double EpsStop = 0.01;
 
     ThreeDimVector<double> deltas(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1, Delta0);
