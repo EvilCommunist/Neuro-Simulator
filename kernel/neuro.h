@@ -18,6 +18,7 @@ private:
     ThreeDimVector<double> weights;
     size_t qvectorMax(const QVector<size_t>& data);
     void initWeights();
+    void backPropogation(const QVector<double>& ans);
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL);
