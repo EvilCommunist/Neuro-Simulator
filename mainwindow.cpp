@@ -148,6 +148,9 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
         ui->learnWeightsLayout->insertWidget(0, coeffWidget);
         break;
     }
+    case RESILENT_PROPOGATION:{
+        break;
+    }
     }
 }
 
@@ -192,6 +195,10 @@ void MainWindow::on_startLearning_clicked()
     case BACK_PROPOGATION:{
         auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs);
         NN->learn_backPropogation(learnData,answers,curr->getSpeedCoeff(), ui->learnIterations->value());
+        break;
+    }
+    case RESILENT_PROPOGATION:{
+        NN->learn_resilentPropogation(learnData, answers, ui->learnIterations->value());
         break;
     }
     }

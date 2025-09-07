@@ -1,6 +1,8 @@
 #include "neuro.h"
 #include <random>
 
+#include <QDebug> // for debug
+
 size_t Neuro::qvectorMax(const QVector<size_t>& data){
     size_t max = data[0];
     for(const auto &element : data){
@@ -89,10 +91,10 @@ QVector<double> Neuro::getRes(){
 void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs = 1000){
     for(size_t e = 0; e < epochs; e++){
         for(size_t selection = 0; selection < data.getHeight(); selection ++){
-            auto data_line = data.getLine(selection);
-            auto ans_line = ans.getLine(selection);
-            forwardPropogation(data_line);
-            backPropogation(ans_line);
+            auto dataLine = data.getLine(selection);
+            auto ansLine = ans.getLine(selection);
+            forwardPropogation(dataLine);
+            backPropogation(ansLine);
 
             for(uint16_t l = layers-2; l > 0; l--){
                 for(size_t n = 0; n < neuronAmountPerLayer[l]; n++){
@@ -104,6 +106,60 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                     }
                 }
             }
+        }
+    }
+}
+
+
+void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs){
+    // RPROP parameters, might be initialized as values calculated based on selections
+    const double Delta0 = 0.001;
+    const double DeltaMin = 0.0000001;
+    const double DeltaMax = 10;
+    const double EtaMinus = 0.05;
+    const double EtaPlus = 0.5;
+    const double EpsStop = 0.01;
+
+    ThreeDimVector<double> deltas(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1, Delta0);
+    ThreeDimVector<double> prevGrads(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1, 0);
+
+    for(size_t e = 0; e < epochs; e++) {
+        double totalGradNorm = 0;
+        for(size_t selection = 0; selection < data.getHeight(); selection++) {
+            auto dataLine = data.getLine(selection);
+            auto ansLine = ans.getLine(selection);
+            forwardPropogation(dataLine);
+            backPropogation(ansLine);
+            for(uint16_t l = 0; l < layers-1; l++) {
+                for(size_t n = 0; n < neuronAmountPerLayer[l]; n++) {
+                    for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++) {
+                        double grad = neurons.getValue(n, NeuroActivateIndex, l) *
+                                      neurons.getValue(prev, NeuroErrorIndex, l+1);
+                        double prevGrad = prevGrads.getValue(n, prev, l);
+                        double delta = deltas.getValue(n, prev, l);
+
+                        if(grad * prevGrad > 0) {
+                            delta = std::min(delta * EtaPlus, DeltaMax);
+                        } else if(grad * prevGrad < 0) {
+                            delta = std::max(delta * EtaMinus, DeltaMin);
+                            grad = 0;
+                        }
+
+                        deltas.setValue(n, prev, l,  delta);
+                        prevGrads.setValue(n, prev, l, grad);
+
+                        double weightChange = -std::copysign(delta, grad);
+                        weights.setValue(n, prev, l,
+                                        weights.getValue(n, prev, l) + weightChange);
+
+                        totalGradNorm += grad * grad;
+                    }
+                }
+            }
+        }
+
+        if(sqrt(totalGradNorm) < EpsStop) {
+            break;
         }
     }
 }

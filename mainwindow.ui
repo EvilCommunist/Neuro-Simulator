@@ -46,7 +46,7 @@
 border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Creation">
        <property name="styleSheet">
@@ -573,6 +573,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   <item>
                    <property name="text">
                     <string>Обратного распространения</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Упругого распространения</string>
                    </property>
                   </item>
                  </widget>
