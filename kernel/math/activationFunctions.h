@@ -11,6 +11,7 @@ double sigmoid(double x);
 double linear(double x);
 double reLu(double x);
 double leakyReLu(double x);
+double tanhHyp(double x);
 
 double get_derivative(ActivationFunc func, double x);
 /*-- Activation functions for neural network --*/

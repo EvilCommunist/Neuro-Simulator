@@ -29,3 +29,7 @@ double math_activate::leakyReLu(double x){
         return 0.1 * x;
     }
 }
+
+double math_activate::tanhHyp(double x){
+    return tanh(x);
+}

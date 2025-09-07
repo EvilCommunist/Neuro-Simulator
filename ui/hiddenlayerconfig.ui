@@ -59,7 +59,7 @@
     <rect>
      <x>10</x>
      <y>30</y>
-     <width>271</width>
+     <width>274</width>
      <height>81</height>
     </rect>
    </property>
@@ -122,6 +122,11 @@
       <item>
        <property name="text">
         <string>Текучая ReLu</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Тангенс-гиперболическая</string>
        </property>
       </item>
      </widget>
