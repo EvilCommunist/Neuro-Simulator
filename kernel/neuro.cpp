@@ -132,11 +132,11 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
             backPropogation(ansLine);
             for(uint16_t l = 0; l < layers-1; l++) {
                 for(size_t n = 0; n < neuronAmountPerLayer[l]; n++) {
-                    for(size_t prev = 0; prev < neuronAmountPerLayer[l+1]; prev++) {
+                    for(size_t next = 0; next < neuronAmountPerLayer[l+1]; next++) {
                         double grad = neurons.getValue(n, NeuroActivateIndex, l) *
-                                      neurons.getValue(prev, NeuroErrorIndex, l+1);
-                        double prevGrad = prevGrads.getValue(n, prev, l);
-                        double delta = deltas.getValue(n, prev, l);
+                                      neurons.getValue(next, NeuroErrorIndex, l+1);
+                        double prevGrad = prevGrads.getValue(n, next, l);
+                        double delta = deltas.getValue(n, next, l);
 
                         if(grad * prevGrad > 0) {
                             delta = std::min(delta * EtaPlus, DeltaMax);
@@ -145,12 +145,15 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
                             grad = 0;
                         }
 
-                        deltas.setValue(n, prev, l,  delta);
-                        prevGrads.setValue(n, prev, l, grad);
+                        deltas.setValue(n, next, l,  delta);
+                        prevGrads.setValue(n, next, l, grad);
 
+                        if(grad == 0){
+                            continue;
+                        }
                         double weightChange = -std::copysign(delta, grad);
-                        weights.setValue(n, prev, l,
-                                        weights.getValue(n, prev, l) + weightChange);
+                        weights.setValue(n, next, l,
+                                        weights.getValue(n, next, l) + weightChange);
 
                         totalGradNorm += grad * grad;
                     }
