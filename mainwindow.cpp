@@ -148,6 +148,9 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
         ui->learnWeightsLayout->insertWidget(0, coeffWidget);
         break;
     }
+    case RESILENT_PROPOGATION:{
+        break;
+    }
     }
 }
 
@@ -188,13 +191,16 @@ void MainWindow::on_startLearning_clicked()
         NN = nullptr;
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
-    auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs); // test now, will change to switch-case or abstract func later
-    for(size_t e = 0; e < ui->learnIterations->value(); e++){
-        for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
-            auto data = learnData.getLine(j);
-            auto ans = answers.getLine(j);
-            NN->learn_backPropogation(data,ans,curr->getSpeedCoeff());
-        }
+    switch(ui->learnAlgorithm->currentIndex()){
+    case BACK_PROPOGATION:{
+        auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs);
+        NN->learn_backPropogation(learnData,answers,curr->getSpeedCoeff(), ui->learnIterations->value());
+        break;
+    }
+    case RESILENT_PROPOGATION:{
+        NN->learn_resilentPropogation(learnData, answers, ui->learnIterations->value());
+        break;
+    }
     }
 
     fillCheckTable();
@@ -258,13 +264,13 @@ void MainWindow::on_deleteTestSelection_clicked()
 void MainWindow::on_calculateTests_clicked()
 {
     TwoDimVector<double> testData(inputSize, ui->prognosisTable->rowCount(), 0);
-    QVector<QPair<double, double>> minMaxInput{};
+    //QVector<QPair<double, double>> minMaxInput{};
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
         for(size_t i = 0; i < inputSize; i++){
             testData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
     }
-    QPair<double, double> minMaxOutput{};
+    //QPair<double, double> minMaxOutput{};
     QVector<double> answers;
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
@@ -277,7 +283,7 @@ void MainWindow::on_calculateTests_clicked()
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)], minMaxOutput.second, minMaxOutput.first));
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
@@ -355,7 +361,7 @@ void MainWindow::on_loadPrognosisData_triggered()
     auto dataParsed = csvProc.parseFromCSV(data);
     ui->prognosisTable->setRowCount(dataParsed.getHeight());
     for(size_t i = 0; i < dataParsed.getHeight(); i++){
-        for(size_t j = 0; j < dataParsed.getWidth() - outputSize; j++){
+        for(size_t j = 0; j < dataParsed.getWidth(); j++){
             QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
             ui->prognosisTable->setItem(i, j, readedItem);
         }

@@ -34,7 +34,7 @@ public:
         return data[recalculateIndex(i, j)];
     }
 
-    QVector<T> getLine(size_t index){
+    QVector<T> getLine(size_t index) const {
         QVector<T> line{};
         for(size_t i = 0; i < width; i++){
             line.append(data[recalculateIndex(i, index)]);

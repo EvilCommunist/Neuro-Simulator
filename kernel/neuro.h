@@ -2,6 +2,7 @@
 #define NEURO_H
 
 #include "threedimvector.h"
+#include "twodimvector.h"
 #include "./math/activationFunctions.h"
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
@@ -17,12 +18,14 @@ private:
     ThreeDimVector<double> weights;
     size_t qvectorMax(const QVector<size_t>& data);
     void initWeights();
+    void backPropogation(const QVector<double>& ans);
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL);
     void forwardPropogation(const QVector<double>& data);
     QVector<double> getRes();
-    void learn_backPropogation(const QVector<double>& data, const QVector<double>& ans, double learnSpeed);
+    void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
+    void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
 
 };
 

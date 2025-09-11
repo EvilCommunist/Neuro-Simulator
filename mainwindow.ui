@@ -147,6 +147,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   <string>Текучая ReLu</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Тангенс-гиперболическая</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -292,6 +297,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                 <item>
                  <property name="text">
                   <string>Текучая ReLu</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Тангенс-гиперболическая</string>
                  </property>
                 </item>
                </widget>
@@ -573,6 +583,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   <item>
                    <property name="text">
                     <string>Обратного распространения</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Упругого распространения</string>
                    </property>
                   </item>
                  </widget>
