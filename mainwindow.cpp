@@ -264,13 +264,13 @@ void MainWindow::on_deleteTestSelection_clicked()
 void MainWindow::on_calculateTests_clicked()
 {
     TwoDimVector<double> testData(inputSize, ui->prognosisTable->rowCount(), 0);
-    QVector<QPair<double, double>> minMaxInput{};
+    //QVector<QPair<double, double>> minMaxInput{};
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
         for(size_t i = 0; i < inputSize; i++){
             testData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
     }
-    QPair<double, double> minMaxOutput{};
+    //QPair<double, double> minMaxOutput{};
     QVector<double> answers;
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
@@ -283,7 +283,7 @@ void MainWindow::on_calculateTests_clicked()
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
-            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)], minMaxOutput.second, minMaxOutput.first));
+            QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->prognosisTable->setItem(j, i, neuroAnswer);
         }
     }
