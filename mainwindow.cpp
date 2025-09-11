@@ -361,7 +361,7 @@ void MainWindow::on_loadPrognosisData_triggered()
     auto dataParsed = csvProc.parseFromCSV(data);
     ui->prognosisTable->setRowCount(dataParsed.getHeight());
     for(size_t i = 0; i < dataParsed.getHeight(); i++){
-        for(size_t j = 0; j < dataParsed.getWidth() - outputSize; j++){
+        for(size_t j = 0; j < dataParsed.getWidth(); j++){
             QTableWidgetItem *readedItem = new QTableWidgetItem(QString::number(dataParsed.getValue(j, i)));
             ui->prognosisTable->setItem(i, j, readedItem);
         }
