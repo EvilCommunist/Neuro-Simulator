@@ -1,4 +1,6 @@
 QT       += core gui
+QT       += charts
+QT       += charts quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,6 +19,7 @@ SOURCES += \
     kernel/neuro.cpp \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
+    ui/chartprocessor.cpp \
     ui/hiddenlayerconfig.cpp
 
 HEADERS += \
@@ -29,6 +32,7 @@ HEADERS += \
     kernel/threedimvector.h \
     ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
+    ui/chartprocessor.h \
     ui/enums.h \
     ui/functionMap.h \
     ui/hiddenlayerconfig.h

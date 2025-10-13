@@ -1,7 +1,18 @@
 #include "neuro.h"
+#include "../ui/chartprocessor.h"
 #include <random>
 
 #include <QDebug> // for debug
+
+float Neuro::learnChartHelper(){ // for gathering info about AI learning
+    size_t counter = 0;
+    float sumErr = 0;
+    for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+        sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
+        counter++;
+    }
+    return sumErr/counter;
+}
 
 size_t Neuro::qvectorMax(const QVector<size_t>& data){
     size_t max = data[0];
@@ -90,6 +101,7 @@ QVector<double> Neuro::getRes(){
 
 void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs = 1000){
     for(size_t e = 0; e < epochs; e++){
+        float learnAvgErr = 0;  // for chart
         for(size_t selection = 0; selection < data.getHeight(); selection ++){
             auto dataLine = data.getLine(selection);
             auto ansLine = ans.getLine(selection);
@@ -106,7 +118,9 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                     }
                 }
             }
+            learnAvgErr+=learnChartHelper();    // for chart
         }
+        chartProcessor::getCurrentError(learnAvgErr/data.getHeight());    // for chart
     }
 }
 
@@ -125,6 +139,7 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
 
     for(size_t e = 0; e < epochs; e++) {
         double totalGradNorm = 0;
+        float learnAvgErr = 0;  // for chart
         for(size_t selection = 0; selection < data.getHeight(); selection++) {
             auto dataLine = data.getLine(selection);
             auto ansLine = ans.getLine(selection);
@@ -159,8 +174,9 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
                     }
                 }
             }
+            learnAvgErr+=learnChartHelper();    // for chart
         }
-
+        chartProcessor::getCurrentError(learnAvgErr/data.getHeight());  // for chart
         if(sqrt(totalGradNorm) < EpsStop) {
             break;
         }
