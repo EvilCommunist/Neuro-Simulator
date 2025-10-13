@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QChartView>
 #include "kernel/neuro.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +41,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network
+    QChartView* currentLearnChart;
     QVector<math_activate::ActivationFunc> activFuncPerLayer;
     //QVector<size_t> neuronsAmountPerLayer;
     QVector<QWidget*> hiddenLayersConfig;

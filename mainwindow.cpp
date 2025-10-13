@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     NN = nullptr;
+    currentLearnChart = nullptr;
 
     redrawLearnTable();
     redrawCheckTable();
@@ -192,7 +193,7 @@ void MainWindow::on_startLearning_clicked()
         NN = nullptr;
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
-    chartProcessor cp;
+    chartProcessor* cp = new chartProcessor;
     switch(ui->learnAlgorithm->currentIndex()){
     case BACK_PROPOGATION:{
         auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs);
@@ -206,8 +207,13 @@ void MainWindow::on_startLearning_clicked()
     }
 
     fillCheckTable();
-    auto chart = cp.makeChart();
-    ui->chartLayout->addWidget(chart);
+    if(currentLearnChart){
+        ui->chartLayout->removeWidget(currentLearnChart);
+        delete currentLearnChart;
+    }
+    currentLearnChart = cp->makeChart();
+    ui->chartLayout->addWidget(currentLearnChart);
+    delete cp;
 }
 
 void MainWindow::fillCheckTable(){

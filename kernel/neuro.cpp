@@ -4,6 +4,16 @@
 
 #include <QDebug> // for debug
 
+void Neuro::learnChartHelper(){ // for gathering info about AI learning
+    size_t counter = 0;
+    float sumErr = 0;
+    for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+        sumErr = neurons.getValue(n, NeuroErrorIndex, layers-1);
+        counter++;
+    }
+    chartProcessor::getCurrentError(sumErr/counter);
+}
+
 size_t Neuro::qvectorMax(const QVector<size_t>& data){
     size_t max = data[0];
     for(const auto &element : data){
@@ -108,7 +118,7 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                 }
             }
         }
-        chartProcessor::getCurrentError(neurons.getValue(neuronAmountPerLayer[layers-1], NeuroErrorIndex, layers-1)); // test
+        learnChartHelper();
     }
 }
 
@@ -162,7 +172,7 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
                 }
             }
         }
-
+        learnChartHelper();
         if(sqrt(totalGradNorm) < EpsStop) {
             break;
         }

@@ -26,6 +26,8 @@ public:
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
     void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
+
+    void learnChartHelper();
 };
 
 #endif // NEURO_H
