@@ -19,7 +19,7 @@ SOURCES += \
     kernel/neuro.cpp \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
-    ui/chartmaker.cpp \
+    ui/chartprocessor.cpp \
     ui/hiddenlayerconfig.cpp
 
 HEADERS += \
@@ -32,7 +32,7 @@ HEADERS += \
     kernel/threedimvector.h \
     ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
-    ui/chartmaker.h \
+    ui/chartprocessor.h \
     ui/enums.h \
     ui/functionMap.h \
     ui/hiddenlayerconfig.h

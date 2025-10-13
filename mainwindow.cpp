@@ -8,7 +8,7 @@
 #include "./kernel/twodimvector.h"
 #include "./kernel/files/csvprocessor.h"
 #include "./ui/adaptlearndatadialog.h"
-#include "./ui/chartmaker.h"
+#include "./ui/chartprocessor.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -158,8 +158,6 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
 
 void MainWindow::on_startLearning_clicked()
 {
-    auto chart = chartProcessing::makeChart();
-    ui->chartLayout->addWidget(chart);
     QVector<size_t> neuronsPerLayer{};
     QVector<math_activate::ActivationFunc> functionPerLayer{};
     neuronsPerLayer.append(inputSize);
@@ -194,6 +192,7 @@ void MainWindow::on_startLearning_clicked()
         NN = nullptr;
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
+    chartProcessor cp;
     switch(ui->learnAlgorithm->currentIndex()){
     case BACK_PROPOGATION:{
         auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs);
@@ -207,6 +206,8 @@ void MainWindow::on_startLearning_clicked()
     }
 
     fillCheckTable();
+    auto chart = cp.makeChart();
+    ui->chartLayout->addWidget(chart);
 }
 
 void MainWindow::fillCheckTable(){

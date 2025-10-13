@@ -1,4 +1,5 @@
 #include "neuro.h"
+#include "../ui/chartprocessor.h"
 #include <random>
 
 #include <QDebug> // for debug
@@ -107,6 +108,7 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                 }
             }
         }
+        chartProcessor::getCurrentError(neurons.getValue(neuronAmountPerLayer[layers-1], NeuroErrorIndex, layers-1)); // test
     }
 }
 
