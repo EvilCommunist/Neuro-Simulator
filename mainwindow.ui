@@ -534,19 +534,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_6">
             <item row="0" column="0">
-             <widget class="QFrame" name="chartFrame">
-              <property name="frameShape">
-               <enum>QFrame::Shape::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Shadow::Raised</enum>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_9">
-               <item row="0" column="0">
-                <layout class="QGridLayout" name="chartLayout"/>
-               </item>
-              </layout>
-             </widget>
+             <layout class="QGridLayout" name="chartLayout"/>
             </item>
            </layout>
           </widget>
