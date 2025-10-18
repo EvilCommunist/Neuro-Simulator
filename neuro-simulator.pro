@@ -17,6 +17,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/GUI/neuroview.cpp \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/chartprocessor.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/GUI/neuroview.h \
     ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
     ui/chartprocessor.h \
