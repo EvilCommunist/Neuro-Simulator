@@ -352,6 +352,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
             <property name="frameShadow">
              <enum>QFrame::Shadow::Raised</enum>
             </property>
+            <layout class="QGridLayout" name="gridLayout_8">
+             <item row="0" column="0">
+              <widget class="QGraphicsView" name="neuroGraphicsView"/>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="2" column="0">
