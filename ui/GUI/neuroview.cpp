@@ -1,3 +1,3 @@
 #include "neuroview.h"
 
-NeuroView::NeuroView() {}
+NeuroView::NeuroView(QWidget *parent) {}

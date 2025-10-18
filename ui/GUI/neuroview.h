@@ -14,7 +14,8 @@ private:
     uint8_t outputNodeCounter;
     uint32_t hiddenNodeCounter;
 public:
-    NeuroView();
+    explicit NeuroView(QWidget *parent = nullptr);
+    ~NeuroView() = default;
 };
 
 #endif // NEUROVIEW_H

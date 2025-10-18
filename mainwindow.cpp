@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     NN = nullptr;
     currentLearnChart = nullptr;
+    setWindowTitle("Neuro Simulator [BETA]");
 
     redrawLearnTable();
     redrawCheckTable();
