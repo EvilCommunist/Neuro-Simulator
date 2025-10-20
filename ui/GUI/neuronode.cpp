@@ -5,11 +5,14 @@
 #include <QStyleOptionGraphicsItem>
 
 
-NeuroNode::NeuroNode(QGraphicsItem *parent)
+NeuroNode::NeuroNode(QPoint position, const QString& name, QGraphicsItem *parent)
     : QGraphicsItem(parent),
+    name(name),
     size(70, 70){
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+    setName(name);
+    setPos(position);
 }
 
 QRectF NeuroNode::boundingRect() const{

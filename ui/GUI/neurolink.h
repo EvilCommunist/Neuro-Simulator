@@ -7,7 +7,7 @@
 class NeuroLink : public QGraphicsLineItem
 {
 public:
-    NeuroLink(NeuroNode* node1, NeuroNode* node2, QGraphicsItem* parent);
+    NeuroLink(NeuroNode* node1, NeuroNode* node2, QGraphicsItem* parent=nullptr);
     ~NeuroLink();
 
     float getWeight();

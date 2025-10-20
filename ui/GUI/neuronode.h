@@ -8,7 +8,7 @@ class NeuroLink;
 class NeuroNode : public QGraphicsItem
 {
 public:
-    NeuroNode(QGraphicsItem *parent);
+    NeuroNode(QPoint position, const QString& name, QGraphicsItem *parent = nullptr);
     ~NeuroNode() = default;
 
     inline float getValue() const {return value;}
