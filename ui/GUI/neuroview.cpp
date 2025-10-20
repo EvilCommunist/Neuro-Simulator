@@ -14,8 +14,9 @@ NeuroView::NeuroView(QWidget *parent)
     //setSceneRect(-1000, -1000, 2000, 2000);
     setDragMode(QGraphicsView::RubberBandDrag);
 
-    createNode(QPointF(50,50), INPUT);
-    createNode(QPointF(100,100),OUTPUT);
+    auto initialInput = createNode(QPointF(50,50), INPUT);
+    auto initialOutput = createNode(QPointF(250,50),OUTPUT);
+    createLink(initialInput, initialOutput);
 }
 
 NeuroNode* NeuroView::createNode(const QPointF &pos, LayerType lType)

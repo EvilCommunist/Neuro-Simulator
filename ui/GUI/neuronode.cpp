@@ -16,7 +16,7 @@ NeuroNode::NeuroNode(QPoint position, const QString& name, QGraphicsItem *parent
 }
 
 QRectF NeuroNode::boundingRect() const{
-    return QRectF(0, 0, size.width(), size.height());
+    return QRectF(-size.width()/2, -size.height()/2, size.width(), size.height());
 }
 
 void NeuroNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -31,23 +31,56 @@ void NeuroNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QBrush circleBrush(gradient);
     QPen circlePen(Qt::darkGray, 2);
 
-    if (option->state & QStyle::State_Selected) {
-        circlePen.setColor(Qt::blue);
-        circlePen.setStyle(Qt::DashLine);
-        painter->setPen(QPen(Qt::blue, 1, Qt::DashLine));
-        painter->setBrush(Qt::NoBrush);
-        painter->drawEllipse(-size/2 - 3, -size/2 - 3, size + 6, size + 6);
-    }
     painter->setBrush(circleBrush);
     painter->setPen(circlePen);
-    painter->drawEllipse(-size/2, -size/2, size, size);
+    painter->drawEllipse(rect);
+
     painter->setPen(Qt::black);
     QFont font = painter->font();
     font.setPointSize(9);
     font.setBold(true);
     painter->setFont(font);
-    QRectF textRect(-size/2, -size/2, size, size);
-    painter->drawText(textRect, Qt::AlignCenter, getName());
+    painter->drawText(rect, Qt::AlignCenter, getName());
+
+    if (option->state & QStyle::State_Selected) {
+        circlePen.setColor(Qt::blue);
+        circlePen.setStyle(Qt::DashLine);
+        painter->setPen(QPen(Qt::blue, 1, Qt::DashLine));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawEllipse(rect.adjusted(-3, -3, 3, 3));
+
+        QString metrics = QString("Value: %1\nError: %2")
+                              .arg(this->getValue()).arg(this->getError());
+        QFontMetrics fm(painter->font());
+        QRect textRect = fm.boundingRect(QRect(), Qt::AlignCenter, metrics);
+        QPointF metricsPos(rect.right() - textRect.width() / 2,
+                           rect.bottom() + textRect.height() / 4);
+        textRect.moveCenter(metricsPos.toPoint());
+
+        painter->setPen(Qt::black);
+        painter->setBrush(Qt::white);
+        painter->drawRect(textRect.adjusted(-5, -5, 5, 5));
+        painter->drawText(textRect, Qt::AlignCenter, metrics);
+    } else if (option->state & QStyle::State_MouseOver) {
+        circlePen.setColor(Qt::blue);
+        circlePen.setStyle(Qt::DashLine);
+        painter->setPen(QPen(Qt::blue, 1, Qt::DashLine));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawEllipse(rect.adjusted(-3, -3, 3, 3));
+
+        QString metrics = QString("Value: %1\nError: %2")
+                              .arg(this->getValue()).arg(this->getError());
+        QFontMetrics fm(painter->font());
+        QRect textRect = fm.boundingRect(QRect(), Qt::AlignCenter, metrics);
+        QPointF metricsPos(rect.right() - textRect.width() / 2,
+                            rect.bottom() - textRect.height() / 2);
+        textRect.moveCenter(metricsPos.toPoint());
+
+        painter->setPen(Qt::black);
+        painter->setBrush(Qt::white);
+        painter->drawRect(textRect.adjusted(-5, -5, 5, 5));
+        painter->drawText(textRect, Qt::AlignCenter, metrics);
+    }
     painter->restore();
 }
 
