@@ -125,6 +125,7 @@ void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
     redrawLearnTable();
     redrawCheckTable();
     redrawForecastTable();
+    ui->neuroGraphicsView->addNode(0);  // test code !!!!!
 }
 
 

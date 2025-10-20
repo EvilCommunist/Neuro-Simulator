@@ -70,7 +70,15 @@ void NeuroView::clear(){
 
 
 void NeuroView::addNode(size_t numLayer){
-
+    // test code________________________________________________________________________________
+    float initPos = -450;
+    for(int i = 0; i < 10; i++){
+        auto testInputPlusOne = createNode(QPointF(50,initPos),INPUT);
+        createLink(testInputPlusOne, neuroNetworkVisual[neuroNetworkVisual.size()-1][neuroNetworkVisual[neuroNetworkVisual.size()-1].size()-1]);
+        neuroNetworkVisual[0].append(testInputPlusOne);
+        initPos+=100;
+    }
+    // test code________________________________________________________________________________
 }
 
 void NeuroView::removeNode(size_t numLayer){
@@ -81,6 +89,6 @@ void NeuroView::addLayer(){
 
 }
 
-void NeuoView::removeLayer(){
+void NeuroView::removeLayer(){
 
 }
