@@ -4,7 +4,8 @@ NeuroView::NeuroView(QWidget *parent)
     : QGraphicsView(parent),
     inputNodeCounter(0),
     hiddenNodeCounter(0),
-    outputNodeCounter(0)
+    outputNodeCounter(0),
+    neuroNetworkVisual({})
 {
     scene = new QGraphicsScene(this);
     setScene(scene);
@@ -17,6 +18,10 @@ NeuroView::NeuroView(QWidget *parent)
     auto initialInput = createNode(QPointF(50,50), INPUT);
     auto initialOutput = createNode(QPointF(250,50),OUTPUT);
     createLink(initialInput, initialOutput);
+    QVector<NeuroNode*> firstLayer = {initialInput};
+    QVector<NeuroNode*> lastLayer = {initialOutput};
+    neuroNetworkVisual.append(firstLayer);
+    neuroNetworkVisual.append(lastLayer);
 }
 
 NeuroNode* NeuroView::createNode(const QPointF &pos, LayerType lType)
@@ -61,4 +66,21 @@ void NeuroView::clear(){
         }
     }
     scene->clear();
+}
+
+
+void NeuroView::addNode(size_t numLayer){
+
+}
+
+void NeuroView::removeNode(size_t numLayer){
+
+}
+
+void NeuroView::addLayer(){
+
+}
+
+void NeuoView::removeLayer(){
+
 }

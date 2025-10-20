@@ -4,7 +4,7 @@
 #include <QStyleOptionGraphicsItem>
 
 NeuroLink::NeuroLink(NeuroNode* node1, NeuroNode* node2, QGraphicsItem* parent)
-    : QGraphicsLineItem(parent), node1(node1), node2(node2)
+    : QGraphicsLineItem(parent), node1(node1), node2(node2), weight(0)
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setZValue(-1);
@@ -20,7 +20,6 @@ NeuroLink::NeuroLink(NeuroNode* node1, NeuroNode* node2, QGraphicsItem* parent)
     }
 
     updatePosition();
-    weight = 0;
 }
 
 NeuroLink::~NeuroLink(){

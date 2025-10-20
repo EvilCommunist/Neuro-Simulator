@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include "neurolink.h"
 #include "neuronode.h"
+#include <QVector>
 
 enum LayerType{
     INPUT,
@@ -22,6 +23,8 @@ private:
     uint8_t outputNodeCounter;
     uint32_t hiddenNodeCounter;
 
+    QVector<QVector<NeuroNode*>> neuroNetworkVisual;
+
     void clear();
 
     NeuroNode* createNode(const QPointF &pos, LayerType lType);
@@ -29,6 +32,12 @@ private:
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;
+
+    // appends|pops last node in layer or layer in NN
+    void addNode(size_t numLayer);
+    void removeNode(size_t numLayer);
+    void addLayer();
+    void removeLayer();
 };
 
 #endif // NEUROVIEW_H
