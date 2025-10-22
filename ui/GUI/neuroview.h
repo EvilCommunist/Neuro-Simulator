@@ -29,6 +29,8 @@ private:
 
     NeuroNode* createNode(const QPointF &pos, LayerType lType);
     void createLink(NeuroNode *from, NeuroNode *to);
+
+    void removeAllBoundedLinks(NeuroNode* node);
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;

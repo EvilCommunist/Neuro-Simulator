@@ -15,8 +15,8 @@ NeuroView::NeuroView(QWidget *parent)
     //setSceneRect(-1000, -1000, 2000, 2000);
     setDragMode(QGraphicsView::RubberBandDrag);
 
-    auto initialInput = createNode(QPointF(50,50), INPUT);
-    auto initialOutput = createNode(QPointF(250,50),OUTPUT);
+    auto initialInput = createNode(QPointF(-100,0), INPUT);
+    auto initialOutput = createNode(QPointF(100,0),OUTPUT);
     createLink(initialInput, initialOutput);
     QVector<NeuroNode*> firstLayer = {initialInput};
     QVector<NeuroNode*> lastLayer = {initialOutput};
@@ -73,7 +73,7 @@ void NeuroView::addNode(size_t numLayer){
     // test code________________________________________________________________________________
     float initPos = -450;
     for(int i = 0; i < 10; i++){
-        auto testInputPlusOne = createNode(QPointF(50,initPos),INPUT);
+        auto testInputPlusOne = createNode(QPointF(-100,initPos),INPUT);
         createLink(testInputPlusOne, neuroNetworkVisual[neuroNetworkVisual.size()-1][neuroNetworkVisual[neuroNetworkVisual.size()-1].size()-1]);
         neuroNetworkVisual[0].append(testInputPlusOne);
         initPos+=100;
@@ -82,7 +82,18 @@ void NeuroView::addNode(size_t numLayer){
 }
 
 void NeuroView::removeNode(size_t numLayer){
+    // test code________________________________________________________________________________
+    for(int i = 10; i > 0; i--){
+        auto curNode = neuroNetworkVisual[numLayer][i];
+        neuroNetworkVisual[numLayer].pop_back();
+        scene->removeItem(curNode);
+        delete curNode;
+    }
+    // test code________________________________________________________________________________
+}
 
+void removeAllBoundedLinks(NeuroNode* node){
+    // TODO
 }
 
 void NeuroView::addLayer(){

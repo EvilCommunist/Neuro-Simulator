@@ -121,11 +121,17 @@ void MainWindow::redrawForecastTable(){
 
 void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 {
+    // test code ______________________________________________________
+    if(inputSize < arg1){
+        ui->neuroGraphicsView->addNode(0);
+    } else {
+        ui->neuroGraphicsView->removeNode(0);
+    }
+    // test code ______________________________________________________
     inputSize = arg1;
     redrawLearnTable();
     redrawCheckTable();
     redrawForecastTable();
-    ui->neuroGraphicsView->addNode(0);  // test code !!!!!
 }
 
 
