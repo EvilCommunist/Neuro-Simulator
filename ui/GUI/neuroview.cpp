@@ -86,14 +86,22 @@ void NeuroView::removeNode(size_t numLayer){
     for(int i = 10; i > 0; i--){
         auto curNode = neuroNetworkVisual[numLayer][i];
         neuroNetworkVisual[numLayer].pop_back();
+        removeAllBoundedLinks(curNode);
         scene->removeItem(curNode);
         delete curNode;
     }
     // test code________________________________________________________________________________
 }
 
-void removeAllBoundedLinks(NeuroNode* node){
-    // TODO
+void NeuroView::removeAllBoundedLinks(NeuroNode* node){
+    for (QGraphicsItem* item : scene->items()) {
+        if (auto* link = dynamic_cast<NeuroLink*>(item)) {
+            if(link->getNode1() == node || link->getNode2() == node){
+                scene->removeItem(link);
+                delete link;
+            }
+        }
+    }
 }
 
 void NeuroView::addLayer(){
