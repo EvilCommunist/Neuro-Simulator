@@ -130,16 +130,40 @@ void NeuroView::removeAllBoundedLinks(NeuroNode* node){
     }
 }
 
-QPointF NeuroView::calculateNodePos(size_t curLayer){
-    qreal x=static_cast<qreal>(curLayer*200),
-        y=static_cast<qreal>((neuroNetworkVisual[curLayer].size()-1)*150);
-    return QPointF(x, y);   // neuro network extends in south-west direction (X,Y)
-}
-
 void NeuroView::addLayer(){
-
+    for(auto node : neuroNetworkVisual[neuroNetworkVisual.size()-1]){
+        removeAllBoundedLinks(node);
+        auto pos = node->pos();
+        pos.setX(pos.x()+XSPACE);
+        node->setPos(pos);
+    }
+    auto newLayerNode = createNode(QPointF(0,0),HIDDEN);
+    neuroNetworkVisual.insert(neuroNetworkVisual.size()-1, QVector<NeuroNode*>{newLayerNode});
+    newLayerNode->setPos(calculateNodePos(neuroNetworkVisual.size()-2));
+    for(int i = 0; i < neuroNetworkVisual[neuroNetworkVisual.size()-1].size(); i++){
+        createLink(newLayerNode, neuroNetworkVisual[neuroNetworkVisual.size()-1][i]);
+    }
+    for(int i = 0; i < neuroNetworkVisual[neuroNetworkVisual.size()-3].size(); i++){
+        createLink(newLayerNode, neuroNetworkVisual[neuroNetworkVisual.size()-3][i]);
+    }
 }
 
 void NeuroView::removeLayer(){
-
+    for(auto node : neuroNetworkVisual[neuroNetworkVisual.size()-2]){
+        removeAllBoundedLinks(node);
+        scene->removeItem(node);
+        delete node;
+    }
+    for(auto node : neuroNetworkVisual[neuroNetworkVisual.size()-1]){
+        removeAllBoundedLinks(node);
+        auto pos = node->pos();
+        pos.setX(pos.x()-XSPACE);
+        node->setPos(pos);
+    }
+    neuroNetworkVisual.removeAt(neuroNetworkVisual.size()-2);
+    for(int i = 0; i < neuroNetworkVisual[neuroNetworkVisual.size()-1].size(); i++){
+        for(int j = 0; j < neuroNetworkVisual[neuroNetworkVisual.size()-2].size(); j++){
+            createLink(neuroNetworkVisual[neuroNetworkVisual.size()-2][j], neuroNetworkVisual[neuroNetworkVisual.size()-1][i]);
+        }
+    }
 }

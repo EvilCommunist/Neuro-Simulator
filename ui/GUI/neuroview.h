@@ -7,6 +7,9 @@
 #include "neuronode.h"
 #include <QVector>
 
+#define XSPACE 200
+#define YSPACE 150
+
 enum LayerType{
     INPUT,
     HIDDEN,
@@ -31,7 +34,9 @@ private:
     void createLink(NeuroNode *from, NeuroNode *to);
 
     void removeAllBoundedLinks(NeuroNode* node);
-    QPointF calculateNodePos(size_t curLayer);
+    inline QPointF calculateNodePos(size_t curLayer){   // neuro network extends in south-west direction (X,Y)
+        return QPointF(static_cast<qreal>(curLayer*XSPACE), static_cast<qreal>((neuroNetworkVisual[curLayer].size()-1)*YSPACE));
+    }
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;

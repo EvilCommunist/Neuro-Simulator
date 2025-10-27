@@ -47,6 +47,7 @@ void MainWindow::on_addLayer_clicked()
     hiddenLayersConfig.append(hLC);
     hLC->setNumber(hiddenLayersConfig.size());
     ui->hiddenLayersLayout->addWidget(hLC);
+    ui->neuroGraphicsView->addLayer();
 }
 
 
@@ -57,6 +58,7 @@ void MainWindow::on_removeLayer_clicked()
     auto hLC = hiddenLayersConfig.takeLast();
     ui->hiddenLayersLayout->removeWidget(hLC);
     delete hLC;
+    ui->neuroGraphicsView->removeLayer();
 }
 
 
