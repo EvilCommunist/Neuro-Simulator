@@ -15,8 +15,8 @@ NeuroView::NeuroView(QWidget *parent)
     //setSceneRect(-1000, -1000, 2000, 2000);
     setDragMode(QGraphicsView::RubberBandDrag);
 
-    auto initialInput = createNode(QPointF(-100,0), INPUT);
-    auto initialOutput = createNode(QPointF(100,0),OUTPUT);
+    auto initialInput = createNode(QPointF(0,0), INPUT);
+    auto initialOutput = createNode(QPointF(200,0),OUTPUT);
     createLink(initialInput, initialOutput);
     QVector<NeuroNode*> firstLayer = {initialInput};
     QVector<NeuroNode*> lastLayer = {initialOutput};
@@ -70,27 +70,53 @@ void NeuroView::clear(){
 
 
 void NeuroView::addNode(size_t numLayer){
-    // test code________________________________________________________________________________
-    float initPos = -450;
-    for(int i = 0; i < 10; i++){
-        auto testInputPlusOne = createNode(QPointF(-100,initPos),INPUT);
-        createLink(testInputPlusOne, neuroNetworkVisual[neuroNetworkVisual.size()-1][neuroNetworkVisual[neuroNetworkVisual.size()-1].size()-1]);
-        neuroNetworkVisual[0].append(testInputPlusOne);
-        initPos+=100;
+    auto index = INPUT;
+    if(numLayer==0){ // does no changes
+    } else if(numLayer == neuroNetworkVisual.size()-1){
+        index = OUTPUT;
+    }else{
+        index = HIDDEN;
     }
-    // test code________________________________________________________________________________
+    auto newNode = createNode(QPointF(0,0),index);
+    neuroNetworkVisual[numLayer].append(newNode);
+    newNode->setPos(calculateNodePos(numLayer));
+    if(index == INPUT){
+        for(int i = 0; i < neuroNetworkVisual[numLayer+1].size(); i++){
+            createLink(newNode, neuroNetworkVisual[numLayer+1][i]);
+        }
+    }else if(index == HIDDEN){
+        for(int i = 0; i < neuroNetworkVisual[numLayer+1].size(); i++){
+            createLink(newNode, neuroNetworkVisual[numLayer+1][i]);
+        }
+        for(int i = 0; i < neuroNetworkVisual[numLayer-1].size(); i++){
+            createLink(newNode, neuroNetworkVisual[numLayer-1][i]);
+        }
+    }else{
+        for(int i = 0; i < neuroNetworkVisual[numLayer-1].size(); i++){
+            createLink(newNode, neuroNetworkVisual[numLayer-1][i]);
+        }
+    }
 }
 
 void NeuroView::removeNode(size_t numLayer){
-    // test code________________________________________________________________________________
-    for(int i = 10; i > 0; i--){
-        auto curNode = neuroNetworkVisual[numLayer][i];
-        neuroNetworkVisual[numLayer].pop_back();
-        removeAllBoundedLinks(curNode);
-        scene->removeItem(curNode);
-        delete curNode;
+    auto curNode = neuroNetworkVisual[numLayer][neuroNetworkVisual[numLayer].size()-1];
+    neuroNetworkVisual[numLayer].pop_back();
+    removeAllBoundedLinks(curNode);
+    scene->removeItem(curNode);
+    delete curNode;
+    auto index = INPUT;
+    if(numLayer==0){ // does no changes
+    } else if(numLayer == neuroNetworkVisual.size()-1){
+        index = OUTPUT;
+    }else{
+        index = HIDDEN;
     }
-    // test code________________________________________________________________________________
+    switch(index){
+    case INPUT: inputNodeCounter--; break;
+    case HIDDEN: hiddenNodeCounter--; break;
+    case OUTPUT: outputNodeCounter--; break;
+    }
+
 }
 
 void NeuroView::removeAllBoundedLinks(NeuroNode* node){
@@ -102,6 +128,12 @@ void NeuroView::removeAllBoundedLinks(NeuroNode* node){
             }
         }
     }
+}
+
+QPointF NeuroView::calculateNodePos(size_t curLayer){
+    qreal x=static_cast<qreal>(curLayer*200),
+        y=static_cast<qreal>((neuroNetworkVisual[curLayer].size()-1)*150);
+    return QPointF(x, y);   // neuro network extends in south-west direction (X,Y)
 }
 
 void NeuroView::addLayer(){

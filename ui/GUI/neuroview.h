@@ -31,6 +31,7 @@ private:
     void createLink(NeuroNode *from, NeuroNode *to);
 
     void removeAllBoundedLinks(NeuroNode* node);
+    QPointF calculateNodePos(size_t curLayer);
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;
@@ -40,6 +41,8 @@ public:
     void removeNode(size_t numLayer);
     void addLayer();
     void removeLayer();
+
+    inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
 };
 
 #endif // NEUROVIEW_H
