@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     NN = nullptr;
     currentLearnChart = nullptr;
+    setWindowTitle("Neuro Simulator [BETA]");
 
     redrawLearnTable();
     redrawCheckTable();
@@ -46,6 +47,12 @@ void MainWindow::on_addLayer_clicked()
     hiddenLayersConfig.append(hLC);
     hLC->setNumber(hiddenLayersConfig.size());
     ui->hiddenLayersLayout->addWidget(hLC);
+    ui->neuroGraphicsView->addLayer();
+
+    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
+            this, &MainWindow::addHiddenNode);
+    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
+            this, &MainWindow::removeHiddenNode);
 }
 
 
@@ -56,6 +63,7 @@ void MainWindow::on_removeLayer_clicked()
     auto hLC = hiddenLayersConfig.takeLast();
     ui->hiddenLayersLayout->removeWidget(hLC);
     delete hLC;
+    ui->neuroGraphicsView->removeLayer();
 }
 
 
@@ -120,6 +128,14 @@ void MainWindow::redrawForecastTable(){
 
 void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 {
+    int times = abs(arg1-static_cast<int>(inputSize));
+    if(inputSize < arg1){
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->addNode(0);
+    } else {
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->removeNode(0);
+    }
     inputSize = arg1;
     redrawLearnTable();
     redrawCheckTable();
@@ -129,6 +145,14 @@ void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 
 void MainWindow::on_neuroAmountOutput_valueChanged(int arg1)
 {
+    int times = abs(arg1-static_cast<int>(outputSize));
+    if(outputSize < arg1){
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->addNode(ui->neuroGraphicsView->getNeuroLen()-1);
+    } else {
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->removeNode(ui->neuroGraphicsView->getNeuroLen()-1);
+    }
     outputSize = arg1;
     redrawLearnTable();
     redrawCheckTable();
@@ -443,5 +467,27 @@ void MainWindow::on_savePrognosisData_triggered()
         return;
     }
     delete csvProc;
+}
+
+void MainWindow::addHiddenNode(QWidget *layer){
+    int numLayer = 0;
+    for(auto item : hiddenLayersConfig){
+        numLayer ++;
+        if(layer==item){
+            break;
+        }
+    }
+    ui->neuroGraphicsView->addNode(numLayer);
+}
+
+void MainWindow::removeHiddenNode(QWidget *layer){
+    int numLayer = 0;
+    for(auto item : hiddenLayersConfig){
+        numLayer ++;
+        if(layer==item){
+            break;
+        }
+    }
+    ui->neuroGraphicsView->removeNode(numLayer);
 }
 

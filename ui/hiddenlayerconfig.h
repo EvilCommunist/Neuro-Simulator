@@ -21,8 +21,16 @@ public:
     size_t getNeuronAmount();
     math_activate::ActivationFunc getActivationFunc();
 
+private slots:
+    void on_hiddenNeuronAmount_valueChanged(int arg1);
+
+signals:
+    void signalAddHiddenNode(QWidget* layer);
+    void signalRemoveHiddenNode(QWidget* layer);
+
 private:
     Ui::HiddenLayerConfig *ui;
+    int curNodeVal;
 };
 
 #endif // HIDDENLAYERCONFIG_H

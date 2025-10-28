@@ -17,6 +17,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/GUI/neurolink.cpp \
+    ui/GUI/neuronode.cpp \
+    ui/GUI/neuroview.cpp \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/chartprocessor.cpp \
@@ -30,6 +33,9 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/GUI/neurolink.h \
+    ui/GUI/neuronode.h \
+    ui/GUI/neuroview.h \
     ui/adaptlearndatadialog.h \
     ui/backpropocoeffs.h \
     ui/chartprocessor.h \
@@ -49,6 +55,7 @@ CONFIG += lrelease
 CONFIG += embed_translations
 
 # Default rules for deployment.
+INCLUDEPATH += $$PWD/ui/GUI
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target

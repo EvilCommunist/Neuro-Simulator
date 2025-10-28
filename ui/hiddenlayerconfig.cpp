@@ -5,6 +5,7 @@
 HiddenLayerConfig::HiddenLayerConfig(QWidget *parent)
     : QFrame(parent)
     , ui(new Ui::HiddenLayerConfig)
+    , curNodeVal(1)
 {
     ui->setupUi(this);
 }
@@ -26,3 +27,17 @@ size_t HiddenLayerConfig::getNeuronAmount(){
 math_activate::ActivationFunc HiddenLayerConfig::getActivationFunc(){
     return  uiKernelMap[ui->hiddenActivFunc->currentText()];
 }
+
+void HiddenLayerConfig::on_hiddenNeuronAmount_valueChanged(int arg1)
+{
+    int times = abs(arg1-curNodeVal);
+    if(curNodeVal < arg1){   // send signal of change
+        for(int i = 0; i < times; i++)
+            emit signalAddHiddenNode(this);
+    } else {
+        for(int i = 0; i < times; i++)
+            emit signalRemoveHiddenNode(this);
+    }
+    curNodeVal = arg1;
+}
+
