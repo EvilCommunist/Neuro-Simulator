@@ -23,6 +23,8 @@ public:
     void addLink(NeuroLink* link);
     void removeLink(NeuroLink* link);
     void updateLinks();
+
+    inline QList<NeuroLink*> getLinks(){return links;}
 private:
     float value;
     float error;

@@ -80,6 +80,7 @@ void NeuroView::addNode(size_t numLayer){
     auto newNode = createNode(QPointF(0,0),index);
     neuroNetworkVisual[numLayer].append(newNode);
     newNode->setPos(calculateNodePos(numLayer));
+    resetLayerNodesPos(numLayer);
     if(index == INPUT){
         for(int i = 0; i < neuroNetworkVisual[numLayer+1].size(); i++){
             createLink(newNode, neuroNetworkVisual[numLayer+1][i]);
@@ -111,6 +112,7 @@ void NeuroView::removeNode(size_t numLayer){
     }else{
         index = HIDDEN;
     }
+    resetLayerNodesPos(numLayer);
     switch(index){
     case INPUT: inputNodeCounter--; break;
     case HIDDEN: hiddenNodeCounter--; break;
@@ -126,6 +128,26 @@ void NeuroView::removeAllBoundedLinks(NeuroNode* node){
                 scene->removeItem(link);
                 delete link;
             }
+        }
+    }
+}
+
+QPointF NeuroView::calculateNodePos(size_t curLayer){
+    qreal x=static_cast<qreal>(curLayer*XSPACE), y=0;
+    return QPointF(x, y);
+}
+
+void NeuroView::resetLayerNodesPos(size_t numLayer){
+    //resetting Y pos for each layer node
+    qreal newY = -((neuroNetworkVisual[numLayer].size()-1)*YSPACE)/2;
+    for(auto node : neuroNetworkVisual[numLayer]){
+        auto pos = node->pos();
+        pos.setY(newY);
+        node->setPos(pos);
+        newY+=YSPACE;
+        auto boundedLinks = node->getLinks();
+        for(auto link: boundedLinks){
+            link->updatePosition();
         }
     }
 }

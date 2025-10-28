@@ -4,6 +4,12 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
+// aliases for layer types
+#define INP 'I'
+#define OUT 'O'
+#define HID 'N'
+
+
 
 NeuroNode::NeuroNode(QPoint position, const QString& name, QGraphicsItem *parent)
     : QGraphicsItem(parent), value(0), error(0), name(name), size(70, 70){
@@ -24,7 +30,12 @@ void NeuroNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     qreal size = rect.width();
     QRadialGradient gradient(0, 0, size/2);
     gradient.setColorAt(0, Qt::white);
-    gradient.setColorAt(1, Qt::lightGray);
+    switch(name[0].toLatin1()){
+    case INP: gradient.setColorAt(1, Qt::red); break;
+    case HID: gradient.setColorAt(1, Qt::yellow); break;
+    case OUT: gradient.setColorAt(1, Qt::green); break;
+    default: gradient.setColorAt(1, Qt::lightGray); break; // in case it needed
+    }
 
     QBrush circleBrush(gradient);
     QPen circlePen(Qt::darkGray, 2);

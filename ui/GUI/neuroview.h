@@ -34,9 +34,8 @@ private:
     void createLink(NeuroNode *from, NeuroNode *to);
 
     void removeAllBoundedLinks(NeuroNode* node);
-    inline QPointF calculateNodePos(size_t curLayer){   // neuro network extends in south-west direction (X,Y)
-        return QPointF(static_cast<qreal>(curLayer*XSPACE), static_cast<qreal>((neuroNetworkVisual[curLayer].size()-1)*YSPACE));
-    }
+    QPointF calculateNodePos(size_t curLayer);
+    void resetLayerNodesPos(size_t numLayer);
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;
