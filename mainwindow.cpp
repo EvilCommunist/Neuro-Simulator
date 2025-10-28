@@ -48,6 +48,11 @@ void MainWindow::on_addLayer_clicked()
     hLC->setNumber(hiddenLayersConfig.size());
     ui->hiddenLayersLayout->addWidget(hLC);
     ui->neuroGraphicsView->addLayer();
+
+    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
+            this, &MainWindow::addHiddenNode);
+    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
+            this, &MainWindow::removeHiddenNode);
 }
 
 
@@ -456,5 +461,27 @@ void MainWindow::on_savePrognosisData_triggered()
         return;
     }
     delete csvProc;
+}
+
+void MainWindow::addHiddenNode(QWidget *layer){
+    int numLayer = 0;
+    for(auto item : hiddenLayersConfig){
+        numLayer ++;
+        if(layer==item){
+            break;
+        }
+    }
+    ui->neuroGraphicsView->addNode(numLayer);
+}
+
+void MainWindow::removeHiddenNode(QWidget *layer){
+    int numLayer = 0;
+    for(auto item : hiddenLayersConfig){
+        numLayer ++;
+        if(layer==item){
+            break;
+        }
+    }
+    ui->neuroGraphicsView->removeNode(numLayer);
 }
 

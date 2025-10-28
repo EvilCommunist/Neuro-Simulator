@@ -38,6 +38,10 @@ private slots:
     void on_saveLearnData_triggered();
     void on_savePrognosisData_triggered();
 
+public slots:
+    void addHiddenNode(QWidget* layer);
+    void removeHiddenNode(QWidget* layer);
+
 private:
     Ui::MainWindow *ui;
     Neuro* NN; // neuro network
