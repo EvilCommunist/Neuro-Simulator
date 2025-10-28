@@ -30,10 +30,13 @@ math_activate::ActivationFunc HiddenLayerConfig::getActivationFunc(){
 
 void HiddenLayerConfig::on_hiddenNeuronAmount_valueChanged(int arg1)
 {
+    int times = abs(arg1-curNodeVal);
     if(curNodeVal < arg1){   // send signal of change
-        emit signalAddHiddenNode(this);
+        for(int i = 0; i < times; i++)
+            emit signalAddHiddenNode(this);
     } else {
-        emit signalRemoveHiddenNode(this);
+        for(int i = 0; i < times; i++)
+            emit signalRemoveHiddenNode(this);
     }
     curNodeVal = arg1;
 }

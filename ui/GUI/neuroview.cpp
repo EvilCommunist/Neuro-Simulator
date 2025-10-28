@@ -97,6 +97,8 @@ void NeuroView::addNode(size_t numLayer){
             createLink(newNode, neuroNetworkVisual[numLayer-1][i]);
         }
     }
+
+    resetSceneSize();
 }
 
 void NeuroView::removeNode(size_t numLayer){
@@ -119,6 +121,7 @@ void NeuroView::removeNode(size_t numLayer){
     case OUTPUT: outputNodeCounter--; break;
     }
 
+    resetSceneSize();
 }
 
 void NeuroView::removeAllBoundedLinks(NeuroNode* node){
@@ -168,6 +171,8 @@ void NeuroView::addLayer(){
     for(int i = 0; i < neuroNetworkVisual[neuroNetworkVisual.size()-3].size(); i++){
         createLink(newLayerNode, neuroNetworkVisual[neuroNetworkVisual.size()-3][i]);
     }
+
+    resetSceneSize();
 }
 
 void NeuroView::removeLayer(){
@@ -188,4 +193,15 @@ void NeuroView::removeLayer(){
             createLink(neuroNetworkVisual[neuroNetworkVisual.size()-2][j], neuroNetworkVisual[neuroNetworkVisual.size()-1][i]);
         }
     }
+
+    resetSceneSize();
+}
+
+
+void NeuroView::resetSceneSize(){
+    QRectF itemsRect = scene->itemsBoundingRect();
+    QRectF paddedRect = itemsRect.adjusted(-50, -50, 50, 50);
+    scene->setSceneRect(paddedRect);
+
+    this->fitInView(paddedRect, Qt::KeepAspectRatio);
 }

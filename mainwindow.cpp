@@ -128,10 +128,13 @@ void MainWindow::redrawForecastTable(){
 
 void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 {
+    int times = abs(arg1-static_cast<int>(inputSize));
     if(inputSize < arg1){
-        ui->neuroGraphicsView->addNode(0);
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->addNode(0);
     } else {
-        ui->neuroGraphicsView->removeNode(0);
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->removeNode(0);
     }
     inputSize = arg1;
     redrawLearnTable();
@@ -142,10 +145,13 @@ void MainWindow::on_neuroAmountInput_valueChanged(int arg1)
 
 void MainWindow::on_neuroAmountOutput_valueChanged(int arg1)
 {
+    int times = abs(arg1-static_cast<int>(outputSize));
     if(outputSize < arg1){
-        ui->neuroGraphicsView->addNode(ui->neuroGraphicsView->getNeuroLen()-1);
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->addNode(ui->neuroGraphicsView->getNeuroLen()-1);
     } else {
-        ui->neuroGraphicsView->removeNode(ui->neuroGraphicsView->getNeuroLen()-1);
+        for(int i = 0; i < times; i++)
+            ui->neuroGraphicsView->removeNode(ui->neuroGraphicsView->getNeuroLen()-1);
     }
     outputSize = arg1;
     redrawLearnTable();
