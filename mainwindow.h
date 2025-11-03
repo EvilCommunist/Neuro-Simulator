@@ -56,6 +56,8 @@ private:
     QWidget* currentLearnFuncCoeffs;
     QWidget* currentInitFuncCoeffs;
 
+
+    void recalculateScrollAreaHeight();
     void redrawLearnTable();
     void redrawCheckTable();
     void redrawForecastTable();

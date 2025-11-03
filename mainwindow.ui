@@ -434,11 +434,14 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                </item>
                <item row="1" column="0" colspan="3">
                 <widget class="QScrollArea" name="scrollArea">
+                 <property name="horizontalScrollBarPolicy">
+                  <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+                 </property>
                  <property name="sizeAdjustPolicy">
                   <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
                  </property>
                  <property name="widgetResizable">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                  <widget class="QWidget" name="scrollAreaWidgetContents_2">
                   <property name="geometry">
@@ -449,24 +452,18 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <height>214</height>
                    </rect>
                   </property>
-                  <widget class="QWidget" name="layoutWidget">
-                   <property name="geometry">
-                    <rect>
-                     <x>11</x>
-                     <y>11</y>
-                     <width>291</width>
-                     <height>191</height>
-                    </rect>
-                   </property>
-                   <layout class="QVBoxLayout" name="hiddenLayersLayout">
-                    <property name="spacing">
-                     <number>7</number>
-                    </property>
-                    <property name="sizeConstraint">
-                     <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
-                    </property>
-                   </layout>
-                  </widget>
+                  <layout class="QGridLayout" name="gridLayout_9">
+                   <item row="0" column="0">
+                    <layout class="QVBoxLayout" name="hiddenLayersLayout">
+                     <property name="spacing">
+                      <number>7</number>
+                     </property>
+                     <property name="sizeConstraint">
+                      <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+                     </property>
+                    </layout>
+                   </item>
+                  </layout>
                  </widget>
                 </widget>
                </item>
