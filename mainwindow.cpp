@@ -49,6 +49,16 @@ void MainWindow::on_addLayer_clicked()
     ui->hiddenLayersLayout->addWidget(hLC);
     ui->neuroGraphicsView->addLayer();
 
+    if(hiddenLayersConfig.size() > 1){
+        int totalHeight = 0;
+        for (auto layer : hiddenLayersConfig) {
+            totalHeight += layer->height() + ui->hiddenLayersLayout->spacing();
+        }
+        totalHeight += ui->hiddenLayersLayout->contentsMargins().top() +
+                       ui->hiddenLayersLayout->contentsMargins().bottom() + 20;
+        ui->scrollAreaWidgetContents_2->setFixedHeight(totalHeight);
+    }
+
     connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
             this, &MainWindow::addHiddenNode);
     connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
@@ -64,6 +74,16 @@ void MainWindow::on_removeLayer_clicked()
     ui->hiddenLayersLayout->removeWidget(hLC);
     delete hLC;
     ui->neuroGraphicsView->removeLayer();
+
+    int totalHeight = 0;
+    for (auto layer : hiddenLayersConfig) {
+        if (layer && layer->isVisible()) {
+            totalHeight += layer->height() + ui->hiddenLayersLayout->spacing();
+        }
+    }
+    totalHeight += ui->hiddenLayersLayout->contentsMargins().top() +
+                   ui->hiddenLayersLayout->contentsMargins().bottom() + 20;
+    ui->scrollAreaWidgetContents_2->setFixedHeight(totalHeight);
 }
 
 
