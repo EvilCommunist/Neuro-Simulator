@@ -62,5 +62,8 @@ private:
     void redrawCheckTable();
     void redrawForecastTable();
     void fillCheckTable();
+
+    // normalization helpers
+    double normMin, normMax;
 };
 #endif // MAINWINDOW_H
