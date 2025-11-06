@@ -16,8 +16,6 @@
 #include <QMessageBox>
 #include <algorithm>  // test
 
-#include <QDebug> // ULTRA TEST >:D
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -250,13 +248,13 @@ void MainWindow::on_startLearning_clicked()
         auto curLine = learnData.getLine(i);
         normalization::normalizeSelection(curLine, normMax, normMin);
         learnData.setLine(curLine,i);
-        qDebug() << curLine << " -> ";
+        //qDebug() << curLine << " -> ";
         curLine = answers.getLine(i);
         normalization::normalizeSelection(curLine, normMax, normMin);
         answers.setLine(curLine,i);
-        qDebug() << curLine << "\n";;
+        //qDebug() << curLine << "\n";;
     }
-    qDebug() << "_____________________________\n";
+    //qDebug() << "_____________________________\n";
     /*_______________________NORMALIZE DATA__________________________*/
 
     if (NN){
@@ -311,10 +309,10 @@ void MainWindow::fillCheckTable(){
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         auto data = learnData.getLine(j);
         normalization::normalizeSelection(data, normMax, normMin);  // normalize data
-        qDebug() << data << " -> ";
+        //qDebug() << data << " -> ";
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
-        qDebug() << ans << "\n";
+        //qDebug() << ans << "\n";
         normalization::denormalizeSelection(ans, normMax, normMin); // denormalize answer
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
