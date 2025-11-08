@@ -23,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     outputSize(1),
     currentInitFuncCoeffs(nullptr),
     currentLearnFuncCoeffs(nullptr),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    normMin(0), normMax(0)
 {
     ui->setupUi(this);
     NN = nullptr;
@@ -226,6 +227,36 @@ void MainWindow::on_startLearning_clicked()
     }
 
 
+    /*_______________________NORMALIZE DATA__________________________*/
+    double min = 1, max = 0;
+    for(int i = 0; i < learnData.getHeight(); i++){
+        auto res = normalization::findMinMax(learnData.getLine(i));
+        if(min > res.first)
+            min = res.first;
+        if(max < res.second)
+            max = res.second;
+    }
+    for(int i = 0; i < answers.getHeight(); i++){
+        auto res = normalization::findMinMax(answers.getLine(i));
+        if(min > res.first)
+            min = res.first;
+        if(max < res.second)
+            max = res.second;
+    }
+    normMin = min; normMax = max;
+    for(int i = 0; i < learnData.getHeight(); i++){
+        auto curLine = learnData.getLine(i);
+        normalization::normalizeSelection(curLine, normMax, normMin);
+        learnData.setLine(curLine,i);
+        //qDebug() << curLine << " -> ";
+        curLine = answers.getLine(i);
+        normalization::normalizeSelection(curLine, normMax, normMin);
+        answers.setLine(curLine,i);
+        //qDebug() << curLine << "\n";;
+    }
+    //qDebug() << "_____________________________\n";
+    /*_______________________NORMALIZE DATA__________________________*/
+
     if (NN){
         delete NN;
         NN = nullptr;
@@ -277,8 +308,12 @@ void MainWindow::fillCheckTable(){
 
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         auto data = learnData.getLine(j);
+        normalization::normalizeSelection(data, normMax, normMin);  // normalize data
+        //qDebug() << data << " -> ";
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
+        //qDebug() << ans << "\n";
+        normalization::denormalizeSelection(ans, normMax, normMin); // denormalize answer
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->checkLearned->setItem(j, i, neuroAnswer);
@@ -372,7 +407,7 @@ void MainWindow::on_loadLearnData_triggered()
         }else{
             if(ui->neuroAmountInput->value()+ui->neuroAmountOutput->value() != (csvProc.getHeader().size()+1)/2){ //string: 9;9;9
                 QMessageBox* message = new QMessageBox(this);
-                message->setText("Проищошла ошибка!\nДанные не подходят для вашей нейросети.");
+                message->setText("Произошла ошибка!\nДанные не подходят для вашей нейросети.");
                 message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
                 message->exec();
                 delete message;

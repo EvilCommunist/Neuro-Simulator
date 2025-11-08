@@ -4,7 +4,7 @@ double normalization::normalize(double value, double max, double min){
     if (max != min)
         return (value - min) / (max - min);
     else
-        return min;
+        return abs(value)/abs(max+min);
 }
 
 double normalization::denormalize(double value, double max, double min){
