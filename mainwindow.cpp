@@ -407,7 +407,7 @@ void MainWindow::on_loadLearnData_triggered()
         }else{
             if(ui->neuroAmountInput->value()+ui->neuroAmountOutput->value() != (csvProc.getHeader().size()+1)/2){ //string: 9;9;9
                 QMessageBox* message = new QMessageBox(this);
-                message->setText("Проищошла ошибка!\nДанные не подходят для вашей нейросети.");
+                message->setText("Произошла ошибка!\nДанные не подходят для вашей нейросети.");
                 message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
                 message->exec();
                 delete message;
