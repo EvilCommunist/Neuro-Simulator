@@ -28,6 +28,9 @@ public:
     void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
 
     float learnChartHelper();
+
+    inline ThreeDimVector<double> getWeights(){return weights;}
+    inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 };
 
 #endif // NEURO_H

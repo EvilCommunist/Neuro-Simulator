@@ -13,6 +13,8 @@ CONFIG += c++17
 SOURCES += \
     kernel/files/csvprocessor.cpp \
     kernel/math/activationFunctions.cpp \
+    kernel/math/heuristicsAlg/geneticalgorithm.cpp \
+    kernel/math/heuristicsAlg/individual.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
 HEADERS += \
     kernel/files/csvprocessor.h \
     kernel/math/activationFunctions.h \
+    kernel/math/heuristicsAlg/geneticalgorithm.h \
+    kernel/math/heuristicsAlg/individual.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
     mainwindow.h \
