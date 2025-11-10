@@ -9,11 +9,11 @@ private:
     ThreeDimVector<double>* data;
     size_t width, height, depth;
     double fitness;
-
-    void generateWeights();
 public:
     Individual(size_t w, size_t h, size_t d, double val = 0);
     ~Individual();
+
+    void generateWeights();
 
     inline void setFitness(double fitness){this->fitness=fitness;}
     inline double getFitness(){return fitness;}
