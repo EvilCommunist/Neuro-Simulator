@@ -33,7 +33,7 @@ void Individual::mutate(){
     for(size_t i = 0; i < width; i++){
         for(size_t j = 0; j < height; j++){
             for(uint16_t k = 0; k < depth; k++){
-                data->setValue(i, j, k, data.getValue(i, j, k)+dis(gen));
+                data->setValue(i, j, k, data->getValue(i, j, k)+dis(gen));
             }
         }
     }
@@ -47,7 +47,7 @@ Individual Individual::operator+(Individual& other){
         crossoverPoint = this->depth/2;
     }
 
-    ThreeDimVector<double>* newData = new ThreeDimVector(this->width, this->height, this->depth, 0);
+    ThreeDimVector<double>* newData = new ThreeDimVector<double>(this->width, this->height, this->depth, 0);
 
     for(size_t i = 0; i < width; i++){
         for(size_t j = 0; j < height; j++){
