@@ -21,8 +21,10 @@ public:
     inline QVector<Individual>& getOffspring(){return offspring;}
 
     void initializePopulation(size_t w, size_t h, size_t d, double val = 0);
+    inline void findInitialBest() {best.append(findBest(currentGeneration));}
     void startIteration();
     void completeIteration();
+    inline Individual getBestOfTheBest(){return findBest(best);}
 };
 
 #endif // GENETICALGORITHM_H

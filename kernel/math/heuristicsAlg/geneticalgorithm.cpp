@@ -50,7 +50,7 @@ void GeneticAlgorithm::initializePopulation(size_t w, size_t h, size_t d, double
     }
 }
 
-void GeneticAlgorithm::startIteration(){
+void GeneticAlgorithm::startIteration(){    // fitness is calculated in NN learn function
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<double> dis(0, 1);
@@ -76,5 +76,21 @@ void GeneticAlgorithm::startIteration(){
 }
 
 void GeneticAlgorithm::completeIteration(){
-    // TODO: elite recombination of individuals
+    auto common = currentGeneration + offspring;
+    for(size_t i = 0; i < common.size(); i++){
+        for(size_t j = 1; j < common.size()-i; j++){
+            if(common[j-1].fitness > common[j].fitness){
+                auto temp = common[j-1];
+                common[j-1] = common[j];
+                common[j] = temp;
+            }
+        }
+    }
+
+    offspring.clear();
+    for(int i = 0; i < currentGeneration.size(); i++){
+        currentGeneration[i] = common[i];
+    }
+
+    best.append(findBest(currentGeneration));
 }
