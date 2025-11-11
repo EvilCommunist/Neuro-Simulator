@@ -1,6 +1,7 @@
 #include "neuro.h"
 #include "../ui/chartprocessor.h"
 #include <random>
+#include "./math/heuristicsAlg/geneticalgorithm.h"
 
 #include <QDebug> // for debug
 
@@ -181,5 +182,52 @@ void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const Tw
             break;
         }
     }
+}
+
+
+void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDimVector<double> &ans, size_t epochs,
+                                   size_t popSize, float pMute, float pCross){
+    GeneticAlgorithm GAHelper(popSize, pMute, pCross);
+// Initial iteration
+    GAHelper.initializePopulation(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1);
+
+    auto currentGen = GAHelper.getCurrent();
+    for (int i = 0; i < currentGen.size(); i++){
+        this->weights = *currentGen[i].getData();
+        float learnAvgErr = 0;
+        for(int j = 0; j < data.getHeight(); j++){
+            forwardPropogation(data.getLine(j));
+            for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+                auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+                neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
+            }
+            learnAvgErr += learnChartHelper();
+        }
+        currentGen[i].setFitness(learnAvgErr/data.getHeight());
+    }
+    GAHelper.findInitialBest();
+    chartProcessor::getCurrentError(GAHelper.getBest()[0].getFitness());
+// Initial iteration
+
+    for(int epoch = 1; epoch < epochs; epoch ++){
+        GAHelper.startIteration();
+        auto currentGen = GAHelper.getCurrent();
+        for (int i = 0; i < currentGen.size(); i++){
+            this->weights = *currentGen[i].getData();
+            float learnAvgErr = 0;
+            for(int j = 0; j < data.getHeight(); j++){
+                forwardPropogation(data.getLine(j));
+                for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+                    auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+                    neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
+                }
+                learnAvgErr += learnChartHelper();
+            }
+            currentGen[i].setFitness(learnAvgErr/data.getHeight());
+        }
+        GAHelper.completeIteration();
+        chartProcessor::getCurrentError(GAHelper.getBest()[epoch].getFitness());
+    }
+    this->weights = *GAHelper.getBestOfTheBest().getData();
 }
 

@@ -79,7 +79,7 @@ void GeneticAlgorithm::completeIteration(){
     auto common = currentGeneration + offspring;
     for(size_t i = 0; i < common.size(); i++){
         for(size_t j = 1; j < common.size()-i; j++){
-            if(common[j-1].fitness > common[j].fitness){
+            if(common[j-1].getFitness() > common[j].getFitness()){
                 auto temp = common[j-1];
                 common[j-1] = common[j];
                 common[j] = temp;
