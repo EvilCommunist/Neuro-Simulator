@@ -211,7 +211,7 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
 
     for(int epoch = 1; epoch < epochs; epoch ++){
         GAHelper.startIteration();
-        auto currentGen = GAHelper.getCurrent();
+        auto currentGen = GAHelper.getCurrent() + GAHelper.getOffspring();
         for (int i = 0; i < currentGen.size(); i++){
             this->weights = currentGen[i]->getData();
             float learnAvgErr = 0;
@@ -226,8 +226,8 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
             currentGen[i]->setFitness(learnAvgErr/data.getHeight());
         }
         GAHelper.completeIteration();
-        chartProcessor::getCurrentError(GAHelper.getBest()[epoch]->getFitness());
+        chartProcessor::getCurrentError(GAHelper.getBestOfTheBest()->getFitness());
     }
-    this->weights = GAHelper.getBestOfTheBest()->getData();
+    this->weights = ThreeDimVector(GAHelper.getBestOfTheBest()->getData());
 }
 

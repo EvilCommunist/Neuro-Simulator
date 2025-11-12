@@ -9,11 +9,6 @@ GeneticAlgorithm::GeneticAlgorithm(size_t popSize, float pMute, float pCross):
 {}
 
 GeneticAlgorithm::~GeneticAlgorithm(){
-    if(!best.empty()){
-        for(auto ind : best){
-            delete ind;
-        }
-    }
     if(!currentGeneration.empty()){
         for(auto ind : currentGeneration){
             if (!best.contains(ind))
@@ -22,7 +17,24 @@ GeneticAlgorithm::~GeneticAlgorithm(){
     }
     if(!offspring.empty()){
         for(auto ind : offspring){
+            if (!best.contains(ind))
+                delete ind;
+        }
+    }
+    if(!best.empty()){
+        for(auto ind : best){
             delete ind;
+
+            QVector<int> indices;
+            int index = 0;
+            while ((index = best.indexOf(ind, index)) != -1) {
+                indices.append(index);
+                ++index;
+            }
+            ind = nullptr;
+            for(auto index_ : indices){
+                best[index_] = nullptr;
+            }
         }
     }
 }
@@ -85,10 +97,11 @@ void GeneticAlgorithm::startIteration(){    // fitness is calculated in NN learn
     for(size_t i = 0; i < currentGeneration.size() - 1; i+=2){
         if(dis(gen) < pCrossover){
             Individual* child1 = new Individual(*selected[i]+*selected[i+1]); Individual* child2 = new Individual(*selected[i+1]+*selected[i]);
-            //*child1 = *selected[i]+*selected[i+1]; *child2 = *selected[i+1]+*selected[i];
             offspring.append(child1); offspring.append(child2);
         }else{
-            offspring.append(selected[i]); offspring.append(selected[i+1]);
+            Individual* copy1 = new Individual(*selected[i]);
+            Individual* copy2 = new Individual(*selected[i+1]);
+            offspring.append(copy1); offspring.append(copy2);
         }
     }
 
@@ -108,13 +121,13 @@ void GeneticAlgorithm::completeIteration(){
                 common[j] = temp;
             }
         }
-    } // needs debugging
+    }
 
     for(int i = 0; i < currentGeneration.size(); i++){
         currentGeneration[i] = common[i];
     }
     for(int i = currentGeneration.size(); i < common.size(); i++){
-        if (common[i]!=nullptr){
+        if(!best.contains(common[i])){
             delete common[i];
             common[i] = nullptr;
         }
