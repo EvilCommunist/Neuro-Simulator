@@ -15,6 +15,10 @@ public:
     explicit GeneticAlgCoefs(QWidget *parent = nullptr);
     ~GeneticAlgCoefs();
 
+    int getPopSize();
+    double getMutationProb();
+    double getCrossoverProb();
+
 private:
     Ui::GeneticAlgCoefs *ui;
 };

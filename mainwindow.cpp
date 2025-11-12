@@ -9,7 +9,7 @@
 #include "./kernel/files/csvprocessor.h"
 #include "./ui/adaptlearndatadialog.h"
 #include "./ui/chartprocessor.h"
-#include "./ui/GUI/geneticalgcoefs.h"
+#include "./ui/geneticalgcoefs.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -278,6 +278,11 @@ void MainWindow::on_startLearning_clicked()
     }
     case RESILENT_PROPOGATION:{
         NN->learn_resilentPropogation(learnData, answers, ui->learnIterations->value());
+        break;
+    }
+    case GENETIC_ALGORITHM:{
+        auto curr = dynamic_cast<GeneticAlgCoefs*>(currentLearnFuncCoeffs);
+        NN->learn_geneticAlgorithm(learnData, answers, ui->learnIterations->value(), curr->getPopSize(), curr->getMutationProb(), curr->getCrossoverProb());
         break;
     }
     }

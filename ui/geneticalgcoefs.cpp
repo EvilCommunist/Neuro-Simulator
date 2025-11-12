@@ -12,3 +12,16 @@ GeneticAlgCoefs::~GeneticAlgCoefs()
 {
     delete ui;
 }
+
+
+int GeneticAlgCoefs::getPopSize(){
+    return ui->popSize->value();
+}
+
+double GeneticAlgCoefs::getCrossoverProb(){
+    return ui->pCrossover->value();
+}
+
+double GeneticAlgCoefs::getMutationProb(){
+    return ui->pMutation->value();
+}
