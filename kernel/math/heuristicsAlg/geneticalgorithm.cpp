@@ -8,21 +8,39 @@ GeneticAlgorithm::GeneticAlgorithm(size_t popSize, float pMute, float pCross):
     offspring({}), currentGeneration({}), best({})
 {}
 
-Individual GeneticAlgorithm::findBest(const QVector<Individual>& sample){
-    Individual best(1, 1, 1, 0);
-    best.setFitness(INT32_MAX);
+GeneticAlgorithm::~GeneticAlgorithm(){
+    if(!best.empty()){
+        for(auto ind : best){
+            delete ind;
+        }
+    }
+    if(!currentGeneration.empty()){
+        for(auto ind : currentGeneration){
+            if (!best.contains(ind))
+                delete ind;
+        }
+    }
+    if(!offspring.empty()){
+        for(auto ind : offspring){
+            delete ind;
+        }
+    }
+}
+
+Individual* GeneticAlgorithm::findBest(const QVector<Individual*>& sample){
+    Individual* best = nullptr;
     for(auto individual: sample){
-        if(best.getFitness() > individual.getFitness()){
+        if(best == nullptr || best->getFitness() > individual->getFitness()){
             best = individual;
         }
     }
     return best;
 }
 
-QVector<Individual> GeneticAlgorithm::randomChoose(){
+QVector<Individual*> GeneticAlgorithm::randomChoose(){
     size_t contestantsAmount = std::min(3, static_cast<int>(currentGeneration.size()));
     QVector<int> usedIndexes{};
-    QVector<Individual> chosen{};
+    QVector<Individual*> chosen{};
     for (size_t i = 0; i < contestantsAmount; i++){
         int index = QRandomGenerator::global()->bounded(currentGeneration.size());
         while(usedIndexes.contains(index))
@@ -33,10 +51,10 @@ QVector<Individual> GeneticAlgorithm::randomChoose(){
     return chosen;
 }
 
-QVector<Individual> GeneticAlgorithm::tournament(){
-    QVector<Individual> selected{};
+QVector<Individual*> GeneticAlgorithm::tournament(){
+    QVector<Individual*> selected{};
     for(size_t i = 0; i < currentGeneration.size(); i++){
-        QVector<Individual> contestants = randomChoose();
+        QVector<Individual*> contestants = randomChoose();
         selected.append(findBest(contestants));
     }
     return selected;
@@ -44,8 +62,8 @@ QVector<Individual> GeneticAlgorithm::tournament(){
 
 void GeneticAlgorithm::initializePopulation(size_t w, size_t h, size_t d, double val){
     for(int i = 0; i < populationSize; i++){
-        Individual newIndividual(w, h, d, val);
-        newIndividual.generateWeights();
+        Individual* newIndividual = new Individual(w, h, d, val);
+        newIndividual->generateWeights();
         currentGeneration.append(newIndividual);
     }
 }
@@ -57,12 +75,17 @@ void GeneticAlgorithm::startIteration(){    // fitness is calculated in NN learn
 
     auto selected = tournament();
 
-    if(!offspring.empty())
+    if(!offspring.empty()){
+        for(auto ind : offspring){
+            delete ind;
+        }
         offspring.clear();
+    }
 
     for(size_t i = 0; i < currentGeneration.size() - 1; i+=2){
         if(dis(gen) < pCrossover){
-            Individual child1 = selected[i]+selected[i+1], child2 = selected[i+1]+selected[i];
+            Individual* child1 = new Individual(*selected[i]+*selected[i+1]); Individual* child2 = new Individual(*selected[i+1]+*selected[i]);
+            //*child1 = *selected[i]+*selected[i+1]; *child2 = *selected[i+1]+*selected[i];
             offspring.append(child1); offspring.append(child2);
         }else{
             offspring.append(selected[i]); offspring.append(selected[i+1]);
@@ -71,7 +94,7 @@ void GeneticAlgorithm::startIteration(){    // fitness is calculated in NN learn
 
     for(size_t i = 0; i < offspring.size(); i++){
         if(dis(gen) < pMutation)
-            offspring[i].mutate();
+            offspring[i]->mutate();
     }
 }
 
@@ -79,18 +102,24 @@ void GeneticAlgorithm::completeIteration(){
     auto common = currentGeneration + offspring;
     for(size_t i = 0; i < common.size(); i++){
         for(size_t j = 1; j < common.size()-i; j++){
-            if(common[j-1].getFitness() > common[j].getFitness()){
+            if(common[j-1]->getFitness() > common[j]->getFitness()){
                 auto temp = common[j-1];
                 common[j-1] = common[j];
                 common[j] = temp;
             }
         }
-    }
+    } // needs debugging
 
-    offspring.clear();
     for(int i = 0; i < currentGeneration.size(); i++){
         currentGeneration[i] = common[i];
     }
+    for(int i = currentGeneration.size(); i < common.size(); i++){
+        if (common[i]!=nullptr){
+            delete common[i];
+            common[i] = nullptr;
+        }
+    }
+    offspring.clear();
 
     best.append(findBest(currentGeneration));
 }

@@ -193,7 +193,7 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
 
     auto currentGen = GAHelper.getCurrent();
     for (int i = 0; i < currentGen.size(); i++){
-        this->weights = *currentGen[i].getData();
+        this->weights = currentGen[i]->getData();
         float learnAvgErr = 0;
         for(int j = 0; j < data.getHeight(); j++){
             forwardPropogation(data.getLine(j));
@@ -203,17 +203,17 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
             }
             learnAvgErr += learnChartHelper();
         }
-        currentGen[i].setFitness(learnAvgErr/data.getHeight());
+        currentGen[i]->setFitness(learnAvgErr/data.getHeight());
     }
     GAHelper.findInitialBest();
-    chartProcessor::getCurrentError(GAHelper.getBest()[0].getFitness());
+    chartProcessor::getCurrentError(GAHelper.getBest()[0]->getFitness());
 // Initial iteration
 
     for(int epoch = 1; epoch < epochs; epoch ++){
         GAHelper.startIteration();
         auto currentGen = GAHelper.getCurrent();
         for (int i = 0; i < currentGen.size(); i++){
-            this->weights = *currentGen[i].getData();
+            this->weights = currentGen[i]->getData();
             float learnAvgErr = 0;
             for(int j = 0; j < data.getHeight(); j++){
                 forwardPropogation(data.getLine(j));
@@ -223,11 +223,11 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
                 }
                 learnAvgErr += learnChartHelper();
             }
-            currentGen[i].setFitness(learnAvgErr/data.getHeight());
+            currentGen[i]->setFitness(learnAvgErr/data.getHeight());
         }
         GAHelper.completeIteration();
-        chartProcessor::getCurrentError(GAHelper.getBest()[epoch].getFitness());
+        chartProcessor::getCurrentError(GAHelper.getBest()[epoch]->getFitness());
     }
-    this->weights = *GAHelper.getBestOfTheBest().getData();
+    this->weights = GAHelper.getBestOfTheBest()->getData();
 }
 
