@@ -13,10 +13,13 @@ CONFIG += c++17
 SOURCES += \
     kernel/files/csvprocessor.cpp \
     kernel/math/activationFunctions.cpp \
+    kernel/math/heuristicsAlg/geneticalgorithm.cpp \
+    kernel/math/heuristicsAlg/individual.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/geneticalgcoefs.cpp \
     ui/GUI/neurolink.cpp \
     ui/GUI/neuronode.cpp \
     ui/GUI/neuroview.cpp \
@@ -28,11 +31,14 @@ SOURCES += \
 HEADERS += \
     kernel/files/csvprocessor.h \
     kernel/math/activationFunctions.h \
+    kernel/math/heuristicsAlg/geneticalgorithm.h \
+    kernel/math/heuristicsAlg/individual.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/geneticalgcoefs.h \
     ui/GUI/neurolink.h \
     ui/GUI/neuronode.h \
     ui/GUI/neuroview.h \
@@ -45,6 +51,7 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
+    ui/geneticalgcoefs.ui \
     ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
     ui/hiddenlayerconfig.ui

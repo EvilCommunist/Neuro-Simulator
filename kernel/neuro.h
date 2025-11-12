@@ -26,8 +26,12 @@ public:
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
     void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
+    void learn_geneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross);
 
     float learnChartHelper();
+
+    inline ThreeDimVector<double> getWeights(){return weights;}
+    inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 };
 
 #endif // NEURO_H
