@@ -4,6 +4,7 @@
 enum functionCoeffs{
     BACK_PROPOGATION,
     RESILENT_PROPOGATION,
+    GENETIC_ALGORITHM
 };
 
 

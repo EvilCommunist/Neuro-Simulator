@@ -9,6 +9,7 @@
 #include "./kernel/files/csvprocessor.h"
 #include "./ui/adaptlearndatadialog.h"
 #include "./ui/chartprocessor.h"
+#include "./ui/GUI/geneticalgcoefs.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -190,6 +191,12 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
         break;
     }
     case RESILENT_PROPOGATION:{
+        break;
+    }
+    case GENETIC_ALGORITHM:{
+        GeneticAlgCoefs* geneticWidget = new GeneticAlgCoefs;
+        currentLearnFuncCoeffs = geneticWidget;
+        ui->learnWeightsLayout->insertWidget(0, geneticWidget);
         break;
     }
     }

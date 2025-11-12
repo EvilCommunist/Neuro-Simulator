@@ -46,7 +46,7 @@
 border-color: rgb(124, 124, 124); padding: 5px;}</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Creation">
        <property name="styleSheet">
@@ -75,7 +75,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
               <rect>
                <x>10</x>
                <y>30</y>
-               <width>321</width>
+               <width>434</width>
                <height>66</height>
               </rect>
              </property>
@@ -200,7 +200,7 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
               <rect>
                <x>10</x>
                <y>30</y>
-               <width>321</width>
+               <width>434</width>
                <height>71</height>
               </rect>
              </property>
@@ -602,6 +602,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                   <item>
                    <property name="text">
                     <string>Упругого распространения</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Генетический алгоритм</string>
                    </property>
                   </item>
                  </widget>
