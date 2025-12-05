@@ -15,6 +15,7 @@ SOURCES += \
     kernel/math/activationFunctions.cpp \
     kernel/math/heuristicsAlg/geneticalgorithm.cpp \
     kernel/math/heuristicsAlg/individual.cpp \
+    kernel/math/heuristicsAlg/modifiedindividual.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -31,8 +32,10 @@ SOURCES += \
 HEADERS += \
     kernel/files/csvprocessor.h \
     kernel/math/activationFunctions.h \
+    kernel/math/heuristicsAlg/GeneticOperatorsEnum.h \
     kernel/math/heuristicsAlg/geneticalgorithm.h \
     kernel/math/heuristicsAlg/individual.h \
+    kernel/math/heuristicsAlg/modifiedindividual.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
     mainwindow.h \

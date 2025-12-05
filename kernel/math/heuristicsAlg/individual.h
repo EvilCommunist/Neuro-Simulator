@@ -5,7 +5,7 @@
 
 class Individual    // the individual is a three dimensional weight matrix
 {
-private:
+protected:
     ThreeDimVector<double> data;
     size_t width, height, depth;
     double fitness;

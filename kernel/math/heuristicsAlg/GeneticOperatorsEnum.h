@@ -1,0 +1,19 @@
+#ifndef GENETICOPERATORSENUM_H
+#define GENETICOPERATORSENUM_H
+
+enum Selection{
+    PROPORTIONAL,
+    RANGED,
+    TOURNAMENT,
+    TOURNAMENT_WITH_RETURN
+};
+
+enum Crossover{
+    ARITHMETICAL,
+    LINEAR,
+    ONE_POINT,
+    TWO_POINT,
+    EVEN
+};
+
+#endif // GENETICOPERATORSENUM_H
