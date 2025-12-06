@@ -6,8 +6,14 @@
 
 class ModifiedIndividual: public Individual
 {
+private:
+    Crossover crossType;
+    MutationStrength mutRateForEach;
 public:
-    ModifiedIndividual(size_t w, size_t h, size_t d, double val = 0, Crossover type = ARITHMETICAL);
+    ModifiedIndividual(size_t w, size_t h, size_t d, double val = 0, Crossover type = ARITHMETICAL, MutationStrength strength = WEAK);
+
+    void mutate() override;
+    ModifiedIndividual operator+(ModifiedIndividual& other) override; // Crossover operation
 };
 
 #endif // MODIFIEDINDIVIDUAL_H

@@ -20,8 +20,8 @@ public:
     inline void setData(ThreeDimVector<double> data) {this->data = data;}
     inline size_t getDepth(){return depth;}
 
-    void mutate();
-    Individual operator+(Individual& other); // Crossover operation
+    virtual void mutate();
+    virtual Individual operator+(Individual& other); // Crossover operation
 };
 
 #endif // INDIVIDUAL_H
