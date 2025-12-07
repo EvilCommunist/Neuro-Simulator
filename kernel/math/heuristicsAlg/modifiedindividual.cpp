@@ -40,13 +40,55 @@ void ModifiedIndividual::mutate(){
     }
 }
 
-ModifiedIndividual operator+(ModifiedIndividual& other){
+ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
     ThreeDimVector<double> newData(this->width, this->height, this->depth, 0);
 
     switch(crossType){
     case ARITHMETICAL:
+        const float partOfPartner = 0.5;
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData.setValue(i, j, k,
+                                     this->data.getValue(i, j, k)*partOfPartner +
+                                                  other.data.getValue(i, j, k)*(1-partOfPartner));
+                }
+            }
+        }
         break;
     case BLX_ALPHA:
+        double minWeight = INT16_MAX, maxWeight = INT16_MIN;
+        const float alpha = 0.5;
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    if(this->data.getValue(i, j, k) < minWeight){
+                        minWeight = this->data.getValue(i, j, k);
+                    }
+                    else if (this->data.getValue(i, j, k) > maxWeight){
+                        maxWeight = this->data.getValue(i, j, k);
+                    }
+                    if(other.data.getValue(i, j, k) < minWeight){
+                        minWeight = other.data.getValue(i, j, k);
+                    }
+                    else if (other.data.getValue(i, j, k) > maxWeight){
+                        maxWeight = other.data.getValue(i, j, k);
+                    }
+                }
+            }
+        }
+
+        double I = maxWeight - minWeight;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::normal_distribution<double> dis(minWeight - I*alpha, maxWeight + I*alpha);
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData.setValue(i, j, k, dis(gen));
+                }
+            }
+        }
         break;
     case LINEAR:
         break;
