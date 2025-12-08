@@ -5,7 +5,7 @@
 
 class GeneticAlgorithm  // this class partly makes GA's functions, fitness will be calculated in the NN's learn function
 {
-private:
+protected:
     size_t populationSize;
     float pMutation;
     float pCrossover;
@@ -21,10 +21,10 @@ public:
     inline QVector<Individual*>& getCurrent(){return currentGeneration;}
     inline QVector<Individual*>& getOffspring(){return offspring;}
 
-    void initializePopulation(size_t w, size_t h, size_t d, double val = 0);
+    virtual void initializePopulation(size_t w, size_t h, size_t d, double val = 0);
     inline void findInitialBest() {best.append(findBest(currentGeneration));}
-    void startIteration();
-    void completeIteration();
+    virtual void startIteration();
+    virtual void completeIteration();
     inline Individual* getBestOfTheBest(){return findBest(best);}
 };
 

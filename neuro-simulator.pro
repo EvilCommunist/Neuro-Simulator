@@ -15,6 +15,7 @@ SOURCES += \
     kernel/math/activationFunctions.cpp \
     kernel/math/heuristicsAlg/geneticalgorithm.cpp \
     kernel/math/heuristicsAlg/individual.cpp \
+    kernel/math/heuristicsAlg/modifiedgeneticalgorithm.cpp \
     kernel/math/heuristicsAlg/modifiedindividual.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     kernel/math/heuristicsAlg/GeneticOperatorsEnum.h \
     kernel/math/heuristicsAlg/geneticalgorithm.h \
     kernel/math/heuristicsAlg/individual.h \
+    kernel/math/heuristicsAlg/modifiedgeneticalgorithm.h \
     kernel/math/heuristicsAlg/modifiedindividual.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
