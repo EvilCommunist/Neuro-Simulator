@@ -1,4 +1,5 @@
 #include "modifiedindividual.h"
+#include <qrandom.h>
 
 ModifiedIndividual::ModifiedIndividual(size_t w, size_t h, size_t d, double val, Crossover type, MutationStrength strength):
     Individual(w, h, d, val),
@@ -96,24 +97,42 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
         newData = Individual::operator+(other).getData();
         break;
     case TWO_POINT:
+        size_t crossoverPoint1 = 0, crossoverPoint2 = 0;
+        if(this->depth % 2 == 1){
+            crossoverPoint1 = this->depth/3 + 1;
+            crossoverPoint2 = 2*this->depth/3 + 1;
+        }else{
+            crossoverPoint1 = this->depth/3;
+            crossoverPoint2 = 2*this->depth/3;
+        }
+
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < crossoverPoint1; k++){
+                    newData.setValue(i, j, k, this->data.getValue(i, j, k));
+                }
+            }
+        }
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = crossoverPoint1; k < crossoverPoint2; k++){
+                    newData.setValue(i, j, k, other.data.getValue(i, j, k));
+                }
+            }
+        }
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = crossoverPoint2; k < this->depth; k++){
+                    newData.setValue(i, j, k, this->data.getValue(i, j, k));
+                }
+            }
+        }
         break;
     case EVEN:
+        QPair<ModifiedIndividual*> pair{this, &other};
+        const uint8_t size = 2;
+        //QRandomGenerator::global()->bounded(size);
         break;
-    }
-
-    for(size_t i = 0; i < width; i++){
-        for(size_t j = 0; j < height; j++){
-            for(uint16_t k = 0; k < crossoverPoint; k++){
-                newData.setValue(i, j, k, this->data.getValue(i, j, k));
-            }
-        }
-    }
-    for(size_t i = 0; i < width; i++){
-        for(size_t j = 0; j < height; j++){
-            for(uint16_t k = crossoverPoint; k < this->depth; k++){
-                newData.setValue(i, j, k, other.data.getValue(i, j, k));
-            }
-        }
     }
     Individual newInd(this->width, this->height, this->depth);
     newInd.setData(newData);
