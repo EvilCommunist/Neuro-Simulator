@@ -45,7 +45,7 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
     ThreeDimVector<double> newData(this->width, this->height, this->depth, 0);
 
     switch(crossType){
-    case ARITHMETICAL:
+    case ARITHMETICAL:{
         const float partOfPartner = 0.5;
         for(size_t i = 0; i < width; i++){
             for(size_t j = 0; j < height; j++){
@@ -56,8 +56,9 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
                 }
             }
         }
+    }
         break;
-    case BLX_ALPHA:
+    case BLX_ALPHA:{
         double minWeight = INT16_MAX, maxWeight = INT16_MIN;
         const float alpha = 0.5;
         for(size_t i = 0; i < width; i++){
@@ -90,13 +91,45 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
                 }
             }
         }
+    }
         break;
-    case LINEAR:
+    case LINEAR:{
+        ThreeDimVector<double> newData1(this->width, this->height, this->depth, 0);
+        ThreeDimVector<double> newData2(this->width, this->height, this->depth, 0);
+        ThreeDimVector<double> newData3(this->width, this->height, this->depth, 0);
+        const uint8_t childs = 3;
+
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData1.setValue(i, j, k, 0.5*this->data.getValue(i, j, k) + 0.5*other.data.getValue(i, j, k));
+                }
+            }
+        }
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData2.setValue(i, j, k, -0.5*this->data.getValue(i, j, k) + 1.5*other.data.getValue(i, j, k));
+                }
+            }
+        }
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData3.setValue(i, j, k, 1.5*this->data.getValue(i, j, k) - 0.5*other.data.getValue(i, j, k));
+                }
+            }
+        }
+
+        QVector<ThreeDimVector<double>*> kindergarten {&newData1, &newData2, &newData3};
+        newData = *kindergarten[QRandomGenerator::global()->bounded(childs)];
+    }
         break;
-    case ONE_POINT:
+    case ONE_POINT:{
         newData = Individual::operator+(other).getData();
+    }
         break;
-    case TWO_POINT:
+    case TWO_POINT:{
         size_t crossoverPoint1 = 0, crossoverPoint2 = 0;
         if(this->depth % 2 == 1){
             crossoverPoint1 = this->depth/3 + 1;
@@ -127,14 +160,22 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
                 }
             }
         }
+    }
         break;
-    case EVEN:
-        QPair<ModifiedIndividual*> pair{this, &other};
+    case EVEN:{
+        QVector<ModifiedIndividual*> pair{this, &other};
         const uint8_t size = 2;
-        //QRandomGenerator::global()->bounded(size);
+        for(size_t i = 0; i < width; i++){
+            for(size_t j = 0; j < height; j++){
+                for(uint16_t k = 0; k < this->depth; k++){
+                    newData.setValue(i, j, k, pair[QRandomGenerator::global()->bounded(size)]->data.getValue(i,j,k));
+                }
+            }
+        }
+    }
         break;
     }
-    Individual newInd(this->width, this->height, this->depth);
+    ModifiedIndividual newInd(this->width, this->height, this->depth, 0, this->crossType, this->mutRateForEach);
     newInd.setData(newData);
 
     return newInd;

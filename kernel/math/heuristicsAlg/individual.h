@@ -21,7 +21,7 @@ public:
     inline size_t getDepth(){return depth;}
 
     virtual void mutate();
-    virtual Individual operator+(Individual& other); // Crossover operation
+    Individual operator+(Individual& other); // Crossover operation
 };
 
 #endif // INDIVIDUAL_H
