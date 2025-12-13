@@ -20,7 +20,7 @@ private:
 public:
     ModifiedGeneticAlgorithm(size_t popSize = 500, float pMute = 0.3, float pCross = 0.7,
                             Crossover crossType = ARITHMETICAL, MutationStrength mutStrength = WEAK,
-                            Selection selType = PROPORTIONAL, uint8_t workers);
+                            Selection selType = PROPORTIONAL, uint8_t workers = 4);
 
     void initializePopulation(size_t w, size_t h, size_t d, double val = 0) override;
     void startIteration() override;
