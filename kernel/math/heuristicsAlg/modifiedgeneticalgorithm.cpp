@@ -61,7 +61,7 @@ QVector<Individual*> ModifiedGeneticAlgorithm::proportionalSelection(){
     QVector<double> fitnesses{};
     QList<QFuture<QVector<double>>> futuresFitness;
     for(int i = 0; i < threadAmount; i ++){
-        auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
+        auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [this, i]() {
             QVector<double> part{};
             for(size_t j = i*currentGeneration.size()/threadAmount; j < (i+1)*currentGeneration.size()/threadAmount; j++){
                 part.append(currentGeneration[j]->getFitness());
@@ -80,7 +80,7 @@ QVector<Individual*> ModifiedGeneticAlgorithm::proportionalSelection(){
 
     QList<QFuture<QVector<ProportionalSelectionHelper>>> futures;
     for(int i = 0; i < threadAmount; i ++){
-        auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
+        auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [this, i, &fitnesses]() {
             QVector<ProportionalSelectionHelper> part{};
             for(size_t j = i*currentGeneration.size()/threadAmount; j < (i+1)*currentGeneration.size()/threadAmount; j++){
                 part.append(ProportionalSelectionHelper{j, ProportionalSelectionHelper::calculateProbability(j, fitnesses), {}});
@@ -135,6 +135,11 @@ QVector<Individual*> ModifiedGeneticAlgorithm::proportionalSelection(){
     return selected;
 }
 
+QVector<Individual*> ModifiedGeneticAlgorithm::rangedSelection(){
+// May be not added on final version
+    return {};
+}
+
 void ModifiedGeneticAlgorithm::initializePopulation(size_t w, size_t h, size_t d, double val){
     QList<QFuture<QVector<Individual*>>> futures;
     for(int i = 0; i < threadAmount; i ++){
@@ -157,10 +162,6 @@ void ModifiedGeneticAlgorithm::initializePopulation(size_t w, size_t h, size_t d
 }
 
 void ModifiedGeneticAlgorithm::startIteration(){
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::normal_distribution<double> dis(0, 1);
-
     QVector<Individual*> selected{};
 
     switch(selectionType){
@@ -172,7 +173,8 @@ void ModifiedGeneticAlgorithm::startIteration(){
         selected = proportionalSelection();
         break;
     }
-    case RANGED:{   // TODO
+    case RANGED:{
+        selected = rangedSelection();
         break;
     }
     }
@@ -187,6 +189,10 @@ void ModifiedGeneticAlgorithm::startIteration(){
     QList<QFuture<QVector<Individual*>>> futures;
     for(int i = 0; i < threadAmount; i ++){
         auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::normal_distribution<double> dis(0, 1);
+
             QVector<Individual*> part{};
             for(size_t i = 0; i < currentGeneration.size()/threadAmount; i+=2){
                 ModifiedIndividual* current1 = dynamic_cast<ModifiedIndividual*>(selected[i]);
@@ -211,18 +217,28 @@ void ModifiedGeneticAlgorithm::startIteration(){
         offspring.append(future.result());
     }
 
-    QList<QFuture<void>> futuresMutation;
-    for(int i = 0; i < threadAmount; i ++){
-        auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
-            for(size_t i = 0; i < offspring.size()/threadAmount; i++){
-                if(dis(gen) < pMutation)
-                    offspring[i]->mutate();
-            }
-        });
-        futuresMutation.append(generatorFuture);
-    }
+    // QList<QFuture<void>> futuresMutation;
+    // for(int i = 0; i < threadAmount; i ++){
+    //     auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
+    //         std::random_device rd;
+    //         std::mt19937 gen(rd());
+    //         std::normal_distribution<double> dis(0, 1);
 
-    for(auto& future : futuresMutation){
-        future.waitForFinished();
+    //         for(size_t i = 0; i < offspring.size()/threadAmount; i++){
+    //             if(dis(gen) < pMutation)
+    //                 offspring[i]->mutate();
+    //         }
+    //     });
+    //     futuresMutation.append(generatorFuture);
+    // }
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<double> dis(0, 1);
+    for(size_t i = 0; i < offspring.size(); i++){
+        if(dis(gen) < pMutation)
+            offspring[i]->mutate();
     }
+    // for(auto& future : futuresMutation){
+    //     future.waitForFinished();
+    // }
 }

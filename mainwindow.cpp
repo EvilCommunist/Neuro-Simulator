@@ -10,6 +10,7 @@
 #include "./ui/adaptlearndatadialog.h"
 #include "./ui/chartprocessor.h"
 #include "./ui/geneticalgcoefs.h"
+#include "./kernel/math/heuristicsAlg/GeneticOperatorsEnum.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -283,6 +284,11 @@ void MainWindow::on_startLearning_clicked()
     case GENETIC_ALGORITHM:{
         auto curr = dynamic_cast<GeneticAlgCoefs*>(currentLearnFuncCoeffs);
         NN->learn_geneticAlgorithm(learnData, answers, ui->learnIterations->value(), curr->getPopSize(), curr->getMutationProb(), curr->getCrossoverProb());
+        break;
+    }
+    case MODIFIED_GA:{
+        // test
+        NN->learn_modifiedGeneticAlgorithm(learnData, answers, 160, 200, 0.3, 0.7, ONE_POINT, STRONG, TOURNAMENT, 4);
         break;
     }
     }

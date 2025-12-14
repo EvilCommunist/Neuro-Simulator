@@ -4,6 +4,7 @@
 #include "threedimvector.h"
 #include "twodimvector.h"
 #include "./math/activationFunctions.h"
+#include "./math/heuristicsAlg/GeneticOperatorsEnum.h"
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
@@ -27,6 +28,8 @@ public:
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
     void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
     void learn_geneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross);
+    void learn_modifiedGeneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross,
+                                        Crossover crossType, MutationStrength mutStrength, Selection selType, uint8_t workers);
 
     float learnChartHelper();
 
