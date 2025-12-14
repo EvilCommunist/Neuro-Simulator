@@ -24,7 +24,6 @@ public:
 
     void initializePopulation(size_t w, size_t h, size_t d, double val = 0) override;
     void startIteration() override;
-    void completeIteration() override;
 };
 
 #endif // MODIFIEDGENETICALGORITHM_H

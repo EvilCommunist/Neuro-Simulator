@@ -24,7 +24,7 @@ public:
     virtual void initializePopulation(size_t w, size_t h, size_t d, double val = 0);
     inline void findInitialBest() {best.append(findBest(currentGeneration));}
     virtual void startIteration();
-    virtual void completeIteration();
+    void completeIteration();
     inline Individual* getBestOfTheBest(){return findBest(best);}
 };
 
