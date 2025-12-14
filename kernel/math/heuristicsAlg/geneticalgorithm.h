@@ -10,7 +10,7 @@ protected:
     float pMutation;
     float pCrossover;
     QVector<Individual*> best, currentGeneration, offspring;
-    QVector<Individual*> tournament();
+    virtual QVector<Individual*> tournament();
     Individual* findBest(const QVector<Individual*>& sample);
     QVector<Individual*> randomChoose();
 

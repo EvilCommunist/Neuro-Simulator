@@ -13,9 +13,9 @@ private:
     Selection selectionType;
     uint8_t threadAmount;
 
-    QVector<ModifiedIndividual*> tournamentWithNoReturn();
-    QVector<ModifiedIndividual*> proportionalSelection();
-    QVector<ModifiedIndividual*> rangedSelection();
+    QVector<Individual*> proportionalSelection();
+    QVector<Individual*> rangedSelection();
+    QVector<Individual*> tournament() override;
 
 public:
     ModifiedGeneticAlgorithm(size_t popSize = 500, float pMute = 0.3, float pCross = 0.7,

@@ -5,10 +5,9 @@
 #define NORMAL_MUTATION 0.5
 
 enum Selection{
-    PROPORTIONAL,
-    RANGED,
     TOURNAMENT,
-    TOURNAMENT_WITH_RETURN
+    PROPORTIONAL,
+    RANGED
 };
 
 enum Crossover{
