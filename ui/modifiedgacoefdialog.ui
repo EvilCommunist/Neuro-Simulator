@@ -249,12 +249,12 @@
       </item>
       <item>
        <property name="text">
-        <string>Сильная</string>
+        <string>Средняя</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Средняя</string>
+        <string>Сильная</string>
        </property>
       </item>
      </widget>

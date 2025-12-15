@@ -294,8 +294,9 @@ void MainWindow::on_startLearning_clicked()
         break;
     }
     case MODIFIED_GA:{
-        // test
-        NN->learn_modifiedGeneticAlgorithm(learnData, answers, 160, 200, 0.3, 0.7, ONE_POINT, STRONG, TOURNAMENT, 4);
+        auto curr = dynamic_cast<ModifGACoefs*>(currentLearnFuncCoeffs);
+        NN->learn_modifiedGeneticAlgorithm(learnData, answers, ui->learnIterations->value(), curr->getPopSize(), curr->getMutationProb(),
+                                           curr->getCrossoverProb(), curr->getCrossType(), curr->getMutStrength(), curr->getSelType(), curr->getWorkers());
         break;
     }
     }

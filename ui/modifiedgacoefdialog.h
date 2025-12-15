@@ -15,7 +15,11 @@ public:
     explicit ModifiedGACoefDialog(QWidget *parent = nullptr);
     ~ModifiedGACoefDialog();
 
+private slots:
+    void on_buttonBox_accepted();
+
 private:
+    QWidget *parent;
     Ui::ModifiedGACoefDialog *ui;
 };
 
