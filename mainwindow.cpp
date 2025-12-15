@@ -11,6 +11,7 @@
 #include "./ui/chartprocessor.h"
 #include "./ui/geneticalgcoefs.h"
 #include "./kernel/math/heuristicsAlg/GeneticOperatorsEnum.h"
+#include "./ui/modifgacoefs.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -198,6 +199,12 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
         GeneticAlgCoefs* geneticWidget = new GeneticAlgCoefs;
         currentLearnFuncCoeffs = geneticWidget;
         ui->learnWeightsLayout->insertWidget(0, geneticWidget);
+        break;
+    }
+    case MODIFIED_GA:{
+        ModifGACoefs* modifiedGeneticWidget = new ModifGACoefs;
+        currentLearnFuncCoeffs = modifiedGeneticWidget;
+        ui->learnWeightsLayout->insertWidget(0, modifiedGeneticWidget);
         break;
     }
     }

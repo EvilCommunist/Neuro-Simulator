@@ -28,7 +28,9 @@ SOURCES += \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/chartprocessor.cpp \
-    ui/hiddenlayerconfig.cpp
+    ui/hiddenlayerconfig.cpp \
+    ui/modifgacoefs.cpp \
+    ui/modifiedgacoefdialog.cpp
 
 HEADERS += \
     kernel/files/csvprocessor.h \
@@ -52,14 +54,18 @@ HEADERS += \
     ui/chartprocessor.h \
     ui/enums.h \
     ui/functionMap.h \
-    ui/hiddenlayerconfig.h
+    ui/hiddenlayerconfig.h \
+    ui/modifgacoefs.h \
+    ui/modifiedgacoefdialog.h
 
 FORMS += \
     mainwindow.ui \
     ui/geneticalgcoefs.ui \
     ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
-    ui/hiddenlayerconfig.ui
+    ui/hiddenlayerconfig.ui \
+    ui/modifgacoefs.ui \
+    ui/modifiedgacoefdialog.ui
 
 TRANSLATIONS += \
     neuro-simulator_ru_RU.ts
