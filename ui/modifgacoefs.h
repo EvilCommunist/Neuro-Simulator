@@ -22,6 +22,7 @@ public:
     inline Selection getSelType() {return selType;}
     inline MutationStrength getMutStrength() {return mutStrength;}
     inline Crossover getCrossType() {return crossType;}
+    inline uint8_t getWorkers() {return workers;}
 
     inline void setPopSize(int value) {this->popSize = value;}
     inline void setMutationProb(double value) {this->mutProb = value;}
@@ -29,6 +30,7 @@ public:
     inline void setSelType(Selection type) {this->selType = type;}
     inline void setMutStrength(MutationStrength strength) {this->mutStrength = strength;}
     inline void setCrossType(Crossover type) {this->crossType = type;}
+    inline void setWorkers(uint8_t amount) {this->workers = amount;}
 
 private slots:
     void on_OpenModifGAWindow_clicked();
@@ -40,6 +42,7 @@ private:
     Selection selType;
     MutationStrength mutStrength;
     Crossover crossType;
+    uint8_t workers;
 
     Ui::ModifGACoefs *ui;
 };

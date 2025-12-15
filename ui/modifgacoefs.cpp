@@ -4,7 +4,14 @@
 
 ModifGACoefs::ModifGACoefs(QWidget *parent)
     : QFrame(parent)
-    , ui(new Ui::ModifGACoefs)
+    , ui(new Ui::ModifGACoefs),
+    popSize(200),
+    mutProb(0.3),
+    crossProb(0.7),
+    selType(TOURNAMENT),
+    mutStrength(WEAK),
+    crossType(ARITHMETICAL),
+    workers(4) // initial hard-coded values
 {
     ui->setupUi(this);
 }
