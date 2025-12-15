@@ -5,7 +5,7 @@
 
 class Individual    // the individual is a three dimensional weight matrix
 {
-private:
+protected:
     ThreeDimVector<double> data;
     size_t width, height, depth;
     double fitness;
@@ -20,7 +20,7 @@ public:
     inline void setData(ThreeDimVector<double> data) {this->data = data;}
     inline size_t getDepth(){return depth;}
 
-    void mutate();
+    virtual void mutate();
     Individual operator+(Individual& other); // Crossover operation
 };
 

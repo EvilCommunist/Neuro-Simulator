@@ -15,6 +15,8 @@ SOURCES += \
     kernel/math/activationFunctions.cpp \
     kernel/math/heuristicsAlg/geneticalgorithm.cpp \
     kernel/math/heuristicsAlg/individual.cpp \
+    kernel/math/heuristicsAlg/modifiedgeneticalgorithm.cpp \
+    kernel/math/heuristicsAlg/modifiedindividual.cpp \
     kernel/math/normalization.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -26,13 +28,18 @@ SOURCES += \
     ui/adaptlearndatadialog.cpp \
     ui/backpropocoeffs.cpp \
     ui/chartprocessor.cpp \
-    ui/hiddenlayerconfig.cpp
+    ui/hiddenlayerconfig.cpp \
+    ui/modifgacoefs.cpp \
+    ui/modifiedgacoefdialog.cpp
 
 HEADERS += \
     kernel/files/csvprocessor.h \
     kernel/math/activationFunctions.h \
+    kernel/math/heuristicsAlg/GeneticOperatorsEnum.h \
     kernel/math/heuristicsAlg/geneticalgorithm.h \
     kernel/math/heuristicsAlg/individual.h \
+    kernel/math/heuristicsAlg/modifiedgeneticalgorithm.h \
+    kernel/math/heuristicsAlg/modifiedindividual.h \
     kernel/math/normalization.h \
     kernel/twodimvector.h \
     mainwindow.h \
@@ -47,14 +54,18 @@ HEADERS += \
     ui/chartprocessor.h \
     ui/enums.h \
     ui/functionMap.h \
-    ui/hiddenlayerconfig.h
+    ui/hiddenlayerconfig.h \
+    ui/modifgacoefs.h \
+    ui/modifiedgacoefdialog.h
 
 FORMS += \
     mainwindow.ui \
     ui/geneticalgcoefs.ui \
     ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
-    ui/hiddenlayerconfig.ui
+    ui/hiddenlayerconfig.ui \
+    ui/modifgacoefs.ui \
+    ui/modifiedgacoefdialog.ui
 
 TRANSLATIONS += \
     neuro-simulator_ru_RU.ts

@@ -609,6 +609,11 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <string>Генетический алгоритм</string>
                    </property>
                   </item>
+                  <item>
+                   <property name="text">
+                    <string>Модифицированный асинхронный ГА</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item row="1" column="0">
