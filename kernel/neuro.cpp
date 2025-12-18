@@ -277,3 +277,47 @@ void Neuro::learn_modifiedGeneticAlgorithm(const TwoDimVector<double> &data, con
     }
     this->weights = ThreeDimVector(GAHelper.getBestOfTheBest()->getData());
 }
+
+void Neuro::ModifiedGAThread::run(){
+    // ERROR CALCULATION______________________________________________________________________________________
+    for(auto& individual : examinatedIndividuals){
+        float learnAvgErr = 0;
+        auto weights = individual->getData();
+        for(int i = 0; i < data.getHeight(); i++){
+            auto data = this->data.getLine(i);
+            size_t index = 0;
+            for (const auto &element : data){
+                neurons.setValue(index, NeuroSignalIndex, 0, element);
+                neurons.setValue(index, NeuroActivateIndex, 0, activationFuncForLayerLink[0](element));
+                index++;
+            }
+
+            for(uint16_t l = 1; l < layers; l++){
+                for(size_t n = 0; n < neuronAmountPerLayerLink[l]; n++){
+                    double input = 0;
+                    for(size_t prev = 0; prev < neuronAmountPerLayerLink[l-1]; prev++)
+                        input += neurons.getValue(prev, NeuroActivateIndex, l-1) * weights.getValue(prev, n, l-1);
+                    neurons.setValue(n, NeuroSignalIndex, l, input);
+                    neurons.setValue(n, NeuroActivateIndex, l, activationFuncForLayerLink[l](input));
+                }
+                if (l < layers -1)
+                    neurons.setValue(neuronAmountPerLayerLink[l]-1, NeuroActivateIndex, l, 1);
+            }
+
+            for(size_t n = 0; n < neuronAmountPerLayerLink[layers-1]; n++){
+                auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+                neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(i)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayerLink[layers-1], currentNeuron)));
+            }
+
+            size_t counter = 0;
+            float sumErr = 0;
+            for(size_t n = 0; n < neuronAmountPerLayerLink[layers-1]; n++){
+                sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
+                counter++;
+            }
+            learnAvgErr += sumErr/counter;
+        }
+        fitnesses.append(learnAvgErr/data.getHeight());
+    }
+    // ERROR CALCULATION______________________________________________________________________________________
+}

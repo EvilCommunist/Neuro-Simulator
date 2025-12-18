@@ -5,6 +5,8 @@
 #include "twodimvector.h"
 #include "./math/activationFunctions.h"
 #include "./math/heuristicsAlg/GeneticOperatorsEnum.h"
+#include <QThread>
+#include "./math/heuristicsAlg/individual.h"
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
@@ -20,6 +22,32 @@ private:
     size_t qvectorMax(const QVector<size_t>& data);
     void initWeights();
     void backPropogation(const QVector<double>& ans);
+
+    class ModifiedGAThread: QThread{
+    private:
+        const QVector<size_t>& neuronAmountPerLayerLink;
+        const QVector<math_activate::ActivationFunc>& activationFuncForLayerLink;
+        const TwoDimVector<double>& data;
+        const TwoDimVector<double>& ans;
+        uint16_t layers;
+        ThreeDimVector<double> neurons;
+        QVector<Individual*> examinatedIndividuals;
+        QVector<double> fitnesses;
+
+    public:
+        inline ModifiedGAThread(const QVector<size_t>& neuroAmount, const QVector<math_activate::ActivationFunc>& activeFunc,
+                                uint16_t l, ThreeDimVector<double> n, TwoDimVector<double>& d, TwoDimVector<double>& a):
+            neuronAmountPerLayerLink(neuroAmount),
+            activationFuncForLayerLink(activeFunc),
+            layers(l), neurons(n),
+            data(d), ans(a),
+            fitnesses({})
+        {}
+
+        void run() override;
+
+        inline QVector<double> getFitnesses(){return this->fitnesses;}
+    };
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL);
