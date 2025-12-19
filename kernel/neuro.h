@@ -23,7 +23,7 @@ private:
     void initWeights();
     void backPropogation(const QVector<double>& ans);
 
-    class ModifiedGAThread: QThread{
+    class ModifiedGAThread: public QThread{
     private:
         const QVector<size_t>& neuronAmountPerLayerLink;
         const QVector<math_activate::ActivationFunc>& activationFuncForLayerLink;
@@ -33,15 +33,19 @@ private:
         ThreeDimVector<double> neurons;
         QVector<Individual*> examinatedIndividuals;
         QVector<double> fitnesses;
+        int startIndex, lastIndex;
 
     public:
         inline ModifiedGAThread(const QVector<size_t>& neuroAmount, const QVector<math_activate::ActivationFunc>& activeFunc,
-                                uint16_t l, ThreeDimVector<double> n, TwoDimVector<double>& d, TwoDimVector<double>& a):
+                                uint16_t l, ThreeDimVector<double> n, const TwoDimVector<double>& d, const TwoDimVector<double>& a,
+                                const QVector<Individual*>& examIndividuals, int start, int end):
             neuronAmountPerLayerLink(neuroAmount),
             activationFuncForLayerLink(activeFunc),
             layers(l), neurons(n),
             data(d), ans(a),
-            fitnesses({})
+            fitnesses({}),
+            examinatedIndividuals(examIndividuals),
+            startIndex(start), lastIndex(end)
         {}
 
         void run() override;
