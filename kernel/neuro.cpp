@@ -255,25 +255,89 @@ void Neuro::learn_modifiedGeneticAlgorithm(const TwoDimVector<double> &data, con
     GAHelper.findInitialBest();
     chartProcessor::getCurrentError(GAHelper.getBest()[0]->getFitness());
     // Initial iteration
-
+    //QElapsedTimer timer;
     for(int epoch = 1; epoch < epochs; epoch ++){
         GAHelper.startIteration();
+        // timer.start();
         auto currentGen = GAHelper.getCurrent() + GAHelper.getOffspring();
-        for (int i = 0; i < currentGen.size(); i++){
-            this->weights = currentGen[i]->getData();
-            float learnAvgErr = 0;
-            for(int j = 0; j < data.getHeight(); j++){
-                forwardPropogation(data.getLine(j));
-                for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
-                    auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
-                    neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
-                }
-                learnAvgErr += learnChartHelper();
-            }
-            currentGen[i]->setFitness(learnAvgErr/data.getHeight());
+        QVector<ModifiedGAThread*> threads{};
+        for(int t = 0; t < workers; t++){
+            ModifiedGAThread* thread = new ModifiedGAThread(neuronAmountPerLayer, activationFuncForLayer, layers, neurons, data, ans,
+                                                            currentGen, t*currentGen.size()/workers, (t+1)*currentGen.size()/workers);
+            threads.append(thread);
+            thread->start();
         }
+        QVector<double> fitnesses{};
+        for(auto thread : threads){
+            thread->QThread::wait();
+            fitnesses.append(thread->getFitnesses());
+        }
+        for(int i = 0; i < currentGen.size(); i++){
+            currentGen[i]->setFitness(fitnesses[i]);
+        }
+        // qDebug() << timer.elapsed();
+        // timer.start();
+        // auto currentGen = GAHelper.getCurrent() + GAHelper.getOffspring();
+        // for (int i = 0; i < currentGen.size(); i++){
+        //     this->weights = currentGen[i]->getData();
+        //     float learnAvgErr = 0;
+        //     for(int j = 0; j < data.getHeight(); j++){
+        //         forwardPropogation(data.getLine(j));
+        //         for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+        //             auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+        //             neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
+        //         }
+        //         learnAvgErr += learnChartHelper();
+        //     }
+        //     currentGen[i]->setFitness(learnAvgErr/data.getHeight());
+        // }
+        // qDebug() << timer.elapsed();
         GAHelper.completeIteration();
         chartProcessor::getCurrentError(GAHelper.getBestOfTheBest()->getFitness());
     }
     this->weights = ThreeDimVector(GAHelper.getBestOfTheBest()->getData());
+}
+
+void Neuro::ModifiedGAThread::run(){
+    // ERROR CALCULATION______________________________________________________________________________________
+    for(int i = startIndex; i < lastIndex; i++){
+        auto weights = examinatedIndividuals[i]->getData();
+        float learnAvgErr = 0;
+        for(int i = 0; i < data.getHeight(); i++){
+            auto data = this->data.getLine(i);
+            size_t index = 0;
+            for (const auto &element : data){
+                neurons.setValue(index, NeuroSignalIndex, 0, element);
+                neurons.setValue(index, NeuroActivateIndex, 0, activationFuncForLayerLink[0](element));
+                index++;
+            }
+
+            for(uint16_t l = 1; l < layers; l++){
+                for(size_t n = 0; n < neuronAmountPerLayerLink[l]; n++){
+                    double input = 0;
+                    for(size_t prev = 0; prev < neuronAmountPerLayerLink[l-1]; prev++)
+                        input += neurons.getValue(prev, NeuroActivateIndex, l-1) * weights.getValue(prev, n, l-1);
+                    neurons.setValue(n, NeuroSignalIndex, l, input);
+                    neurons.setValue(n, NeuroActivateIndex, l, activationFuncForLayerLink[l](input));
+                }
+                if (l < layers -1)
+                    neurons.setValue(neuronAmountPerLayerLink[l]-1, NeuroActivateIndex, l, 1);
+            }
+
+            for(size_t n = 0; n < neuronAmountPerLayerLink[layers-1]; n++){
+                auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
+                neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(i)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayerLink[layers-1], currentNeuron)));
+            }
+
+            size_t counter = 0;
+            float sumErr = 0;
+            for(size_t n = 0; n < neuronAmountPerLayerLink[layers-1]; n++){
+                sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
+                counter++;
+            }
+            learnAvgErr += sumErr/counter;
+        }
+        fitnesses.append(learnAvgErr/data.getHeight());
+    }
+    // ERROR CALCULATION______________________________________________________________________________________
 }

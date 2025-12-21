@@ -207,6 +207,10 @@ void ModifiedGeneticAlgorithm::startIteration(){
                     part.append(copy1); part.append(copy2);
                 }
             }
+            for(size_t i = 0; i < part.size(); i++){
+                if(dis(gen) < pMutation)
+                    part[i]->mutate();
+            }
             return part;
         });
         futures.append(generatorFuture);
@@ -216,29 +220,4 @@ void ModifiedGeneticAlgorithm::startIteration(){
         future.waitForFinished();
         offspring.append(future.result());
     }
-
-    // QList<QFuture<void>> futuresMutation;
-    // for(int i = 0; i < threadAmount; i ++){
-    //     auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
-    //         std::random_device rd;
-    //         std::mt19937 gen(rd());
-    //         std::normal_distribution<double> dis(0, 1);
-
-    //         for(size_t i = 0; i < offspring.size()/threadAmount; i++){
-    //             if(dis(gen) < pMutation)
-    //                 offspring[i]->mutate();
-    //         }
-    //     });
-    //     futuresMutation.append(generatorFuture);
-    // }
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::normal_distribution<double> dis(0, 1);
-    for(size_t i = 0; i < offspring.size(); i++){
-        if(dis(gen) < pMutation)
-            offspring[i]->mutate();
-    }
-    // for(auto& future : futuresMutation){
-    //     future.waitForFinished();
-    // }
 }
