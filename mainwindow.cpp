@@ -212,7 +212,7 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
 
 void MainWindow::normalizeData(TwoDimVector<double> &data){
     for(int i = 0; i < data.getWidth(); i++){
-        double min = 1, max = 0;
+        double min = INT16_MAX, max = INT16_MIN;
         auto res = normalization::findMinMax(data.getRow(i));
         if(min > res.first)
             min = res.first;
@@ -228,18 +228,20 @@ void MainWindow::normalizeData(TwoDimVector<double> &data){
 
 void MainWindow::normalizeExample(QVector<double> &example){
     for(int i = 0; i < example.size(); i++){
-        normalization::normalize(example[i], normMax[i], normMin[i]);
+        example[i] = normalization::normalize(example[i], normMax[i], normMin[i]);
     }
 }
 
 void MainWindow::denormalizeAns(QVector<double> &answer){
-    for(int i = inputSize-1; i < inputSize+outputSize-1; i++){
-        normalization::normalize(answer[i-inputSize + 1], normMax[i], normMin[i]);
+    for(int i = inputSize-1; i < inputSize+outputSize-1; i++){ // brokes here
+        answer[i-inputSize + 1] = normalization::normalize(answer[i-inputSize + 1], normMax[i], normMin[i]);
     }
 }
 
 void MainWindow::on_startLearning_clicked()
 {
+    normMax = {};
+    normMin = {};
     QVector<size_t> neuronsPerLayer{};
     QVector<math_activate::ActivationFunc> functionPerLayer{};
     neuronsPerLayer.append(inputSize);
@@ -303,6 +305,8 @@ void MainWindow::on_startLearning_clicked()
     }
     }
 
+    qDebug() << "NormMax: " << normMax << "\nnormMin: " << normMin;
+
     fillCheckTable();
     if(currentLearnChart){
         ui->chartLayout->removeWidget(currentLearnChart);
@@ -336,10 +340,14 @@ void MainWindow::fillCheckTable(){
 
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         auto data = learnData.getLine(j);
+        qDebug() << "Raw: " << data;
         normalizeExample(data);  // normalize data
+        qDebug() << "Norm: " << data;
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
+        qDebug() << "Raw ans: " << ans;
         denormalizeAns(ans); // denormalize answer
+        qDebug() << "Ans: " << ans;
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->checkLearned->setItem(j, i, neuroAnswer);
