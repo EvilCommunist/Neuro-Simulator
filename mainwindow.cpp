@@ -233,8 +233,8 @@ void MainWindow::normalizeExample(QVector<double> &example){
 }
 
 void MainWindow::denormalizeAns(QVector<double> &answer){
-    for(int i = inputSize-1; i < inputSize+outputSize-1; i++){ // brokes here
-        answer[i-inputSize + 1] = normalization::normalize(answer[i-inputSize + 1], normMax[i], normMin[i]);
+    for(int i = inputSize; i < inputSize+outputSize; i++){ // brokes here
+        answer[i-inputSize] = normalization::denormalize(answer[i-inputSize], normMax[i], normMin[i]);
     }
 }
 
@@ -305,8 +305,6 @@ void MainWindow::on_startLearning_clicked()
     }
     }
 
-    qDebug() << "NormMax: " << normMax << "\nnormMin: " << normMin;
-
     fillCheckTable();
     if(currentLearnChart){
         ui->chartLayout->removeWidget(currentLearnChart);
@@ -340,14 +338,10 @@ void MainWindow::fillCheckTable(){
 
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         auto data = learnData.getLine(j);
-        qDebug() << "Raw: " << data;
         normalizeExample(data);  // normalize data
-        qDebug() << "Norm: " << data;
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
-        qDebug() << "Raw ans: " << ans;
         denormalizeAns(ans); // denormalize answer
-        qDebug() << "Ans: " << ans;
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->checkLearned->setItem(j, i, neuroAnswer);
