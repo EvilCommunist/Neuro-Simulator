@@ -1,10 +1,13 @@
 #include "normalization.h"
 
+#define MIN_INTERVAL_VALUE 0
+#define MAX_INTERVAL_VALUE 1
+
 double normalization::normalize(double value, double max, double min){
     if (max != min)
         return (value - min) / (max - min);
     else
-        return abs(value)/abs(max+min);
+        return MAX_INTERVAL_VALUE;
 }
 
 double normalization::denormalize(double value, double max, double min){

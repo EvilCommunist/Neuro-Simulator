@@ -48,6 +48,20 @@ public:
         }
     }
 
+    QVector<T> getRow(size_t index) const {
+        QVector<T> row{};
+        for(size_t i = 0; i < height; i++){
+            row.append(data[recalculateIndex(index, i)]);
+        }
+        return row;
+    }
+
+    void setRow(const QVector<T>& data, size_t index){
+        for(size_t i = 0; i < height; i++){
+            this->data[recalculateIndex(index, i)] = data[i];
+        }
+    }
+
     inline size_t getWidth() const { return width; }
     inline size_t getHeight() const { return height; }
 };

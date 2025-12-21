@@ -47,7 +47,6 @@ private:
     Neuro* NN; // neuro network
     QChartView* currentLearnChart;
     QVector<math_activate::ActivationFunc> activFuncPerLayer;
-    //QVector<size_t> neuronsAmountPerLayer;
     QVector<QWidget*> hiddenLayersConfig;
     size_t inputSize; // input amount of neurons
     size_t outputSize; // output amount of neurons
@@ -64,6 +63,9 @@ private:
     void fillCheckTable();
 
     // normalization helpers
-    double normMin, normMax;
+    QVector<double> normMin, normMax;
+    void normalizeData(TwoDimVector<double>& data);
+    void normalizeExample(QVector<double>& example);
+    void denormalizeAns(QVector<double>& answer);
 };
 #endif // MAINWINDOW_H

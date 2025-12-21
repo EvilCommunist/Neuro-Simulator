@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     currentInitFuncCoeffs(nullptr),
     currentLearnFuncCoeffs(nullptr),
     ui(new Ui::MainWindow),
-    normMin(0), normMax(0)
+    normMin({}), normMax({})
 {
     ui->setupUi(this);
     NN = nullptr;
@@ -210,6 +210,33 @@ void MainWindow::on_learnAlgorithm_currentIndexChanged(int index)
     }
 }
 
+void MainWindow::normalizeData(TwoDimVector<double> &data){
+    for(int i = 0; i < data.getWidth(); i++){
+        double min = 1, max = 0;
+        auto res = normalization::findMinMax(data.getRow(i));
+        if(min > res.first)
+            min = res.first;
+        if(max < res.second)
+            max = res.second;
+        auto row = data.getRow(i);
+        normalization::normalizeSelection(row, max, min);
+        data.setRow(row, i);
+        normMin.append(min);
+        normMax.append(max);
+    }
+}
+
+void MainWindow::normalizeExample(QVector<double> &example){
+    for(int i = 0; i < example.size(); i++){
+        normalization::normalize(example[i], normMax[i], normMin[i]);
+    }
+}
+
+void MainWindow::denormalizeAns(QVector<double> &answer){
+    for(int i = inputSize-1; i < inputSize+outputSize-1; i++){
+        normalization::normalize(answer[i-inputSize + 1], normMax[i], normMin[i]);
+    }
+}
 
 void MainWindow::on_startLearning_clicked()
 {
@@ -243,33 +270,8 @@ void MainWindow::on_startLearning_clicked()
 
 
     /*_______________________NORMALIZE DATA__________________________*/
-    double min = 1, max = 0;
-    for(int i = 0; i < learnData.getHeight(); i++){
-        auto res = normalization::findMinMax(learnData.getLine(i));
-        if(min > res.first)
-            min = res.first;
-        if(max < res.second)
-            max = res.second;
-    }
-    for(int i = 0; i < answers.getHeight(); i++){
-        auto res = normalization::findMinMax(answers.getLine(i));
-        if(min > res.first)
-            min = res.first;
-        if(max < res.second)
-            max = res.second;
-    }
-    normMin = min; normMax = max;
-    for(int i = 0; i < learnData.getHeight(); i++){
-        auto curLine = learnData.getLine(i);
-        normalization::normalizeSelection(curLine, normMax, normMin);
-        learnData.setLine(curLine,i);
-        //qDebug() << curLine << " -> ";
-        curLine = answers.getLine(i);
-        normalization::normalizeSelection(curLine, normMax, normMin);
-        answers.setLine(curLine,i);
-        //qDebug() << curLine << "\n";;
-    }
-    //qDebug() << "_____________________________\n";
+    normalizeData(learnData);
+    normalizeData(answers);
     /*_______________________NORMALIZE DATA__________________________*/
 
     if (NN){
@@ -334,12 +336,10 @@ void MainWindow::fillCheckTable(){
 
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         auto data = learnData.getLine(j);
-        normalization::normalizeSelection(data, normMax, normMin);  // normalize data
-        //qDebug() << data << " -> ";
+        normalizeExample(data);  // normalize data
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
-        //qDebug() << ans << "\n";
-        normalization::denormalizeSelection(ans, normMax, normMin); // denormalize answer
+        denormalizeAns(ans); // denormalize answer
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->checkLearned->setItem(j, i, neuroAnswer);
@@ -389,8 +389,10 @@ void MainWindow::on_calculateTests_clicked()
 
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
         auto data = testData.getLine(j);
+        normalizeExample(data);
         NN->forwardPropogation(data);
         auto ans = NN->getRes();
+        denormalizeAns(ans);
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
             QTableWidgetItem *neuroAnswer = new QTableWidgetItem(QString::number(ans[i-(inputSize)]));
             ui->prognosisTable->setItem(j, i, neuroAnswer);
