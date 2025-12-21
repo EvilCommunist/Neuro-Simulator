@@ -17,7 +17,6 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMessageBox>
-#include <algorithm>  // test
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -233,7 +232,7 @@ void MainWindow::normalizeExample(QVector<double> &example){
 }
 
 void MainWindow::denormalizeAns(QVector<double> &answer){
-    for(int i = inputSize; i < inputSize+outputSize; i++){ // brokes here
+    for(int i = inputSize; i < inputSize+outputSize; i++){
         answer[i-inputSize] = normalization::denormalize(answer[i-inputSize], normMax[i], normMin[i]);
     }
 }
@@ -270,11 +269,8 @@ void MainWindow::on_startLearning_clicked()
         }
     }
 
-
-    /*_______________________NORMALIZE DATA__________________________*/
     normalizeData(learnData);
     normalizeData(answers);
-    /*_______________________NORMALIZE DATA__________________________*/
 
     if (NN){
         delete NN;
@@ -375,13 +371,11 @@ void MainWindow::on_deleteTestSelection_clicked()
 void MainWindow::on_calculateTests_clicked()
 {
     TwoDimVector<double> testData(inputSize, ui->prognosisTable->rowCount(), 0);
-    //QVector<QPair<double, double>> minMaxInput{};
     for(size_t j = 0; j < ui->prognosisTable->rowCount(); j++){
         for(size_t i = 0; i < inputSize; i++){
             testData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
     }
-    //QPair<double, double> minMaxOutput{};
     QVector<double> answers;
     for(size_t j = 0; j < ui->learnDataTable->rowCount(); j++){
         for(size_t i = inputSize; i < (inputSize+outputSize); i++){
