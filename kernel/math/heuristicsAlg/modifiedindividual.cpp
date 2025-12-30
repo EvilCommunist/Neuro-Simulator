@@ -11,8 +11,8 @@ void ModifiedIndividual::mutate(){
     std::random_device rd;
     std::mt19937 gen(rd());
     double stddev = sqrt(1.0 / width);
-    std::normal_distribution<double> dis(-stddev, stddev);
-    std::normal_distribution<double> chance(0, 1);
+    std::normal_distribution<double> dis(0, stddev);
+    std::uniform_real_distribution<double> chance(0, 1);
 
     switch(mutRateForEach){
     case WEAK:
@@ -83,7 +83,7 @@ ModifiedIndividual ModifiedIndividual::operator+(ModifiedIndividual& other){
         double I = maxWeight - minWeight;
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::normal_distribution<double> dis(minWeight - I*alpha, maxWeight + I*alpha);
+        std::uniform_real_distribution<double> dis(minWeight - I*alpha, maxWeight + I*alpha);
         for(size_t i = 0; i < width; i++){
             for(size_t j = 0; j < height; j++){
                 for(uint16_t k = 0; k < this->depth; k++){

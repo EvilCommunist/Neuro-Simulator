@@ -83,7 +83,7 @@ void GeneticAlgorithm::initializePopulation(size_t w, size_t h, size_t d, double
 void GeneticAlgorithm::startIteration(){    // fitness is calculated in NN learn function
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::normal_distribution<double> dis(0, 1);
+    std::uniform_real_distribution<double> dis(0, 1);
 
     auto selected = tournament();
 

@@ -11,7 +11,7 @@ Individual::Individual(size_t w, size_t h, size_t d, double val):
 void Individual::generateWeights(){
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::normal_distribution<double> dis(-1, 1);
+    std::uniform_real_distribution<double> dis(-1, 1);
 
     for(size_t i = 0; i < width; i++){
         for(size_t j = 0; j < height; j++){
@@ -27,7 +27,7 @@ void Individual::mutate(){
     std::random_device rd;
     std::mt19937 gen(rd());
     double stddev = sqrt(1.0 / width);
-    std::normal_distribution<double> dis(-stddev, stddev);
+    std::normal_distribution<double> dis(0, stddev);
 
     for(size_t i = 0; i < width; i++){
         for(size_t j = 0; j < height; j++){

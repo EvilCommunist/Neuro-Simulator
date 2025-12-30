@@ -111,7 +111,7 @@ QVector<Individual*> ModifiedGeneticAlgorithm::proportionalSelection(){
         auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::normal_distribution<double> dis(0, 1);
+            std::uniform_real_distribution<double> dis(0, 1);
             QVector<Individual*> part;
             for(size_t i = 0; i < currentGeneration.size()/threadAmount; i++){
                 auto prob = dis(gen);
@@ -191,7 +191,7 @@ void ModifiedGeneticAlgorithm::startIteration(){
         auto generatorFuture = QtConcurrent::run(QThreadPool::globalInstance(), [&]() {
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::normal_distribution<double> dis(0, 1);
+            std::uniform_real_distribution<double> dis(0, 1);
 
             QVector<Individual*> part{};
             for(size_t i = 0; i < currentGeneration.size()/threadAmount; i+=2){
