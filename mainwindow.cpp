@@ -18,6 +18,10 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 
+// time measure helpers
+#include <QElapsedTimer>
+#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -278,28 +282,39 @@ void MainWindow::on_startLearning_clicked()
     }
     NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
     chartProcessor* cp = new chartProcessor;
+    QElapsedTimer timer;
+    qint64 measuredTime{};
     switch(ui->learnAlgorithm->currentIndex()){
     case BACK_PROPOGATION:{
         auto curr = dynamic_cast<backPropoCoeffs*>(currentLearnFuncCoeffs);
+        timer.start();
         NN->learn_backPropogation(learnData,answers,curr->getSpeedCoeff(), ui->learnIterations->value());
+        measuredTime = timer.elapsed();
         break;
     }
     case RESILENT_PROPOGATION:{
+        timer.start();
         NN->learn_resilentPropogation(learnData, answers, ui->learnIterations->value());
+        measuredTime = timer.elapsed();
         break;
     }
     case GENETIC_ALGORITHM:{
         auto curr = dynamic_cast<GeneticAlgCoefs*>(currentLearnFuncCoeffs);
+        timer.start();
         NN->learn_geneticAlgorithm(learnData, answers, ui->learnIterations->value(), curr->getPopSize(), curr->getMutationProb(), curr->getCrossoverProb());
+        measuredTime = timer.elapsed();
         break;
     }
     case MODIFIED_GA:{
         auto curr = dynamic_cast<ModifGACoefs*>(currentLearnFuncCoeffs);
+        timer.start();
         NN->learn_modifiedGeneticAlgorithm(learnData, answers, ui->learnIterations->value(), curr->getPopSize(), curr->getMutationProb(),
                                            curr->getCrossoverProb(), curr->getCrossType(), curr->getMutStrength(), curr->getSelType(), curr->getWorkers());
+        measuredTime = timer.elapsed();
         break;
     }
     }
+    qDebug() << "Time spent on learning: " << measuredTime << " ms\n";
 
     fillCheckTable();
     if(currentLearnChart){
