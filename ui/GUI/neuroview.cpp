@@ -205,3 +205,16 @@ void NeuroView::resetSceneSize(){
 
     this->fitInView(paddedRect, Qt::KeepAspectRatio);
 }
+
+void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
+    for(int i = 0; i < weights.size(); i ++){
+        for(int j = 0; j < weights[i].size(); j++){
+            auto links = neuroNetworkVisual[i][j]->getLinks();
+            int index = 0;
+            for(auto link: links){
+                link->setWeight(weights[i][j][index]);
+                index++;
+            }
+        }
+    }
+}

@@ -48,6 +48,8 @@ public:
     void addLayer();
     void removeLayer();
 
+    void replaceWeights(QVector<QVector<QVector<float>>> weights);
+
     inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
 
     void setNNValues(){}//TODO

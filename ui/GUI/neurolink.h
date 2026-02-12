@@ -16,6 +16,8 @@ public:
     NeuroNode* getNode2() const;
     void updatePosition();
 
+    inline void setWeight(float weight){this->weight = weight;}
+
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget = nullptr) override;
     // QRectF boundingRect() const override;

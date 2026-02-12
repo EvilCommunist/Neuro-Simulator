@@ -309,6 +309,29 @@ void MainWindow::on_startLearning_clicked()
     currentLearnChart = cp->makeChart();
     ui->chartLayout->addWidget(currentLearnChart);
     delete cp;
+
+    // filling UI NN with data
+    QVector<int> amountPerLayer{inputSize};
+    for(auto config: hiddenLayersConfig){
+        auto layerConfig = dynamic_cast<HiddenLayerConfig*>(config);
+        amountPerLayer.append(layerConfig->getNeuronAmount());
+    }
+    amountPerLayer.append(outputSize);
+    QVector<QVector<QVector<float>>> weightData;
+    auto weights = NN->getWeights();
+    for(int i = 0; i < amountPerLayer.size()-1; i++){
+        QVector<QVector<float>> matrixOfWeights;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> lineOfWeights;
+            for(int k = 0; k < amountPerLayer[i+1]; k++){
+                lineOfWeights.append(weights.getValue(i,j,k));
+            }
+            matrixOfWeights.append(lineOfWeights);
+        }
+        weightData.append(matrixOfWeights);
+    }
+
+    // draw it inside scene
 }
 
 void MainWindow::fillCheckTable(){
@@ -522,9 +545,11 @@ void MainWindow::on_savePrognosisData_triggered()
     }
 
 
-    TwoDimVector<double> prognData(inputSize, ui->prognosisTable->rowCount(), 0);
+    //TwoDimVector<double> prognData(inputSize, ui->prognosisTable->rowCount(), 0);
+    TwoDimVector<double> prognData(ui->prognosisTable->columnCount(), ui->prognosisTable->rowCount(), 0);
     for(size_t j = 0; j < prognData.getHeight(); j++){
-        for(size_t i = 0; i < inputSize; i++){
+        //for(size_t i = 0; i < inputSize; i++){
+        for(size_t i = 0; i < ui->prognosisTable->columnCount(); i++){
             prognData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
     }
@@ -563,4 +588,3 @@ void MainWindow::removeHiddenNode(QWidget *layer){
     }
     ui->neuroGraphicsView->removeNode(numLayer);
 }
-
