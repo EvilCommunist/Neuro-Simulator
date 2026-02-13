@@ -317,6 +317,7 @@ void MainWindow::on_startLearning_clicked()
         amountPerLayer.append(layerConfig->getNeuronAmount());
     }
     amountPerLayer.append(outputSize);
+
     QVector<QVector<QVector<float>>> weightData;
     auto weights = NN->getWeights();
     for(int i = 0; i < amountPerLayer.size()-1; i++){
@@ -324,13 +325,13 @@ void MainWindow::on_startLearning_clicked()
         for(int j = 0; j < amountPerLayer[i]; j++){
             QVector<float> lineOfWeights;
             for(int k = 0; k < amountPerLayer[i+1]; k++){
-                lineOfWeights.append(weights.getValue(i,j,k));
+                lineOfWeights.append(weights.getValue(k,j,i));
             }
             matrixOfWeights.append(lineOfWeights);
         }
         weightData.append(matrixOfWeights);
     }
-
+    ui->neuroGraphicsView->replaceWeights(weightData);
     // draw it inside scene
 }
 

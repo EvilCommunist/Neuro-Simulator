@@ -50,8 +50,6 @@ void NeuroView::createLink(NeuroNode *from, NeuroNode *to)
 {
     NeuroLink* link = new NeuroLink(from, to);
     scene->addItem(link);
-    from->addLink(link);
-    to->addLink(link);
 }
 
 void NeuroView::clear(){
@@ -212,8 +210,21 @@ void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
             auto links = neuroNetworkVisual[i][j]->getLinks();
             int index = 0;
             for(auto link: links){
-                link->setWeight(weights[i][j][index]);
-                index++;
+                // if(index == neuroNetworkVisual[i+1].size())
+                //     break;
+                if(neuroNetworkVisual[i][j] == link->getNode1())
+                {
+                    if(neuroNetworkVisual[i+1].contains(link->getNode2())){
+                        link->setWeight(weights[i][j][index]);
+                        index++;
+                    }
+                }
+                else if(neuroNetworkVisual[i][j] == link->getNode2()){
+                    if(neuroNetworkVisual[i+1].contains(link->getNode1())){
+                        link->setWeight(weights[i][j][index]);
+                        index++;
+                    }
+                }
             }
         }
     }
