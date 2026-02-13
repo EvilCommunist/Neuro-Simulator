@@ -49,10 +49,9 @@ public:
     void removeLayer();
 
     void replaceWeights(QVector<QVector<QVector<float>>> weights);
+    void setNeuroneValues(QVector<QVector<QVector<float>>> values);
 
     inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
-
-    void setNNValues(){}//TODO
 };
 
 #endif // NEUROVIEW_H

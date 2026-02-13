@@ -210,8 +210,6 @@ void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
             auto links = neuroNetworkVisual[i][j]->getLinks();
             int index = 0;
             for(auto link: links){
-                // if(index == neuroNetworkVisual[i+1].size())
-                //     break;
                 if(neuroNetworkVisual[i][j] == link->getNode1())
                 {
                     if(neuroNetworkVisual[i+1].contains(link->getNode2())){
@@ -226,6 +224,16 @@ void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
                     }
                 }
             }
+        }
+    }
+}
+
+void NeuroView::setNeuroneValues(QVector<QVector<QVector<float>>> values){
+    const int ERROR_INDEX = 1, VALUE_INDEX = 0;
+    for(int i = 0; i < values.size(); i++){
+        for(int j = 0; j < values[i].size(); j++){
+            neuroNetworkVisual[i][j]->setValue(values[i][j][ERROR_INDEX]);
+            neuroNetworkVisual[i][j]->setError(values[i][j][VALUE_INDEX]);
         }
     }
 }

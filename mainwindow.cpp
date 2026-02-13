@@ -332,7 +332,20 @@ void MainWindow::on_startLearning_clicked()
         weightData.append(matrixOfWeights);
     }
     ui->neuroGraphicsView->replaceWeights(weightData);
-    // draw it inside scene
+
+    QVector<QVector<QVector<float>>> neuroData;
+    auto neurons = this->NN->getNeuroData();
+    for(int i = 0; i < amountPerLayer.size(); i++){
+        QVector<QVector<float>> lineOfData;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> pairOfData;
+            pairOfData.append(neurons.getValue(j,NeuroErrorIndex,i));
+            pairOfData.append(neurons.getValue(j,NeuroSignalIndex,i));
+            lineOfData.append(pairOfData);
+        }
+        neuroData.append(lineOfData);
+    }
+    ui->neuroGraphicsView->setNeuroneValues(neuroData);
 }
 
 void MainWindow::fillCheckTable(){
