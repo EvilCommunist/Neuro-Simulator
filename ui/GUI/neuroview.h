@@ -38,6 +38,10 @@ private:
     void resetLayerNodesPos(size_t numLayer);
 
     void resetSceneSize();
+
+protected:
+    void wheelEvent(QWheelEvent *event);
+
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;

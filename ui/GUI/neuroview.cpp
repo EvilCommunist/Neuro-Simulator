@@ -1,4 +1,5 @@
 #include "neuroview.h"
+#include <QWheelEvent>
 
 NeuroView::NeuroView(QWidget *parent)
     : QGraphicsView(parent),
@@ -237,3 +238,15 @@ void NeuroView::setNeuroneValues(QVector<QVector<QVector<float>>> values){
         }
     }
 }
+
+
+//=---------------------------------_MANIPULATIONS_-------------------------------------=//
+void NeuroView::wheelEvent(QWheelEvent *event){
+    qreal factor = 1.1;
+    if (event->angleDelta().y() > 0) {
+        scale(factor, factor);
+    } else {
+        scale(1.0 / factor, 1.0 / factor);
+    }
+}
+//=---------------------------------_MANIPULATIONS_-------------------------------------=//
