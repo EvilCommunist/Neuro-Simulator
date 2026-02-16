@@ -559,10 +559,8 @@ void MainWindow::on_savePrognosisData_triggered()
     }
 
 
-    //TwoDimVector<double> prognData(inputSize, ui->prognosisTable->rowCount(), 0);
     TwoDimVector<double> prognData(ui->prognosisTable->columnCount(), ui->prognosisTable->rowCount(), 0);
     for(size_t j = 0; j < prognData.getHeight(); j++){
-        //for(size_t i = 0; i < inputSize; i++){
         for(size_t i = 0; i < ui->prognosisTable->columnCount(); i++){
             prognData.setValue(i, j, ui->prognosisTable->item(j, i)->text().toDouble());
         }
