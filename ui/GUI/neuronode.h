@@ -13,6 +13,10 @@ public:
 
     inline float getValue() const {return value;}
     inline float getError() const {return error;}
+
+    inline void setValue(float value){this->value = value;}
+    inline void setError(float error){this->error = error;}
+
     inline QString getName() const {return name;}
     void setName(const QString& name);
 

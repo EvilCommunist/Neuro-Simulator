@@ -44,7 +44,7 @@ void NeuroLink::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
         QFontMetrics fm(painter->font());
         QRect textRect = fm.boundingRect(QRect(), Qt::AlignCenter, metric);
-        QPointF center = (line().p1() + line().p2()) / 2;
+        QPointF center = (2* line().p1() + line().p2()) / 3;
         textRect.moveCenter(center.toPoint());
 
         painter->setPen(Qt::black);

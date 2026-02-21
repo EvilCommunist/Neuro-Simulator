@@ -1,4 +1,5 @@
 #include "neuroview.h"
+#include <QWheelEvent>
 
 NeuroView::NeuroView(QWidget *parent)
     : QGraphicsView(parent),
@@ -50,8 +51,6 @@ void NeuroView::createLink(NeuroNode *from, NeuroNode *to)
 {
     NeuroLink* link = new NeuroLink(from, to);
     scene->addItem(link);
-    from->addLink(link);
-    to->addLink(link);
 }
 
 void NeuroView::clear(){
@@ -205,3 +204,49 @@ void NeuroView::resetSceneSize(){
 
     this->fitInView(paddedRect, Qt::KeepAspectRatio);
 }
+
+void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
+    for(int i = 0; i < weights.size(); i ++){
+        for(int j = 0; j < weights[i].size(); j++){
+            auto links = neuroNetworkVisual[i][j]->getLinks();
+            int index = 0;
+            for(auto link: links){
+                if(neuroNetworkVisual[i][j] == link->getNode1())
+                {
+                    if(neuroNetworkVisual[i+1].contains(link->getNode2())){
+                        link->setWeight(weights[i][j][index]);
+                        index++;
+                    }
+                }
+                else if(neuroNetworkVisual[i][j] == link->getNode2()){
+                    if(neuroNetworkVisual[i+1].contains(link->getNode1())){
+                        link->setWeight(weights[i][j][index]);
+                        index++;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void NeuroView::setNeuroneValues(QVector<QVector<QVector<float>>> values){
+    const int ERROR_INDEX = 1, VALUE_INDEX = 0;
+    for(int i = 0; i < values.size(); i++){
+        for(int j = 0; j < values[i].size(); j++){
+            neuroNetworkVisual[i][j]->setValue(values[i][j][ERROR_INDEX]);
+            neuroNetworkVisual[i][j]->setError(values[i][j][VALUE_INDEX]);
+        }
+    }
+}
+
+
+//=---------------------------------_MANIPULATIONS_-------------------------------------=//
+void NeuroView::wheelEvent(QWheelEvent *event){
+    qreal factor = 1.1;
+    if (event->angleDelta().y() > 0) {
+        scale(factor, factor);
+    } else {
+        scale(1.0 / factor, 1.0 / factor);
+    }
+}
+//=---------------------------------_MANIPULATIONS_-------------------------------------=//

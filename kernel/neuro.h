@@ -65,7 +65,8 @@ public:
 
     float learnChartHelper();
 
-    inline ThreeDimVector<double> getWeights(){return weights;}
+    inline ThreeDimVector<double> getWeights() const {return weights;}
+    inline ThreeDimVector<double> getNeuroData() const {return neurons;}
     inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 };
 

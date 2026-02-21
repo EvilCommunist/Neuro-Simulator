@@ -38,6 +38,10 @@ private:
     void resetLayerNodesPos(size_t numLayer);
 
     void resetSceneSize();
+
+protected:
+    void wheelEvent(QWheelEvent *event);
+
 public:
     explicit NeuroView(QWidget *parent = nullptr);
     ~NeuroView() = default;
@@ -48,9 +52,10 @@ public:
     void addLayer();
     void removeLayer();
 
-    inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
+    void replaceWeights(QVector<QVector<QVector<float>>> weights);
+    void setNeuroneValues(QVector<QVector<QVector<float>>> values);
 
-    void setNNValues(){}//TODO
+    inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
 };
 
 #endif // NEUROVIEW_H
