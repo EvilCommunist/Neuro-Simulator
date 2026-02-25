@@ -17,11 +17,17 @@ typedef void(*NormilizeSelection)(QVector<double>&, double, double);
 typedef void(*DenormilizeSelection)(QVector<double>&, double, double);
 
 
-double normalize_0_1(double value, double max, double min);
-double denormalize_0_1(double value, double max, double min);
+double normalize_0_1(double value, double max, double min); // [0, 1]
+double denormalize_0_1(double value, double max, double min); // [0, 1]
 
 void normalizeSelection_0_1(QVector<double>& data, double max, double min);
 void denormalizeSelection_0_1(QVector<double>& data, double max, double min);
+
+double normalize_m1_1(double value, double max, double min); // [-1, 1]
+double denormalize_m1_1(double value, double max, double min); // [-1, 1]
+
+void normalizeSelection_m1_1(QVector<double>& data, double max, double min);
+void denormalizeSelection_m1_1(QVector<double>& data, double max, double min);
 
 QPair<double, double> findMinMax(const QVector<double>& data);
 /*--Functions for normalization--*/

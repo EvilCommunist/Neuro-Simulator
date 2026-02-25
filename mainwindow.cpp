@@ -224,6 +224,7 @@ void MainWindow::normalizeData(TwoDimVector<double> &data){
             break;
         }
         case normalization::MINUS_ONE_ONE:{
+            normalization::normalizeSelection_m1_1(row, max, min);
             break;
         }
         }
@@ -241,6 +242,7 @@ void MainWindow::normalizeExample(QVector<double> &example){
         break;
     }
     case normalization::MINUS_ONE_ONE:{
+        normalizer = normalization::normalize_m1_1;
         break;
     }
     }
@@ -257,6 +259,7 @@ void MainWindow::denormalizeAns(QVector<double> &answer){
         break;
     }
     case normalization::MINUS_ONE_ONE:{
+        denormalizer = normalization::denormalize_m1_1;
         break;
     }
     }
