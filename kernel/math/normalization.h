@@ -4,12 +4,24 @@
 #include <QPair>
 
 namespace normalization{
-/*--Functions for normalization--*/
-double normalize(double value, double max, double min);
-double denormalize(double value, double max, double min);
+enum Range{
+    ZERO_ONE,
+    MINUS_ONE_ONE
+};
 
-void normalizeSelection(QVector<double>& data, double max, double min);
-void denormalizeSelection(QVector<double>& data, double max, double min);
+/*--Functions for normalization--*/
+typedef double(*Normilize)(double, double, double);
+typedef double(*Denormilize)(double, double, double);
+
+typedef void(*NormilizeSelection)(QVector<double>&, double, double);
+typedef void(*DenormilizeSelection)(QVector<double>&, double, double);
+
+
+double normalize_0_1(double value, double max, double min);
+double denormalize_0_1(double value, double max, double min);
+
+void normalizeSelection_0_1(QVector<double>& data, double max, double min);
+void denormalizeSelection_0_1(QVector<double>& data, double max, double min);
 
 QPair<double, double> findMinMax(const QVector<double>& data);
 /*--Functions for normalization--*/

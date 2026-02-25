@@ -218,7 +218,15 @@ void MainWindow::normalizeData(TwoDimVector<double> &data){
         if(max < res.second)
             max = res.second;
         auto row = data.getRow(i);
-        normalization::normalizeSelection(row, max, min);
+        switch(ui->normDiapazon->currentIndex()){
+        case normalization::ZERO_ONE:{
+            normalization::normalizeSelection_0_1(row, max, min);
+            break;
+        }
+        case normalization::MINUS_ONE_ONE:{
+            break;
+        }
+        }
         data.setRow(row, i);
         normMin.append(min);
         normMax.append(max);
@@ -226,14 +234,34 @@ void MainWindow::normalizeData(TwoDimVector<double> &data){
 }
 
 void MainWindow::normalizeExample(QVector<double> &example){
+    normalization::Normilize normalizer;
+    switch(ui->normDiapazon->currentIndex()){
+    case normalization::ZERO_ONE:{
+        normalizer = normalization::normalize_0_1;
+        break;
+    }
+    case normalization::MINUS_ONE_ONE:{
+        break;
+    }
+    }
     for(int i = 0; i < example.size(); i++){
-        example[i] = normalization::normalize(example[i], normMax[i], normMin[i]);
+        example[i] = normalizer(example[i], normMax[i], normMin[i]);
     }
 }
 
 void MainWindow::denormalizeAns(QVector<double> &answer){
+    normalization::Normilize denormalizer;
+    switch(ui->normDiapazon->currentIndex()){
+    case normalization::ZERO_ONE:{
+        denormalizer = normalization::denormalize_0_1;
+        break;
+    }
+    case normalization::MINUS_ONE_ONE:{
+        break;
+    }
+    }
     for(int i = inputSize; i < inputSize+outputSize; i++){
-        answer[i-inputSize] = normalization::denormalize(answer[i-inputSize], normMax[i], normMin[i]);
+        answer[i-inputSize] = denormalizer(answer[i-inputSize], normMax[i], normMin[i]);
     }
 }
 

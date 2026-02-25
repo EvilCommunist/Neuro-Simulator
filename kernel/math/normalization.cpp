@@ -3,28 +3,28 @@
 #define MIN_INTERVAL_VALUE 0
 #define MAX_INTERVAL_VALUE 1
 
-double normalization::normalize(double value, double max, double min){
+double normalization::normalize_0_1(double value, double max, double min){
     if (max != min)
         return (value - min) / (max - min);
     else
         return MAX_INTERVAL_VALUE;
 }
 
-double normalization::denormalize(double value, double max, double min){
+double normalization::denormalize_0_1(double value, double max, double min){
     return value*(max-min)+min;
 }
 
 
-void normalization::normalizeSelection(QVector<double> &data, double max, double min){
+void normalization::normalizeSelection_0_1(QVector<double> &data, double max, double min){
     for(int i = 0; i < data.size(); i++){
-        data[i] = normalize(data[i], max, min);
+        data[i] = normalize_0_1(data[i], max, min);
     }
 }
 
 
-void normalization::denormalizeSelection(QVector<double> &data, double max, double min){
+void normalization::denormalizeSelection_0_1(QVector<double> &data, double max, double min){
     for(int i = 0; i < data.size(); i++){
-        data[i] = denormalize(data[i], max, min);
+        data[i] = denormalize_0_1(data[i], max, min);
     }
 }
 
