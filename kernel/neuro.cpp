@@ -341,3 +341,8 @@ void Neuro::ModifiedGAThread::run(){
     }
     // ERROR CALCULATION______________________________________________________________________________________
 }
+
+
+QString Neuro::serialize(){
+    return "Serialized neural network";
+}

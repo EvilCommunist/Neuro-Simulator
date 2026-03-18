@@ -7,6 +7,7 @@
 #include "./math/heuristicsAlg/GeneticOperatorsEnum.h"
 #include <QThread>
 #include "./math/heuristicsAlg/individual.h"
+#include <QString>
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
@@ -23,6 +24,7 @@ private:
     void initWeights();
     void backPropogation(const QVector<double>& ans);
 
+    // ______________________________________________________________________
     class ModifiedGAThread: public QThread{
     private:
         const QVector<size_t>& neuronAmountPerLayerLink;
@@ -52,6 +54,7 @@ private:
 
         inline QVector<double> getFitnesses(){return this->fitnesses;}
     };
+    // ______________________________________________________________________
 
 public:
     Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL);
@@ -68,6 +71,8 @@ public:
     inline ThreeDimVector<double> getWeights() const {return weights;}
     inline ThreeDimVector<double> getNeuroData() const {return neurons;}
     inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
+
+    QString serialize();
 };
 
 #endif // NEURO_H

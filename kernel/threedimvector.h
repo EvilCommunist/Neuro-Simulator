@@ -2,6 +2,7 @@
 #define THREEDIMVECTOR_H
 
 #include <QVector>
+#include <QString>
 
 template <typename T>
 class ThreeDimVector
@@ -32,6 +33,10 @@ public:
     inline T getValue(size_t i, size_t j, size_t k) const{
         checkIndex(i, j, k);
         return data[recalculateIndex(i, j, k)];
+    }
+
+    QString serialize(){
+        return "Serialized ThreeDimVector";
     }
 };
 

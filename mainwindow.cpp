@@ -631,3 +631,15 @@ void MainWindow::removeHiddenNode(QWidget *layer){
     }
     ui->neuroGraphicsView->removeNode(numLayer);
 }
+
+void MainWindow::on_saveNNData_triggered()
+{
+
+}
+
+
+void MainWindow::on_loadNNData_triggered()
+{
+
+}
+

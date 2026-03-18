@@ -886,6 +886,9 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
     <addaction name="separator"/>
     <addaction name="loadPrognosisData"/>
     <addaction name="savePrognosisData"/>
+    <addaction name="separator"/>
+    <addaction name="saveNNData"/>
+    <addaction name="loadNNData"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu"/>
@@ -940,6 +943,16 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
   <action name="savePrognosisData">
    <property name="text">
     <string>Сохранить данные для прогноза в файл</string>
+   </property>
+  </action>
+  <action name="saveNNData">
+   <property name="text">
+    <string>Сохранить конфигурацию нейронной сети</string>
+   </property>
+  </action>
+  <action name="loadNNData">
+   <property name="text">
+    <string>Загрузить конфигурацию нейронной сети</string>
    </property>
   </action>
  </widget>
