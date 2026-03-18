@@ -7,7 +7,9 @@
 #include "./math/heuristicsAlg/GeneticOperatorsEnum.h"
 #include <QThread>
 #include "./math/heuristicsAlg/individual.h"
-#include <QString>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
@@ -73,6 +75,7 @@ public:
     inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 
     QString serialize();
+    void deserialize(QString data);
 };
 
 #endif // NEURO_H

@@ -2,7 +2,9 @@
 #define THREEDIMVECTOR_H
 
 #include <QVector>
-#include <QString>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 template <typename T>
 class ThreeDimVector
@@ -36,7 +38,23 @@ public:
     }
 
     QString serialize(){
-        return "Serialized ThreeDimVector";
+        QJsonObject neuroData{
+            {"width", width},
+            {"height", height},
+            {"depth", depth}
+        };
+
+        QJsonArray neuroWeights{};
+        for(auto &elem : data){
+            neuroWeights.append(elem);
+        }
+
+        neuroData["data"]=neuroWeights;
+        return QString::fromUtf8(QJsonDocument(neuroData).toJson());
+    }
+
+    void deserialize(QString data){
+        // TODO
     }
 };
 

@@ -344,5 +344,12 @@ void Neuro::ModifiedGAThread::run(){
 
 
 QString Neuro::serialize(){
+    QJsonObject data{
+        {"layers", layers}
+    };
     return "Serialized neural network";
+}
+
+void Neuro::deserialize(QString data){
+
 }
