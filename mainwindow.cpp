@@ -647,7 +647,7 @@ void MainWindow::on_saveNNData_triggered(){
     QString filename = QFileDialog::getSaveFileName(this,
                                                     "Сохранить проект нейронной сети",
                                                     QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
-                                                    "Проекты nsim (*.nsim);;JSON файлы (*.json)");
+                                                    "Проекты nsim (*.nsim)");
     if (filename.isEmpty()) {
         return;
     }
@@ -685,6 +685,44 @@ void MainWindow::on_saveNNData_triggered(){
 
 
 void MainWindow::on_loadNNData_triggered(){
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить проект нейронной сети",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
+                                                    "Проекты nsim (*.nsim);;JSON файлы (*.json)");
+    if (filename.isEmpty()) {
+        return;
+    }
 
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при открытии файла для чтения!");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    normMin.clear();
+    normMax.clear();
+    if (NN != nullptr){
+        delete NN;
+        NN = nullptr;
+    }
+    // Очистка графического представления...
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    QJsonObject project = doc.object();
+
+    for(auto elem : project["normMin"].toArray()){
+        normMin.append(elem.toDouble());
+    }
+    for(auto elem : project["normMax"].toArray()){
+        normMax.append(elem.toDouble());
+    }
+
+    // Отрисовка нейронной сети заново...
+
+    NN = new Neuro(0, {}, {});
+    NN->deserialize(project["NN"].toObject());
 }
 
