@@ -39,9 +39,9 @@ public:
 
     QString serialize(){
         QJsonObject neuroData{
-            {"width", width},
-            {"height", height},
-            {"depth", depth}
+            {"width", static_cast<qint64>(width)},
+            {"height", static_cast<qint64>(height)},
+            {"depth", static_cast<qint64>(depth)}
         };
 
         QJsonArray neuroWeights{};

@@ -347,7 +347,35 @@ QString Neuro::serialize(){
     QJsonObject data{
         {"layers", layers}
     };
-    return "Serialized neural network";
+
+    QJsonArray layerSizes{};
+    for(auto &size : neuronAmountPerLayer){
+        layerSizes.append(static_cast<qint64>(size));
+    }
+    data["neuronAmountPerLayer"] = layerSizes;
+
+    QJsonArray layersFunc{};
+    for(auto &function : activationFuncForLayer){
+        if (function == math_activate::sigmoid){
+            layersFunc.append("sigmoid");
+        }else if(function == math_activate::linear){
+            layersFunc.append("linear");
+        }else if(function == math_activate::reLu){
+            layersFunc.append("reLu");
+        }else if(function == math_activate::leakyReLu){
+            layersFunc.append("leakyReLu");
+        }else if(function == math_activate::tanhHyp){
+            layersFunc.append("tanhHyp");
+        }else{
+            layersFunc.append("ERROR_AT_PARSING_FUNCTIONS");
+        }
+    }
+    data["activationFuncForLayer"] = layersFunc;
+
+    data["neurons"] = neurons.serialize();
+    data["weights"] = weights.serialize();
+
+    return QString::fromUtf8(QJsonDocument(data).toJson());
 }
 
 void Neuro::deserialize(QString data){
