@@ -17,6 +17,9 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMessageBox>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -569,7 +572,7 @@ void MainWindow::on_saveLearnData_triggered()
     QString data = csvProc->parseToCSV(learnData);
     if(!csvProc->writeCSVFile(data, filename)){
         QMessageBox* message = new QMessageBox(this);
-        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setText("Произошла ошибка!\nДанные не были сохранены.");
         message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
         message->exec();
         delete message;
@@ -601,7 +604,7 @@ void MainWindow::on_savePrognosisData_triggered()
     QString data = csvProc->parseToCSV(prognData);
     if(!csvProc->writeCSVFile(data, filename)){
         QMessageBox* message = new QMessageBox(this);
-        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setText("Произошла ошибка!\nДанные не были сохранены.");
         message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
         message->exec();
         delete message;
@@ -632,14 +635,56 @@ void MainWindow::removeHiddenNode(QWidget *layer){
     ui->neuroGraphicsView->removeNode(numLayer);
 }
 
-void MainWindow::on_saveNNData_triggered()
-{
+void MainWindow::on_saveNNData_triggered(){
+    if (NN == nullptr){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при сохранении!\nСначала обучите нейронную сеть.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить проект нейронной сети",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
+                                                    "Проекты nsim (*.nsim);;JSON файлы (*.json)");
+    if (filename.isEmpty()) {
+        return;
+    }
 
+    if (!filename.endsWith(".nsim", Qt::CaseInsensitive)) {
+        filename += ".nsim";
+    }
+
+    QJsonArray min{};
+    for(auto &elem : normMin){
+        min.append(elem);
+    }
+    QJsonArray max{};
+    for(auto &elem : normMax){
+        max.append(elem);
+    }
+
+    QJsonObject project{
+        {"normMin", min},
+        {"normMax", max},
+        {"NN", NN->serialize()}
+    };
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при открытии файла для сохранения!");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    file.write(QJsonDocument(project).toJson());
 }
 
 
-void MainWindow::on_loadNNData_triggered()
-{
+void MainWindow::on_loadNNData_triggered(){
 
 }
 
