@@ -343,7 +343,7 @@ void Neuro::ModifiedGAThread::run(){
 }
 
 
-QString Neuro::serialize(){
+QJsonObject Neuro::serialize(){
     QJsonObject data{
         {"layers", layers}
     };
@@ -375,9 +375,9 @@ QString Neuro::serialize(){
     data["neurons"] = neurons.serialize();
     data["weights"] = weights.serialize();
 
-    return QString::fromUtf8(QJsonDocument(data).toJson());
+    return data;
 }
 
-void Neuro::deserialize(QString data){
+void Neuro::deserialize(QJsonObject data){
 
 }

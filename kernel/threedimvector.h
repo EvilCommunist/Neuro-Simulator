@@ -37,7 +37,7 @@ public:
         return data[recalculateIndex(i, j, k)];
     }
 
-    QString serialize(){
+    QJsonObject serialize(){
         QJsonObject neuroData{
             {"width", static_cast<qint64>(width)},
             {"height", static_cast<qint64>(height)},
@@ -50,10 +50,10 @@ public:
         }
 
         neuroData["data"]=neuroWeights;
-        return QString::fromUtf8(QJsonDocument(neuroData).toJson());
+        return neuroData;
     }
 
-    void deserialize(QString data){
+    void deserialize(QJsonObject data){
         // TODO
     }
 };

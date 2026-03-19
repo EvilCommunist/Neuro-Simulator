@@ -74,8 +74,8 @@ public:
     inline ThreeDimVector<double> getNeuroData() const {return neurons;}
     inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 
-    QString serialize();
-    void deserialize(QString data);
+    QJsonObject serialize();
+    void deserialize(QJsonObject data);
 };
 
 #endif // NEURO_H
