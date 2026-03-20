@@ -53,8 +53,14 @@ public:
         return neuroData;
     }
 
-    void deserialize(QJsonObject data){
-        // TODO
+    void deserialize(QJsonObject neuroData){
+        this->width = static_cast<size_t>(neuroData["width"].toInt());
+        this->height = static_cast<size_t>(neuroData["height"].toInt());
+        this->depth = static_cast<size_t>(neuroData["depth"].toInt());
+
+        for(auto elem : neuroData["data"].toArray()){
+            data.append(elem.toDouble());
+        }
     }
 };
 

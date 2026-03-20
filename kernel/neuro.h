@@ -75,7 +75,7 @@ public:
     inline void setWeights(ThreeDimVector<double> weights){this->weights = weights;}
 
     QJsonObject serialize();
-    void deserialize(QJsonObject data);
+    bool deserialize(QJsonObject data);
 };
 
 #endif // NEURO_H

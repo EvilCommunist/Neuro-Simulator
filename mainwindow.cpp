@@ -685,8 +685,8 @@ void MainWindow::on_saveNNData_triggered(){
 
 
 void MainWindow::on_loadNNData_triggered(){
-    QString filename = QFileDialog::getSaveFileName(this,
-                                                    "Сохранить проект нейронной сети",
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Загрузить проект нейронной сети",
                                                     QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
                                                     "Проекты nsim (*.nsim);;JSON файлы (*.json)");
     if (filename.isEmpty()) {
@@ -722,7 +722,15 @@ void MainWindow::on_loadNNData_triggered(){
 
     // Отрисовка нейронной сети заново...
 
-    NN = new Neuro(0, {}, {});
-    NN->deserialize(project["NN"].toObject());
+    NN = new Neuro(1, {1}, {math_activate::sigmoid});
+    bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
+
+    if(!gotAllfunctions){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Внимание!\nНе удалось считать часть функций активации, они были заменены на sigmoid.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+    }
 }
 
