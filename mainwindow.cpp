@@ -722,7 +722,7 @@ void MainWindow::on_loadNNData_triggered(){
 
     // Отрисовка нейронной сети заново...
 
-    NN = new Neuro(1, {1}, {math_activate::sigmoid});
+    NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
 
     if(!gotAllfunctions){

@@ -239,6 +239,10 @@ void NeuroView::setNeuroneValues(QVector<QVector<QVector<float>>> values){
     }
 }
 
+void prepeare(){
+    // make sure scene empty?
+}
+
 
 //=---------------------------------_MANIPULATIONS_-------------------------------------=//
 void NeuroView::wheelEvent(QWheelEvent *event){
