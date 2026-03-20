@@ -37,6 +37,8 @@ private slots:
     void on_loadPrognosisData_triggered();
     void on_saveLearnData_triggered();
     void on_savePrognosisData_triggered();
+    void on_saveNNData_triggered();
+    void on_loadNNData_triggered();
 
 public slots:
     void addHiddenNode(QWidget* layer);

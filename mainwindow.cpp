@@ -17,6 +17,9 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMessageBox>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -569,7 +572,7 @@ void MainWindow::on_saveLearnData_triggered()
     QString data = csvProc->parseToCSV(learnData);
     if(!csvProc->writeCSVFile(data, filename)){
         QMessageBox* message = new QMessageBox(this);
-        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setText("Произошла ошибка!\nДанные не были сохранены.");
         message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
         message->exec();
         delete message;
@@ -601,7 +604,7 @@ void MainWindow::on_savePrognosisData_triggered()
     QString data = csvProc->parseToCSV(prognData);
     if(!csvProc->writeCSVFile(data, filename)){
         QMessageBox* message = new QMessageBox(this);
-        message->setText("Проищошла ошибка!\nДанные не были сохранены.");
+        message->setText("Произошла ошибка!\nДанные не были сохранены.");
         message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
         message->exec();
         delete message;
@@ -631,3 +634,103 @@ void MainWindow::removeHiddenNode(QWidget *layer){
     }
     ui->neuroGraphicsView->removeNode(numLayer);
 }
+
+void MainWindow::on_saveNNData_triggered(){
+    if (NN == nullptr){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при сохранении!\nСначала обучите нейронную сеть.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить проект нейронной сети",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
+                                                    "Проекты nsim (*.nsim)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    if (!filename.endsWith(".nsim", Qt::CaseInsensitive)) {
+        filename += ".nsim";
+    }
+
+    QJsonArray min{};
+    for(auto &elem : normMin){
+        min.append(elem);
+    }
+    QJsonArray max{};
+    for(auto &elem : normMax){
+        max.append(elem);
+    }
+
+    QJsonObject project{
+        {"normMin", min},
+        {"normMax", max},
+        {"NN", NN->serialize()}
+    };
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при открытии файла для сохранения!");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    file.write(QJsonDocument(project).toJson());
+}
+
+
+void MainWindow::on_loadNNData_triggered(){
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Загрузить проект нейронной сети",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
+                                                    "Проекты nsim (*.nsim);;JSON файлы (*.json)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при открытии файла для чтения!");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    normMin.clear();
+    normMax.clear();
+    if (NN != nullptr){
+        delete NN;
+        NN = nullptr;
+    }
+    // Очистка графического представления...
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    QJsonObject project = doc.object();
+
+    for(auto elem : project["normMin"].toArray()){
+        normMin.append(elem.toDouble());
+    }
+    for(auto elem : project["normMax"].toArray()){
+        normMax.append(elem.toDouble());
+    }
+
+    // Отрисовка нейронной сети заново...
+
+    NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
+    bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
+
+    if(!gotAllfunctions){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Внимание!\nНе удалось считать часть функций активации, они были заменены на sigmoid.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+    }
+}
+

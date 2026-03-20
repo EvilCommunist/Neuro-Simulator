@@ -56,6 +56,8 @@ public:
     void setNeuroneValues(QVector<QVector<QVector<float>>> values);
 
     inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
+
+    void prepeare();
 };
 
 #endif // NEUROVIEW_H
