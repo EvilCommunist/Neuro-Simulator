@@ -178,6 +178,7 @@ void NeuroView::removeLayer(){
     for(auto node : neuroNetworkVisual[neuroNetworkVisual.size()-2]){
         removeAllBoundedLinks(node);
         scene->removeItem(node);
+        this->hiddenNodeCounter --;
         delete node;
     }
     for(auto node : neuroNetworkVisual[neuroNetworkVisual.size()-1]){
@@ -239,8 +240,19 @@ void NeuroView::setNeuroneValues(QVector<QVector<QVector<float>>> values){
     }
 }
 
-void prepeare(){
-    // make sure scene empty?
+void NeuroView::prepeare(){
+    while(neuroNetworkVisual.size() > 2){
+        this->removeLayer();
+    }
+    this->hiddenNodeCounter = 0;
+    while(neuroNetworkVisual[INITIAL_INPUT].size() > 1){
+        this->removeNode(INITIAL_INPUT);
+    }
+    while(neuroNetworkVisual[INITIAL_OUTPUT].size() > 1){
+        this->removeNode(INITIAL_OUTPUT);
+    }
+    this->inputNodeCounter = 0;
+    this->outputNodeCounter = 0;
 }
 
 

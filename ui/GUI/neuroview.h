@@ -9,6 +9,8 @@
 
 #define XSPACE 200
 #define YSPACE 150
+#define INITIAL_INPUT 0
+#define INITIAL_OUTPUT 1
 
 enum LayerType{
     INPUT,

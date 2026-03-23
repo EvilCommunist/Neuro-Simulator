@@ -708,7 +708,7 @@ void MainWindow::on_loadNNData_triggered(){
         delete NN;
         NN = nullptr;
     }
-    // Очистка графического представления...
+    this->ui->neuroGraphicsView->prepeare();
 
     QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
     QJsonObject project = doc.object();
@@ -720,7 +720,7 @@ void MainWindow::on_loadNNData_triggered(){
         normMax.append(elem.toDouble());
     }
 
-    // Отрисовка нейронной сети заново...
+    // Отрисовка нейронной сети заново... || Восстановление из нейронки или из данных? Или вместе?
 
     NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
