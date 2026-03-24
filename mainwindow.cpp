@@ -720,7 +720,22 @@ void MainWindow::on_loadNNData_triggered(){
         normMax.append(elem.toDouble());
     }
 
-    // Отрисовка нейронной сети заново... || Восстановление из нейронки или из данных? Или вместе?
+    QVector<size_t> neuronAmounts = {};
+    for(auto elem : project["NN"].toObject()["neuronAmountPerLayer"].toArray()){
+        neuronAmounts.append(static_cast<size_t>(elem.toInteger()));
+    }
+
+    for(int layer = 0; layer < neuronAmounts.size(); layer++){
+        if (layer != 0 && layer != neuronAmounts.size() - 1)
+            this->ui->neuroGraphicsView->addLayer();
+        for(int size = 0; size < neuronAmounts[layer]-1; size++){
+            this->ui->neuroGraphicsView->addNode(layer);
+        }
+        if (layer != 0 && layer != neuronAmounts.size() - 1)
+            this->ui->neuroGraphicsView->removeNode(layer);
+    }
+
+    // Синхронизировать параметры конфигурации с состоянием нейронной сети
 
     NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
