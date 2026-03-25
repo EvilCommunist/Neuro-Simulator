@@ -724,7 +724,20 @@ void MainWindow::on_loadNNData_triggered(){
     int currentIndex = 1; // 1st layer already defined
     for(auto hLC : hiddenLayersConfig){
         auto hLCCasted = dynamic_cast<HiddenLayerConfig*>(hLC);
-        hLCCasted->setNeuronAmount(neuronAmounts[currentIndex]-1); // ignore bias neurons
+        hLCCasted->setNeuronAmount(neuronAmounts[currentIndex++]-1); // ignore bias neurons
+    }
+
+    QVector<QString> neuronFunctions = {};
+    for(auto elem : project["NN"].toObject()["activationFuncForLayer"].toArray()){
+        neuronFunctions.append(elem.toString());
+    }
+
+    this->ui->activFuncInput->setCurrentIndex(parseFunction(neuronFunctions[0]));
+    this->ui->activFuncOutput->setCurrentIndex(parseFunction(neuronFunctions[neuronFunctions.size()-1]));
+    currentIndex = 1; // 1st layer already defined
+    for(auto hLC : hiddenLayersConfig){
+        auto hLCCasted = dynamic_cast<HiddenLayerConfig*>(hLC);
+        hLCCasted->setActivationFunc(parseFunction(neuronFunctions[currentIndex++]));
     }
     // Синхронизировать параметры конфигурации с состоянием нейронной сети
     redrawLearnTable();
@@ -765,4 +778,20 @@ void MainWindow::removeLayerWidget(){
     delete hLC;
 
     recalculateScrollAreaHeight();
+}
+
+int MainWindow::parseFunction(QString funcName){
+    if(funcName == "sigmoid"){
+        return SIGMOID;
+    }else if(funcName == "linear"){
+        return LINEAR_F;
+    }else if(funcName == "reLu"){
+        return RELU;
+    }else if(funcName == "leakyReLu"){
+        return LEAKY_RELU;
+    }else if(funcName == "tanhHyp"){
+        return TANH_HYP;
+    }else{
+        return SIGMOID;
+    }
 }

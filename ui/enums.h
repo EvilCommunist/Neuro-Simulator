@@ -8,5 +8,13 @@ enum functionCoeffs{
     MODIFIED_GA
 };
 
+enum activationFunc{
+    SIGMOID,
+    LINEAR_F,
+    RELU,
+    LEAKY_RELU,
+    TANH_HYP
+};
+
 
 #endif // ENUMS_H

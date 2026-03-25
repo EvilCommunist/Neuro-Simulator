@@ -24,6 +24,10 @@ void HiddenLayerConfig::setNeuronAmount(size_t amount){
     ui->hiddenNeuronAmount->setValue(amount);
 }
 
+void HiddenLayerConfig::setActivationFunc(int func){
+    ui->hiddenActivFunc->setCurrentIndex(func);
+}
+
 size_t HiddenLayerConfig::getNeuronAmount(){
     return ui->hiddenNeuronAmount->text().toUInt();
 }

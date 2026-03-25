@@ -58,6 +58,7 @@ private:
     QWidget* currentInitFuncCoeffs;
     void addLayerWidget();
     void removeLayerWidget();
+    int parseFunction(QString funcName);
 
     void recalculateScrollAreaHeight();
     void redrawLearnTable();

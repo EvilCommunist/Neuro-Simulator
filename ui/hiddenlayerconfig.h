@@ -17,7 +17,9 @@ public:
     void setNumber(size_t num);
     ~HiddenLayerConfig();
 
+    // setters
     void setNeuronAmount(size_t amount);
+    void setActivationFunc(int func);
 
     // getters
     size_t getNeuronAmount();
