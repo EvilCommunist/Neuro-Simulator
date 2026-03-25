@@ -56,7 +56,8 @@ private:
     // visual helpers
     QWidget* currentLearnFuncCoeffs;
     QWidget* currentInitFuncCoeffs;
-
+    void addLayerWidget();
+    void removeLayerWidget();
 
     void recalculateScrollAreaHeight();
     void redrawLearnTable();

@@ -59,31 +59,15 @@ void MainWindow::recalculateScrollAreaHeight(){
 
 void MainWindow::on_addLayer_clicked()
 {
-    HiddenLayerConfig* hLC = new HiddenLayerConfig;
-    hiddenLayersConfig.append(hLC);
-    hLC->setNumber(hiddenLayersConfig.size());
-    ui->hiddenLayersLayout->addWidget(hLC);
     ui->neuroGraphicsView->addLayer();
-
-    recalculateScrollAreaHeight();
-
-    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
-            this, &MainWindow::addHiddenNode);
-    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
-            this, &MainWindow::removeHiddenNode);
+    addLayerWidget();
 }
 
 
 void MainWindow::on_removeLayer_clicked()
 {
-    if (hiddenLayersConfig.isEmpty())
-        return;
-    auto hLC = hiddenLayersConfig.takeLast();
-    ui->hiddenLayersLayout->removeWidget(hLC);
-    delete hLC;
     ui->neuroGraphicsView->removeLayer();
-
-    recalculateScrollAreaHeight();
+    removeLayerWidget();
 }
 
 
@@ -709,6 +693,9 @@ void MainWindow::on_loadNNData_triggered(){
         NN = nullptr;
     }
     this->ui->neuroGraphicsView->prepeare();
+    while(!hiddenLayersConfig.isEmpty()){
+        removeLayerWidget();
+    }
 
     QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
     QJsonObject project = doc.object();
@@ -731,10 +718,11 @@ void MainWindow::on_loadNNData_triggered(){
         for(int size = 0; size < neuronAmounts[layer]-1; size++){
             this->ui->neuroGraphicsView->addNode(layer);
         }
-        if (layer != 0 && layer != neuronAmounts.size() - 1)
+        if (layer != 0 && layer != neuronAmounts.size() - 1){
             this->ui->neuroGraphicsView->removeNode(layer);
+            addLayerWidget();
+        }
     }
-
     // Синхронизировать параметры конфигурации с состоянием нейронной сети
 
     NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
@@ -749,3 +737,26 @@ void MainWindow::on_loadNNData_triggered(){
     }
 }
 
+void MainWindow::addLayerWidget(){
+    HiddenLayerConfig* hLC = new HiddenLayerConfig;
+    hiddenLayersConfig.append(hLC);
+    hLC->setNumber(hiddenLayersConfig.size());
+    ui->hiddenLayersLayout->addWidget(hLC);
+
+    recalculateScrollAreaHeight();
+
+    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
+            this, &MainWindow::addHiddenNode);
+    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
+            this, &MainWindow::removeHiddenNode);
+}
+
+void MainWindow::removeLayerWidget(){
+    if (hiddenLayersConfig.isEmpty())
+        return;
+    auto hLC = hiddenLayersConfig.takeLast();
+    ui->hiddenLayersLayout->removeWidget(hLC);
+    delete hLC;
+
+    recalculateScrollAreaHeight();
+}
