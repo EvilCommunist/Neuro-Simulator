@@ -17,6 +17,8 @@ public:
     void setNumber(size_t num);
     ~HiddenLayerConfig();
 
+    void setNeuronAmount(size_t amount);
+
     // getters
     size_t getNeuronAmount();
     math_activate::ActivationFunc getActivationFunc();

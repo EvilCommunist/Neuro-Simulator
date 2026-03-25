@@ -713,17 +713,23 @@ void MainWindow::on_loadNNData_triggered(){
     }
 
     for(int layer = 0; layer < neuronAmounts.size(); layer++){
-        if (layer != 0 && layer != neuronAmounts.size() - 1)
-            this->ui->neuroGraphicsView->addLayer();
-        for(int size = 0; size < neuronAmounts[layer]-1; size++){
-            this->ui->neuroGraphicsView->addNode(layer);
-        }
         if (layer != 0 && layer != neuronAmounts.size() - 1){
-            this->ui->neuroGraphicsView->removeNode(layer);
+            this->ui->neuroGraphicsView->addLayer();
             addLayerWidget();
         }
     }
+
+    this->ui->neuroAmountInput->setValue(neuronAmounts[0]);
+    this->ui->neuroAmountOutput->setValue(neuronAmounts[neuronAmounts.size()-1]);
+    int currentIndex = 1; // 1st layer already defined
+    for(auto hLC : hiddenLayersConfig){
+        auto hLCCasted = dynamic_cast<HiddenLayerConfig*>(hLC);
+        hLCCasted->setNeuronAmount(neuronAmounts[currentIndex]-1); // ignore bias neurons
+    }
     // Синхронизировать параметры конфигурации с состоянием нейронной сети
+    redrawLearnTable();
+    redrawCheckTable();
+    redrawForecastTable();
 
     NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
