@@ -328,42 +328,7 @@ void MainWindow::on_startLearning_clicked()
     ui->chartLayout->addWidget(currentLearnChart);
     delete cp;
 
-    // filling UI NN with data
-    QVector<int> amountPerLayer{inputSize};
-    for(auto config: hiddenLayersConfig){
-        auto layerConfig = dynamic_cast<HiddenLayerConfig*>(config);
-        amountPerLayer.append(layerConfig->getNeuronAmount());
-    }
-    amountPerLayer.append(outputSize);
-
-    QVector<QVector<QVector<float>>> weightData;
-    auto weights = NN->getWeights();
-    for(int i = 0; i < amountPerLayer.size()-1; i++){
-        QVector<QVector<float>> matrixOfWeights;
-        for(int j = 0; j < amountPerLayer[i]; j++){
-            QVector<float> lineOfWeights;
-            for(int k = 0; k < amountPerLayer[i+1]; k++){
-                lineOfWeights.append(weights.getValue(k,j,i));
-            }
-            matrixOfWeights.append(lineOfWeights);
-        }
-        weightData.append(matrixOfWeights);
-    }
-    ui->neuroGraphicsView->replaceWeights(weightData);
-
-    QVector<QVector<QVector<float>>> neuroData;
-    auto neurons = this->NN->getNeuroData();
-    for(int i = 0; i < amountPerLayer.size(); i++){
-        QVector<QVector<float>> lineOfData;
-        for(int j = 0; j < amountPerLayer[i]; j++){
-            QVector<float> pairOfData;
-            pairOfData.append(neurons.getValue(j,NeuroErrorIndex,i));
-            pairOfData.append(neurons.getValue(j,NeuroSignalIndex,i));
-            lineOfData.append(pairOfData);
-        }
-        neuroData.append(lineOfData);
-    }
-    ui->neuroGraphicsView->setNeuroneValues(neuroData);
+    putNNParamsIntoVisual();
 }
 
 void MainWindow::fillCheckTable(){
@@ -739,13 +704,14 @@ void MainWindow::on_loadNNData_triggered(){
         auto hLCCasted = dynamic_cast<HiddenLayerConfig*>(hLC);
         hLCCasted->setActivationFunc(parseFunction(neuronFunctions[currentIndex++]));
     }
-    // Синхронизировать параметры конфигурации с состоянием нейронной сети
+
     redrawLearnTable();
     redrawCheckTable();
     redrawForecastTable();
 
     NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
+    putNNParamsIntoVisual();
 
     if(!gotAllfunctions){
         QMessageBox* message = new QMessageBox(this);
@@ -794,4 +760,42 @@ int MainWindow::parseFunction(QString funcName){
     }else{
         return SIGMOID;
     }
+}
+
+void MainWindow::putNNParamsIntoVisual(){
+    QVector<int> amountPerLayer{inputSize};
+    for(auto config: hiddenLayersConfig){
+        auto layerConfig = dynamic_cast<HiddenLayerConfig*>(config);
+        amountPerLayer.append(layerConfig->getNeuronAmount());
+    }
+    amountPerLayer.append(outputSize);
+
+    QVector<QVector<QVector<float>>> weightData;
+    auto weights = NN->getWeights();
+    for(int i = 0; i < amountPerLayer.size()-1; i++){
+        QVector<QVector<float>> matrixOfWeights;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> lineOfWeights;
+            for(int k = 0; k < amountPerLayer[i+1]; k++){
+                lineOfWeights.append(weights.getValue(k,j,i));
+            }
+            matrixOfWeights.append(lineOfWeights);
+        }
+        weightData.append(matrixOfWeights);
+    }
+    ui->neuroGraphicsView->replaceWeights(weightData);
+
+    QVector<QVector<QVector<float>>> neuroData;
+    auto neurons = this->NN->getNeuroData();
+    for(int i = 0; i < amountPerLayer.size(); i++){
+        QVector<QVector<float>> lineOfData;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> pairOfData;
+            pairOfData.append(neurons.getValue(j,NeuroErrorIndex,i));
+            pairOfData.append(neurons.getValue(j,NeuroSignalIndex,i));
+            lineOfData.append(pairOfData);
+        }
+        neuroData.append(lineOfData);
+    }
+    ui->neuroGraphicsView->setNeuroneValues(neuroData);
 }

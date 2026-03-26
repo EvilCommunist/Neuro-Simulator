@@ -59,6 +59,7 @@ private:
     void addLayerWidget();
     void removeLayerWidget();
     int parseFunction(QString funcName);
+    void putNNParamsIntoVisual();
 
     void recalculateScrollAreaHeight();
     void redrawLearnTable();
