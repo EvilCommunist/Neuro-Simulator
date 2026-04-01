@@ -212,8 +212,7 @@ void NeuroView::replaceWeights(QVector<QVector<QVector<float>>> weights){
             auto links = neuroNetworkVisual[i][j]->getLinks();
             int index = 0;
             for(auto link: links){
-                if(neuroNetworkVisual[i][j] == link->getNode1())
-                {
+                if(neuroNetworkVisual[i][j] == link->getNode1()){
                     if(neuroNetworkVisual[i+1].contains(link->getNode2())){
                         link->setWeight(weights[i][j][index]);
                         index++;

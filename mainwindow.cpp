@@ -653,6 +653,8 @@ void MainWindow::on_loadNNData_triggered(){
     }
     normMin.clear();
     normMax.clear();
+    this->ui->neuroAmountInput->setValue(1); // defaulting neuro amount
+    this->ui->neuroAmountOutput->setValue(1); // defaulting neuro amount
     if (NN != nullptr){
         delete NN;
         NN = nullptr;
@@ -720,6 +722,12 @@ void MainWindow::on_loadNNData_triggered(){
         message->exec();
         delete message;
     }
+    // QMessageBox* message = new QMessageBox(this);
+    // message->setText("Успешно!\nНейронная сеть загружена, обратите внимание,\n"
+    //                  "что диапазон нормализации не настроен, его необходимо определить во вкладке \"Обучение\"");
+    // message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+    // message->exec();
+    // delete message; // На случай отсутствия менее элегантного решения
 }
 
 void MainWindow::addLayerWidget(){
