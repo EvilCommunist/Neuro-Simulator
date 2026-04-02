@@ -584,57 +584,95 @@ void MainWindow::removeHiddenNode(QWidget *layer){
     ui->neuroGraphicsView->removeNode(numLayer);
 }
 
-void MainWindow::on_saveNNData_triggered(){
-    if (NN == nullptr){
-        QMessageBox* message = new QMessageBox(this);
-        message->setText("Произошла ошибка при сохранении!\nСначала обучите нейронную сеть.");
-        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
-        message->exec();
-        delete message;
+void MainWindow::addLayerWidget(){
+    HiddenLayerConfig* hLC = new HiddenLayerConfig;
+    hiddenLayersConfig.append(hLC);
+    hLC->setNumber(hiddenLayersConfig.size());
+    ui->hiddenLayersLayout->addWidget(hLC);
+
+    recalculateScrollAreaHeight();
+
+    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
+            this, &MainWindow::addHiddenNode);
+    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
+            this, &MainWindow::removeHiddenNode);
+}
+
+void MainWindow::removeLayerWidget(){
+    if (hiddenLayersConfig.isEmpty())
         return;
-    }
-    QString filename = QFileDialog::getSaveFileName(this,
-                                                    "Сохранить проект нейронной сети",
-                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
-                                                    "Проекты nsim (*.nsim)");
-    if (filename.isEmpty()) {
-        return;
-    }
+    auto hLC = hiddenLayersConfig.takeLast();
+    ui->hiddenLayersLayout->removeWidget(hLC);
+    delete hLC;
 
-    if (!filename.endsWith(".nsim", Qt::CaseInsensitive)) {
-        filename += ".nsim";
-    }
+    recalculateScrollAreaHeight();
+}
 
-    QJsonArray min{};
-    for(auto &elem : normMin){
-        min.append(elem);
+int MainWindow::parseFunction(QString funcName){
+    if(funcName == "sigmoid"){
+        return SIGMOID;
+    }else if(funcName == "linear"){
+        return LINEAR_F;
+    }else if(funcName == "reLu"){
+        return RELU;
+    }else if(funcName == "leakyReLu"){
+        return LEAKY_RELU;
+    }else if(funcName == "tanhHyp"){
+        return TANH_HYP;
+    }else{
+        return SIGMOID;
     }
-    QJsonArray max{};
-    for(auto &elem : normMax){
-        max.append(elem);
-    }
+}
 
-    QJsonObject project{
-        {"normMin", min},
-        {"normMax", max},
-        {"normalization", ui->normDiapazon->currentIndex()},
-        {"NN", NN->serialize()}
-    };
-
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)){
-        QMessageBox* message = new QMessageBox(this);
-        message->setText("Произошла ошибка при открытии файла для сохранения!");
-        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
-        message->exec();
-        delete message;
-        return;
+void MainWindow::putNNParamsIntoVisual(){
+    QVector<int> amountPerLayer{inputSize};
+    for(auto config: hiddenLayersConfig){
+        auto layerConfig = dynamic_cast<HiddenLayerConfig*>(config);
+        amountPerLayer.append(layerConfig->getNeuronAmount());
     }
-    file.write(QJsonDocument(project).toJson());
+    amountPerLayer.append(outputSize);
+
+    QVector<QVector<QVector<float>>> weightData;
+    auto weights = NN->getWeights();
+    for(int i = 0; i < amountPerLayer.size()-1; i++){
+        QVector<QVector<float>> matrixOfWeights;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> lineOfWeights;
+            for(int k = 0; k < amountPerLayer[i+1]; k++){
+                lineOfWeights.append(weights.getValue(k,j,i));
+            }
+            matrixOfWeights.append(lineOfWeights);
+        }
+        weightData.append(matrixOfWeights);
+    }
+    ui->neuroGraphicsView->replaceWeights(weightData);
+
+    QVector<QVector<QVector<float>>> neuroData;
+    auto neurons = this->NN->getNeuroData();
+    for(int i = 0; i < amountPerLayer.size(); i++){
+        QVector<QVector<float>> lineOfData;
+        for(int j = 0; j < amountPerLayer[i]; j++){
+            QVector<float> pairOfData;
+            pairOfData.append(neurons.getValue(j,NeuroErrorIndex,i));
+            pairOfData.append(neurons.getValue(j,NeuroSignalIndex,i));
+            lineOfData.append(pairOfData);
+        }
+        neuroData.append(lineOfData);
+    }
+    ui->neuroGraphicsView->setNeuroneValues(neuroData);
+}
+
+void MainWindow::on_actionSave_current_neuro_network_triggered(){
+    QMessageBox* message = new QMessageBox(this);
+    message->setText("Функция в разработке!");
+    message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+    message->exec();
+    delete message;
+    return;
 }
 
 
-void MainWindow::on_loadNNData_triggered(){
+void MainWindow::on_actionOpen_neuro_network_triggered(){
     QString filename = QFileDialog::getOpenFileName(this,
                                                     "Загрузить проект нейронной сети",
                                                     QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
@@ -726,80 +764,53 @@ void MainWindow::on_loadNNData_triggered(){
     }
 }
 
-void MainWindow::addLayerWidget(){
-    HiddenLayerConfig* hLC = new HiddenLayerConfig;
-    hiddenLayersConfig.append(hLC);
-    hLC->setNumber(hiddenLayersConfig.size());
-    ui->hiddenLayersLayout->addWidget(hLC);
 
-    recalculateScrollAreaHeight();
-
-    connect(hLC, &HiddenLayerConfig::signalAddHiddenNode,
-            this, &MainWindow::addHiddenNode);
-    connect(hLC, &HiddenLayerConfig::signalRemoveHiddenNode,
-            this, &MainWindow::removeHiddenNode);
-}
-
-void MainWindow::removeLayerWidget(){
-    if (hiddenLayersConfig.isEmpty())
+void MainWindow::on_actionSave_current_neuro_network_as_triggered(){
+    if (NN == nullptr){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при сохранении!\nСначала обучите нейронную сеть.");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
         return;
-    auto hLC = hiddenLayersConfig.takeLast();
-    ui->hiddenLayersLayout->removeWidget(hLC);
-    delete hLC;
+    }
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Сохранить проект нейронной сети",
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/NeuralNetwork.nsim",
+                                                    "Проекты nsim (*.nsim)");
+    if (filename.isEmpty()) {
+        return;
+    }
 
-    recalculateScrollAreaHeight();
+    if (!filename.endsWith(".nsim", Qt::CaseInsensitive)) {
+        filename += ".nsim";
+    }
+
+    QJsonArray min{};
+    for(auto &elem : normMin){
+        min.append(elem);
+    }
+    QJsonArray max{};
+    for(auto &elem : normMax){
+        max.append(elem);
+    }
+
+    QJsonObject project{
+        {"normMin", min},
+        {"normMax", max},
+        {"normalization", ui->normDiapazon->currentIndex()},
+        {"NN", NN->serialize()}
+    };
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)){
+        QMessageBox* message = new QMessageBox(this);
+        message->setText("Произошла ошибка при открытии файла для сохранения!");
+        message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
+        message->exec();
+        delete message;
+        return;
+    }
+    file.write(QJsonDocument(project).toJson());
 }
 
-int MainWindow::parseFunction(QString funcName){
-    if(funcName == "sigmoid"){
-        return SIGMOID;
-    }else if(funcName == "linear"){
-        return LINEAR_F;
-    }else if(funcName == "reLu"){
-        return RELU;
-    }else if(funcName == "leakyReLu"){
-        return LEAKY_RELU;
-    }else if(funcName == "tanhHyp"){
-        return TANH_HYP;
-    }else{
-        return SIGMOID;
-    }
-}
-
-void MainWindow::putNNParamsIntoVisual(){
-    QVector<int> amountPerLayer{inputSize};
-    for(auto config: hiddenLayersConfig){
-        auto layerConfig = dynamic_cast<HiddenLayerConfig*>(config);
-        amountPerLayer.append(layerConfig->getNeuronAmount());
-    }
-    amountPerLayer.append(outputSize);
-
-    QVector<QVector<QVector<float>>> weightData;
-    auto weights = NN->getWeights();
-    for(int i = 0; i < amountPerLayer.size()-1; i++){
-        QVector<QVector<float>> matrixOfWeights;
-        for(int j = 0; j < amountPerLayer[i]; j++){
-            QVector<float> lineOfWeights;
-            for(int k = 0; k < amountPerLayer[i+1]; k++){
-                lineOfWeights.append(weights.getValue(k,j,i));
-            }
-            matrixOfWeights.append(lineOfWeights);
-        }
-        weightData.append(matrixOfWeights);
-    }
-    ui->neuroGraphicsView->replaceWeights(weightData);
-
-    QVector<QVector<QVector<float>>> neuroData;
-    auto neurons = this->NN->getNeuroData();
-    for(int i = 0; i < amountPerLayer.size(); i++){
-        QVector<QVector<float>> lineOfData;
-        for(int j = 0; j < amountPerLayer[i]; j++){
-            QVector<float> pairOfData;
-            pairOfData.append(neurons.getValue(j,NeuroErrorIndex,i));
-            pairOfData.append(neurons.getValue(j,NeuroSignalIndex,i));
-            lineOfData.append(pairOfData);
-        }
-        neuroData.append(lineOfData);
-    }
-    ui->neuroGraphicsView->setNeuroneValues(neuroData);
-}

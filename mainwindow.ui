@@ -887,8 +887,6 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
     <addaction name="loadPrognosisData"/>
     <addaction name="savePrognosisData"/>
     <addaction name="separator"/>
-    <addaction name="saveNNData"/>
-    <addaction name="loadNNData"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu"/>
