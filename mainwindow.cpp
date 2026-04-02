@@ -617,6 +617,7 @@ void MainWindow::on_saveNNData_triggered(){
     QJsonObject project{
         {"normMin", min},
         {"normMax", max},
+        {"normalization", ui->normDiapazon->currentIndex()},
         {"NN", NN->serialize()}
     };
 
@@ -673,6 +674,7 @@ void MainWindow::on_loadNNData_triggered(){
     for(auto elem : project["normMax"].toArray()){
         normMax.append(elem.toDouble());
     }
+    this->ui->normDiapazon->setCurrentIndex(project["normalization"].toInt());
 
     QVector<size_t> neuronAmounts = {};
     for(auto elem : project["NN"].toObject()["neuronAmountPerLayer"].toArray()){
@@ -722,12 +724,6 @@ void MainWindow::on_loadNNData_triggered(){
         message->exec();
         delete message;
     }
-    // QMessageBox* message = new QMessageBox(this);
-    // message->setText("Успешно!\nНейронная сеть загружена, обратите внимание,\n"
-    //                  "что диапазон нормализации не настроен, его необходимо определить во вкладке \"Обучение\"");
-    // message->setStyleSheet("font-family:\"Garamond\"; font-size:11pt;");
-    // message->exec();
-    // delete message; // На случай отсутствия менее элегантного решения
 }
 
 void MainWindow::addLayerWidget(){
