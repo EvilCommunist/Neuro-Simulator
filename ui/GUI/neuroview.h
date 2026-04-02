@@ -9,6 +9,8 @@
 
 #define XSPACE 200
 #define YSPACE 150
+#define INITIAL_INPUT 0
+#define INITIAL_OUTPUT 1
 
 enum LayerType{
     INPUT,
@@ -56,6 +58,8 @@ public:
     void setNeuroneValues(QVector<QVector<QVector<float>>> values);
 
     inline size_t getNeuroLen(){return this->neuroNetworkVisual.size();}
+
+    void prepeare();
 };
 
 #endif // NEUROVIEW_H

@@ -2,6 +2,9 @@
 #define THREEDIMVECTOR_H
 
 #include <QVector>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 template <typename T>
 class ThreeDimVector
@@ -32,6 +35,32 @@ public:
     inline T getValue(size_t i, size_t j, size_t k) const{
         checkIndex(i, j, k);
         return data[recalculateIndex(i, j, k)];
+    }
+
+    QJsonObject serialize(){
+        QJsonObject neuroData{
+            {"width", static_cast<qint64>(width)},
+            {"height", static_cast<qint64>(height)},
+            {"depth", static_cast<qint64>(depth)}
+        };
+
+        QJsonArray neuroWeights{};
+        for(auto &elem : data){
+            neuroWeights.append(elem);
+        }
+
+        neuroData["data"]=neuroWeights;
+        return neuroData;
+    }
+
+    void deserialize(QJsonObject neuroData){
+        this->width = static_cast<size_t>(neuroData["width"].toInt());
+        this->height = static_cast<size_t>(neuroData["height"].toInt());
+        this->depth = static_cast<size_t>(neuroData["depth"].toInt());
+
+        for(auto elem : neuroData["data"].toArray()){
+            data.append(elem.toDouble());
+        }
     }
 };
 

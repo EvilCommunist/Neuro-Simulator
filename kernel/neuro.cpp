@@ -6,6 +6,12 @@
 
 #include <QDebug> // for debug
 
+#define SIGMOID "sigmoid"
+#define LINEAR "linear"
+#define RELU "reLu"
+#define LEAKYRELU "leakyReLu"
+#define TANHHYP "tanhHyp"
+
 float Neuro::learnChartHelper(){ // for gathering info about AI learning
     size_t counter = 0;
     float sumErr = 0;
@@ -340,4 +346,71 @@ void Neuro::ModifiedGAThread::run(){
         fitnesses.append(learnAvgErr/data.getHeight());
     }
     // ERROR CALCULATION______________________________________________________________________________________
+}
+
+
+QJsonObject Neuro::serialize(){
+    QJsonObject data{
+        {"layers", static_cast<int>(layers)}
+    };
+
+    QJsonArray layerSizes{};
+    for(auto &size : neuronAmountPerLayer){
+        layerSizes.append(static_cast<qint64>(size));
+    }
+    data["neuronAmountPerLayer"] = layerSizes;
+
+    QJsonArray layersFunc{};
+    for(auto &function : activationFuncForLayer){
+        if (function == math_activate::sigmoid){
+            layersFunc.append(SIGMOID);
+        }else if(function == math_activate::linear){
+            layersFunc.append(LINEAR);
+        }else if(function == math_activate::reLu){
+            layersFunc.append(RELU);
+        }else if(function == math_activate::leakyReLu){
+            layersFunc.append(LEAKYRELU);
+        }else if(function == math_activate::tanhHyp){
+            layersFunc.append(TANHHYP);
+        }else{
+            layersFunc.append("ERROR_AT_PARSING_FUNCTIONS");
+        }
+    }
+    data["activationFuncForLayer"] = layersFunc;
+
+    data["neurons"] = neurons.serialize();
+    data["weights"] = weights.serialize();
+
+    return data;
+}
+
+bool Neuro::deserialize(QJsonObject data){
+    this->layers = static_cast<uint16_t>(data["layers"].toInt());
+    this->neuronAmountPerLayer = {};
+    this->activationFuncForLayer = {};
+    for(auto elem : data["neuronAmountPerLayer"].toArray()){
+        this->neuronAmountPerLayer.append(static_cast<size_t>(elem.toInt()));
+    }
+    bool allFunctionsLoadedRight = true;
+    for(auto elem : data["activationFuncForLayer"].toArray()){
+        if(elem.toString() == SIGMOID){
+            this->activationFuncForLayer.append(math_activate::sigmoid);
+        }else if(elem.toString() == LINEAR){
+            this->activationFuncForLayer.append(math_activate::linear);
+        }else if(elem.toString() == RELU){
+            this->activationFuncForLayer.append(math_activate::reLu);
+        }else if(elem.toString() == LEAKYRELU){
+            this->activationFuncForLayer.append(math_activate::leakyReLu);
+        }else if(TANHHYP){
+            this->activationFuncForLayer.append(math_activate::tanhHyp);
+        }else{
+            allFunctionsLoadedRight = false;
+            this->activationFuncForLayer.append(math_activate::sigmoid);
+        }
+    }
+
+    this->neurons.deserialize(data["neurons"].toObject());
+    this->weights.deserialize(data["weights"].toObject());
+
+    return allFunctionsLoadedRight;
 }
