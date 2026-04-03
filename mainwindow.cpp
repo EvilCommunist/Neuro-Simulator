@@ -303,7 +303,7 @@ void MainWindow::on_startLearning_clicked()
         break;
     }
     case RESILENT_PROPOGATION:{
-        NN->learn_resilentPropogation(learnData, answers, ui->learnIterations->value());
+        NN->learn_resilientPropogation(learnData, answers, ui->learnIterations->value());
         break;
     }
     case GENETIC_ALGORITHM:{
