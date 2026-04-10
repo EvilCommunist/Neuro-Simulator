@@ -63,7 +63,7 @@ public:
     void forwardPropogation(const QVector<double>& data);
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
-    void learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
+    void learn_resilientPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs); // RPROP
     void learn_geneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross);
     void learn_modifiedGeneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross,
                                         Crossover crossType, MutationStrength mutStrength, Selection selType, uint8_t workers);

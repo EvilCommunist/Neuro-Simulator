@@ -133,61 +133,69 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
 }
 
 
-void Neuro::learn_resilentPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs){
-    // RPROP parameters, might be initialized as values calculated based on selections
-    const double Delta0 = 0.01;
-    const double DeltaMin = 0.0000001;
-    const double DeltaMax = 50;
-    const double EtaMinus = 0.5;
-    const double EtaPlus = 1.2;
-    const double EpsStop = 0.01;
+void Neuro::learn_resilientPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs){
+    // RPROP default parameters
+    const double eta_plus  = 1.2;
+    const double eta_minus = 0.5;
+    const double delta_max = 50.0;
+    const double delta_min = 0.000001;
+    const double delta0    = 0.1;
 
-    ThreeDimVector<double> deltas(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1, Delta0);
-    ThreeDimVector<double> prevGrads(qvectorMax(neuronAmountPerLayer), qvectorMax(neuronAmountPerLayer), layers-1, 0);
+    const size_t weightLayers = layers - 1;
 
-    for(size_t e = 0; e < epochs; e++) {
-        double totalGradNorm = 0;
-        float learnAvgErr = 0;  // for chart
-        for(size_t selection = 0; selection < data.getHeight(); selection++) {
-            auto dataLine = data.getLine(selection);
-            auto ansLine = ans.getLine(selection);
-            forwardPropogation(dataLine);
-            backPropogation(ansLine);
-            for(uint16_t l = 0; l < layers-1; l++) {
-                for(size_t n = 0; n < neuronAmountPerLayer[l]; n++) {
-                    for(size_t next = 0; next < neuronAmountPerLayer[l+1]; next++) {
-                        double grad = neurons.getValue(n, NeuroActivateIndex, l) *
-                                      neurons.getValue(next, NeuroErrorIndex, l+1);
-                        double prevGrad = prevGrads.getValue(n, next, l);
-                        double delta = deltas.getValue(n, next, l);
+    QVector<QVector<QVector<double>>> prevGrad(weightLayers);
+    QVector<QVector<QVector<double>>> delta(weightLayers);
 
-                        if(grad * prevGrad > 0) {
-                            delta = std::min(delta * EtaPlus, DeltaMax);
-                        } else if(grad * prevGrad < 0) {
-                            delta = std::max(delta * EtaMinus, DeltaMin);
-                            grad = 0;
+    for (size_t l = 0; l < weightLayers; ++l) {
+        size_t rows = neuronAmountPerLayer[l];
+        size_t cols = neuronAmountPerLayer[l + 1];
+        prevGrad[l].resize(rows, QVector<double>(cols, 0.0));
+        delta[l].resize(rows, QVector<double>(cols, delta0));
+    }
+
+    for (size_t epoch = 0; epoch < epochs; ++epoch) {
+        double avgError = 0.0;
+        for (size_t sample = 0; sample < data.getHeight(); ++sample) {
+            forwardPropogation(data.getLine(sample));
+            backPropogation(ans.getLine(sample));
+
+            for (int l = static_cast<int>(weightLayers) - 1; l >= 0; --l) {
+                size_t nCount = neuronAmountPerLayer[l];
+                size_t pCount = neuronAmountPerLayer[l + 1];
+
+                for (size_t n = 0; n < nCount; ++n) {
+                    for (size_t prev = 0; prev < pCount; ++prev) {
+                        double gradient = neurons.getValue(n, NeuroActivateIndex, l) *
+                                          neurons.getValue(prev, NeuroErrorIndex, l + 1);
+
+                        double& d = delta[l][n][prev];
+                        double  pg = prevGrad[l][n][prev];
+
+                        if (pg * gradient > 0) {
+                            d = std::min(d * eta_plus, delta_max);
+                            double weightChange = (gradient > 0) ? d : -d;
+                            double newWeight = weights.getValue(n, prev, l) + weightChange;
+                            weights.setValue(n, prev, l, newWeight);
+                            prevGrad[l][n][prev] = gradient;
                         }
-
-                        deltas.setValue(n, next, l,  delta);
-                        prevGrads.setValue(n, next, l, grad);
-
-                        if(grad == 0){
-                            continue;
+                        else if (pg * gradient < 0) {
+                            d = std::max(d * eta_minus, delta_min);
+                            prevGrad[l][n][prev] = 0.0;
                         }
-                        double weightChange = -std::copysign(delta, grad);
-                        weights.setValue(n, next, l,
-                                        weights.getValue(n, next, l) + weightChange);
-
-                        totalGradNorm += grad * grad;
+                        else {
+                            if (gradient != 0.0) {
+                                double weightChange = (gradient > 0) ? d : -d;
+                                double newWeight = weights.getValue(n, prev, l) + weightChange;
+                                weights.setValue(n, prev, l, newWeight);
+                            }
+                            prevGrad[l][n][prev] = gradient;
+                        }
                     }
                 }
             }
-            learnAvgErr+=learnChartHelper();    // for chart
+            avgError += learnChartHelper();   // for chart
         }
-        chartProcessor::getCurrentError(learnAvgErr/data.getHeight());  // for chart
-        if(sqrt(totalGradNorm) < EpsStop) {
-            break;
-        }
+        chartProcessor::getCurrentError(avgError / data.getHeight());
     }
 }
 
