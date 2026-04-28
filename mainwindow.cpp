@@ -294,7 +294,7 @@ void MainWindow::on_startLearning_clicked()
         delete NN;
         NN = nullptr;
     }
-    NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer);
+    NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer, ui->weightInitAlgorithm->currentIndex());
     chartProcessor* cp = new chartProcessor;
     switch(ui->learnAlgorithm->currentIndex()){
     case BACK_PROPOGATION:{
@@ -751,7 +751,7 @@ void MainWindow::on_actionOpen_neuro_network_triggered(){
     redrawCheckTable();
     redrawForecastTable();
 
-    NN = new Neuro(1, {1}, {math_activate::sigmoid}); // default parameters for NN initialization
+    NN = new Neuro(1, {1}, {math_activate::sigmoid}, ui->weightInitAlgorithm->currentIndex()); // default parameters for NN initialization
     bool gotAllfunctions = NN->deserialize(project["NN"].toObject());
     putNNParamsIntoVisual();
 

@@ -642,6 +642,16 @@ border-color: rgb(124, 124, 124); padding: 5px;}</string>
                     <string>Метод Ксавьера</string>
                    </property>
                   </item>
+                  <item>
+                   <property name="text">
+                    <string>Случайные числа в диапазоне [-1;1]</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Константа</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item row="2" column="0">
