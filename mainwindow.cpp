@@ -720,6 +720,7 @@ void MainWindow::on_actionOpen_neuro_network_triggered(){
         normMax.append(elem.toDouble());
     }
     this->ui->normDiapazon->setCurrentIndex(project["normalization"].toInt());
+    this->ui->weightInitAlgorithm->setCurrentIndex(project["weightInit"].toInt());
 
     QVector<size_t> neuronAmounts = {};
     for(auto elem : project["NN"].toObject()["neuronAmountPerLayer"].toArray()){
@@ -806,6 +807,7 @@ void MainWindow::on_actionSave_current_neuro_network_as_triggered(){
         {"normMin", min},
         {"normMax", max},
         {"normalization", ui->normDiapazon->currentIndex()},
+        {"weightInit", ui->weightInitAlgorithm->currentIndex()},
         {"NN", NN->serialize()}
     };
 
