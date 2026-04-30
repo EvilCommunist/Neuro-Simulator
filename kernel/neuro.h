@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include "./ui/enums.h"
 
 const size_t NeuroDataType = 3, NeuroSignalIndex = 0, NeuroActivateIndex = 1, NeuroErrorIndex = 2;
 
@@ -23,7 +24,7 @@ private:
     ThreeDimVector<double> neurons;
     ThreeDimVector<double> weights;
     size_t qvectorMax(const QVector<size_t>& data);
-    void initWeights();
+    void initWeights(int initType, float constant = 0);
     void backPropogation(const QVector<double>& ans);
 
     // ______________________________________________________________________
@@ -59,7 +60,7 @@ private:
     // ______________________________________________________________________
 
 public:
-    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL);
+    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant = 0);
     void forwardPropogation(const QVector<double>& data);
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);

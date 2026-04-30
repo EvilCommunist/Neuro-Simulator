@@ -30,32 +30,60 @@ size_t Neuro::qvectorMax(const QVector<size_t>& data){
     return max;
 }
 
-void Neuro::initWeights(){  // Xavier initializattion
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    double stddev = sqrt(1.0 / qvectorMax(neuronAmountPerLayer));
-    std::normal_distribution<double> dis(0.0, stddev);
+void Neuro::initWeights(int initType, float constant){
+    switch(initType){
+    case XAVIER:{
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        double stddev = sqrt(1.0 / qvectorMax(neuronAmountPerLayer));
+        std::normal_distribution<double> dis(0.0, stddev);
 
-    for(size_t i = 0; i < qvectorMax(neuronAmountPerLayer); i++){
-        for(size_t j = 0; j < qvectorMax(neuronAmountPerLayer); j++){
-            for(uint16_t k = 0; k < layers - 1; k++){
-                weights.setValue(i, j, k, dis(gen));
+        for(size_t i = 0; i < qvectorMax(neuronAmountPerLayer); i++){
+            for(size_t j = 0; j < qvectorMax(neuronAmountPerLayer); j++){
+                for(uint16_t k = 0; k < layers - 1; k++){
+                    weights.setValue(i, j, k, dis(gen));
+                }
             }
         }
+        break;
+    }
+    case RAND:{
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> dis(-1, 1);
+
+        for(size_t i = 0; i < qvectorMax(neuronAmountPerLayer); i++){
+            for(size_t j = 0; j < qvectorMax(neuronAmountPerLayer); j++){
+                for(uint16_t k = 0; k < layers - 1; k++){
+                    weights.setValue(i, j, k, dis(gen));
+                }
+            }
+        }
+        break;
+    }
+    case CONST:{
+        for(size_t i = 0; i < qvectorMax(neuronAmountPerLayer); i++){
+            for(size_t j = 0; j < qvectorMax(neuronAmountPerLayer); j++){
+                for(uint16_t k = 0; k < layers - 1; k++){
+                    weights.setValue(i, j, k, constant);
+                }
+            }
+        }
+        break;
+    }
     }
 }
 
-Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL):
+Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant):
     layers(l),
     neuronAmountPerLayer(nAPL),
     activationFuncForLayer(aFfL),
     neurons(ThreeDimVector<double>(qvectorMax(nAPL)+1,NeuroDataType,l,0)),
     weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0))
 {
-
     for (int i = 1; i < nAPL.size()-1; i++)  // adding bias neurons
         neuronAmountPerLayer[i]++;
-    initWeights();
+    initWeights(initType, constant);
 }
 
 void Neuro::forwardPropogation(const QVector<double>& data){

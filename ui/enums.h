@@ -16,5 +16,11 @@ enum activationFunc{
     TANH_HYP
 };
 
+enum weightInit{
+    XAVIER,
+    RAND,
+    CONST
+};
+
 
 #endif // ENUMS_H

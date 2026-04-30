@@ -22,6 +22,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     kernel/neuro.cpp \
+    ui/constvalue.cpp \
     ui/geneticalgcoefs.cpp \
     ui/GUI/neurolink.cpp \
     ui/GUI/neuronode.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     mainwindow.h \
     kernel/neuro.h \
     kernel/threedimvector.h \
+    ui/constvalue.h \
     ui/geneticalgcoefs.h \
     ui/GUI/neurolink.h \
     ui/GUI/neuronode.h \
@@ -61,6 +63,7 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
+    ui/constvalue.ui \
     ui/geneticalgcoefs.ui \
     ui/adaptlearndatadialog.ui \
     ui/backpropocoeffs.ui \
