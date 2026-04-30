@@ -74,7 +74,7 @@ void Neuro::initWeights(int initType, float constant){
     }
 }
 
-Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType):
+Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant):
     layers(l),
     neuronAmountPerLayer(nAPL),
     activationFuncForLayer(aFfL),
@@ -83,7 +83,7 @@ Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activat
 {
     for (int i = 1; i < nAPL.size()-1; i++)  // adding bias neurons
         neuronAmountPerLayer[i]++;
-    initWeights(initType);
+    initWeights(initType, constant);
 }
 
 void Neuro::forwardPropogation(const QVector<double>& data){

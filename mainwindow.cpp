@@ -12,6 +12,7 @@
 #include "./ui/geneticalgcoefs.h"
 #include "./kernel/math/heuristicsAlg/GeneticOperatorsEnum.h"
 #include "./ui/modifgacoefs.h"
+#include "./ui/constvalue.h"
 
 #include <QPair>
 #include <QFileDialog>
@@ -294,7 +295,13 @@ void MainWindow::on_startLearning_clicked()
         delete NN;
         NN = nullptr;
     }
-    NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer, ui->weightInitAlgorithm->currentIndex());
+    if(currentInitFuncCoeffs){
+        auto curr = dynamic_cast<ConstValue*>(currentInitFuncCoeffs);
+        NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer, ui->weightInitAlgorithm->currentIndex(), curr->getConstValue());
+    }
+    else{
+        NN = new Neuro(2+hiddenLayersConfig.size(), neuronsPerLayer, functionPerLayer, ui->weightInitAlgorithm->currentIndex());
+    }
     chartProcessor* cp = new chartProcessor;
     switch(ui->learnAlgorithm->currentIndex()){
     case BACK_PROPOGATION:{
@@ -812,5 +819,29 @@ void MainWindow::on_actionSave_current_neuro_network_as_triggered(){
         return;
     }
     file.write(QJsonDocument(project).toJson());
+}
+
+
+void MainWindow::on_weightInitAlgorithm_currentIndexChanged(int index)
+{
+    if(currentInitFuncCoeffs){
+        ui->learnWeightsLayout->removeWidget(currentInitFuncCoeffs);
+        delete currentInitFuncCoeffs;
+        currentInitFuncCoeffs = nullptr;
+    }
+    switch(index){
+    case XAVIER:{
+        break;
+    }
+    case RAND:{
+        break;
+    }
+    case CONST:{
+        ConstValue* coeffWidget = new ConstValue;
+        currentInitFuncCoeffs = coeffWidget;
+        ui->learnWeightsLayout->insertWidget(ui->learnWeightsLayout->count(), coeffWidget);
+        break;
+    }
+    }
 }
 

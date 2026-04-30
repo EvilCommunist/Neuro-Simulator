@@ -41,6 +41,8 @@ private slots:
     void on_actionOpen_neuro_network_triggered();
     void on_actionSave_current_neuro_network_as_triggered();
 
+    void on_weightInitAlgorithm_currentIndexChanged(int index);
+
 public slots:
     void addHiddenNode(QWidget* layer);
     void removeHiddenNode(QWidget* layer);
