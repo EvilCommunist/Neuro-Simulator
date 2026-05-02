@@ -13,13 +13,33 @@
 #define TANHHYP "tanhHyp"
 
 float Neuro::learnChartHelper(){ // for gathering info about AI learning
-    size_t counter = 0;
-    float sumErr = 0;
-    for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
-        sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
-        counter++;
+    float res = 0.0;
+    switch (errorCalculationType){
+    case AVGERR:{
+        size_t counter = 0;
+        float sumErr = 0;
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
+            counter++;
+        }
+        res = sumErr/counter;
+        break;
     }
-    return sumErr/counter;
+    case MSE:{
+        size_t counter = 0;
+        float sumSquareErr = 0;
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            sumSquareErr += pow(neurons.getValue(n, NeuroErrorIndex, layers-1), 2);
+            counter++;
+        }
+        res = sumSquareErr/counter;
+        break;
+    }
+    case CROSSENTROPY:{
+        break;
+    }
+    }
+    return res;
 }
 
 size_t Neuro::qvectorMax(const QVector<size_t>& data){
@@ -74,12 +94,14 @@ void Neuro::initWeights(int initType, float constant){
     }
 }
 
-Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant):
+Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL,
+             int initType, float constant, int errCalcType):
     layers(l),
     neuronAmountPerLayer(nAPL),
     activationFuncForLayer(aFfL),
     neurons(ThreeDimVector<double>(qvectorMax(nAPL)+1,NeuroDataType,l,0)),
-    weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0))
+    weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0)),
+    errorCalculationType(errCalcType)
 {
     for (int i = 1; i < nAPL.size()-1; i++)  // adding bias neurons
         neuronAmountPerLayer[i]++;
@@ -137,7 +159,7 @@ QVector<double> Neuro::getRes(){
 
 void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs = 1000){
     for(size_t e = 0; e < epochs; e++){
-        float learnAvgErr = 0;  // for chart
+        float learnAvgErr = 0.0; // for chart
         for(size_t selection = 0; selection < data.getHeight(); selection ++){
             auto dataLine = data.getLine(selection);
             auto ansLine = ans.getLine(selection);
@@ -154,9 +176,9 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                     }
                 }
             }
-            learnAvgErr+=learnChartHelper();    // for chart
+            learnAvgErr += learnChartHelper();   // for chart;
         }
-        chartProcessor::getCurrentError(learnAvgErr/data.getHeight());    // for chart
+        chartProcessor::getCurrentError(learnAvgErr / data.getHeight());    // for chart
     }
 }
 

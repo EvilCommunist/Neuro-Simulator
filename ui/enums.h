@@ -22,5 +22,10 @@ enum weightInit{
     CONST
 };
 
+enum errCalcType{
+    AVGERR,
+    MSE,
+    CROSSENTROPY
+};
 
 #endif // ENUMS_H

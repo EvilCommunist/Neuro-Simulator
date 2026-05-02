@@ -23,6 +23,7 @@ private:
     QVector<math_activate::ActivationFunc> activationFuncForLayer;
     ThreeDimVector<double> neurons;
     ThreeDimVector<double> weights;
+    int errorCalculationType;
     size_t qvectorMax(const QVector<size_t>& data);
     void initWeights(int initType, float constant = 0);
     void backPropogation(const QVector<double>& ans);
@@ -60,7 +61,8 @@ private:
     // ______________________________________________________________________
 
 public:
-    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant = 0);
+    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL,
+          int initType, float constant = 0, int errCalcType = AVGERR);
     void forwardPropogation(const QVector<double>& data);
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
