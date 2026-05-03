@@ -71,7 +71,7 @@ public:
     void learn_modifiedGeneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross,
                                         Crossover crossType, MutationStrength mutStrength, Selection selType, uint8_t workers);
 
-    float learnChartHelper();
+    float learnChartHelper(const QVector<double>& ansLine);
 
     inline ThreeDimVector<double> getWeights() const {return weights;}
     inline ThreeDimVector<double> getNeuroData() const {return neurons;}
