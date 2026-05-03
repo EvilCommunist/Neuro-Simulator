@@ -12,14 +12,39 @@
 #define LEAKYRELU "leakyReLu"
 #define TANHHYP "tanhHyp"
 
-float Neuro::learnChartHelper(){ // for gathering info about AI learning
-    size_t counter = 0;
-    float sumErr = 0;
-    for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
-        sumErr += abs(neurons.getValue(n, NeuroErrorIndex, layers-1));
-        counter++;
+float Neuro::learnChartHelper(const QVector<double>& ansLine){ // for gathering info about AI learning
+    float res = 0.0;
+    switch (errorCalculationType){
+    case AVGERR:{
+        size_t counter = 0;
+        float sumErr = 0;
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            sumErr += abs(ansLine[n] - abs(neurons.getValue(n, NeuroActivateIndex, layers-1)));
+            counter++;
+        }
+        res = sumErr/counter;
+        break;
     }
-    return sumErr/counter;
+    case MSE:{
+        size_t counter = 0;
+        float sumSquareErr = 0;
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            sumSquareErr += pow(ansLine[n] - abs(neurons.getValue(n, NeuroActivateIndex, layers-1)), 2);
+            counter++;
+        }
+        res = sumSquareErr/counter;
+        break;
+    }
+    case CROSSENTROPY:{
+        float sumLogits = 0;
+        for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
+            sumLogits += ansLine[n]*log(neurons.getValue(n, NeuroActivateIndex, layers-1));
+        }
+        res = -sumLogits;
+        break;
+    }
+    }
+    return res;
 }
 
 size_t Neuro::qvectorMax(const QVector<size_t>& data){
@@ -74,12 +99,14 @@ void Neuro::initWeights(int initType, float constant){
     }
 }
 
-Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant):
+Neuro::Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL,
+             int initType, float constant, int errCalcType):
     layers(l),
     neuronAmountPerLayer(nAPL),
     activationFuncForLayer(aFfL),
     neurons(ThreeDimVector<double>(qvectorMax(nAPL)+1,NeuroDataType,l,0)),
-    weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0))
+    weights(ThreeDimVector<double>(qvectorMax(nAPL)+1,qvectorMax(nAPL)+1,l-1,0)),
+    errorCalculationType(errCalcType)
 {
     for (int i = 1; i < nAPL.size()-1; i++)  // adding bias neurons
         neuronAmountPerLayer[i]++;
@@ -137,7 +164,7 @@ QVector<double> Neuro::getRes(){
 
 void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs = 1000){
     for(size_t e = 0; e < epochs; e++){
-        float learnAvgErr = 0;  // for chart
+        float learnAvgErr = 0.0; // for chart
         for(size_t selection = 0; selection < data.getHeight(); selection ++){
             auto dataLine = data.getLine(selection);
             auto ansLine = ans.getLine(selection);
@@ -154,9 +181,9 @@ void Neuro::learn_backPropogation(const TwoDimVector<double>& data, const TwoDim
                     }
                 }
             }
-            learnAvgErr+=learnChartHelper();    // for chart
+            learnAvgErr += learnChartHelper(ansLine);   // for chart;
         }
-        chartProcessor::getCurrentError(learnAvgErr/data.getHeight());    // for chart
+        chartProcessor::getCurrentError(learnAvgErr / data.getHeight());    // for chart
     }
 }
 
@@ -221,7 +248,7 @@ void Neuro::learn_resilientPropogation(const TwoDimVector<double>& data, const T
                     }
                 }
             }
-            avgError += learnChartHelper();   // for chart
+            avgError += learnChartHelper(ans.getLine(sample));   // for chart
         }
         chartProcessor::getCurrentError(avgError / data.getHeight());
     }
@@ -244,7 +271,7 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
                 auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
                 neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
             }
-            learnAvgErr += learnChartHelper();
+            learnAvgErr += learnChartHelper(ans.getLine(i));
         }
         currentGen[i]->setFitness(learnAvgErr/data.getHeight());
     }
@@ -264,7 +291,7 @@ void Neuro::learn_geneticAlgorithm(const TwoDimVector<double> &data, const TwoDi
                     auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
                     neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
                 }
-                learnAvgErr += learnChartHelper();
+                learnAvgErr += learnChartHelper(ans.getLine(i));
             }
             currentGen[i]->setFitness(learnAvgErr/data.getHeight());
         }
@@ -290,17 +317,15 @@ void Neuro::learn_modifiedGeneticAlgorithm(const TwoDimVector<double> &data, con
                 auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
                 neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
             }
-            learnAvgErr += learnChartHelper();
+            learnAvgErr += learnChartHelper(ans.getLine(j));
         }
         currentGen[i]->setFitness(learnAvgErr/data.getHeight());
     }
     GAHelper.findInitialBest();
     chartProcessor::getCurrentError(GAHelper.getBest()[0]->getFitness());
     // Initial iteration
-    //QElapsedTimer timer;
     for(int epoch = 1; epoch < epochs; epoch ++){
         GAHelper.startIteration();
-        // timer.start();
         auto currentGen = GAHelper.getCurrent() + GAHelper.getOffspring();
         QVector<ModifiedGAThread*> threads{};
         for(int t = 0; t < workers; t++){
@@ -317,23 +342,6 @@ void Neuro::learn_modifiedGeneticAlgorithm(const TwoDimVector<double> &data, con
         for(int i = 0; i < currentGen.size(); i++){
             currentGen[i]->setFitness(fitnesses[i]);
         }
-        // qDebug() << timer.elapsed();
-        // timer.start();
-        // auto currentGen = GAHelper.getCurrent() + GAHelper.getOffspring();
-        // for (int i = 0; i < currentGen.size(); i++){
-        //     this->weights = currentGen[i]->getData();
-        //     float learnAvgErr = 0;
-        //     for(int j = 0; j < data.getHeight(); j++){
-        //         forwardPropogation(data.getLine(j));
-        //         for(size_t n = 0; n < neuronAmountPerLayer[layers-1]; n++){
-        //             auto currentNeuron = neurons.getValue(n, NeuroActivateIndex, layers-1);
-        //             neurons.setValue(n, NeuroErrorIndex, layers-1, ((ans.getLine(j)[n]-currentNeuron)*math_activate::get_derivative(activationFuncForLayer[layers-1], currentNeuron)));
-        //         }
-        //         learnAvgErr += learnChartHelper();
-        //     }
-        //     currentGen[i]->setFitness(learnAvgErr/data.getHeight());
-        // }
-        // qDebug() << timer.elapsed();
         GAHelper.completeIteration();
         chartProcessor::getCurrentError(GAHelper.getBestOfTheBest()->getFitness());
     }

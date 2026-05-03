@@ -23,6 +23,7 @@ private:
     QVector<math_activate::ActivationFunc> activationFuncForLayer;
     ThreeDimVector<double> neurons;
     ThreeDimVector<double> weights;
+    int errorCalculationType;
     size_t qvectorMax(const QVector<size_t>& data);
     void initWeights(int initType, float constant = 0);
     void backPropogation(const QVector<double>& ans);
@@ -60,7 +61,8 @@ private:
     // ______________________________________________________________________
 
 public:
-    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL, int initType, float constant = 0);
+    Neuro(uint16_t l, const QVector<size_t>& nAPL, const QVector<math_activate::ActivationFunc>& aFfL,
+          int initType, float constant = 0, int errCalcType = AVGERR);
     void forwardPropogation(const QVector<double>& data);
     QVector<double> getRes();
     void learn_backPropogation(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, double learnSpeed, size_t epochs);
@@ -69,7 +71,7 @@ public:
     void learn_modifiedGeneticAlgorithm(const TwoDimVector<double>& data, const TwoDimVector<double>& ans, size_t epochs, size_t popSize, float pMute, float pCross,
                                         Crossover crossType, MutationStrength mutStrength, Selection selType, uint8_t workers);
 
-    float learnChartHelper();
+    float learnChartHelper(const QVector<double>& ansLine);
 
     inline ThreeDimVector<double> getWeights() const {return weights;}
     inline ThreeDimVector<double> getNeuroData() const {return neurons;}
